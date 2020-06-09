@@ -23,14 +23,17 @@ jobs:
         run: |
           yarn install
 
-      - name: yarn test
+      - name: yarn package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn package-ci
-          yarn lint
-          yarn tsc
+          yarn package
 
+      - name: Upload packaged app
+        uses: actions/upload-artifact@v2
+        with:
+          name: comit-app-${{ matrix.os }}
+          path: release/*
 # Failing because virtual framebuffer not installed
 #          yarn build-e2e
 #          yarn test-e2e
