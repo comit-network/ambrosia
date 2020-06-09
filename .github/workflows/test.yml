@@ -42,6 +42,10 @@ jobs:
       #     python -m pip install --upgrade pip
       #     env LDFLAGS="-L$(brew --prefix openssl)/lib" CFLAGS="-I$(brew --prefix openssl)/include" pip install cryptography
 
+      - name: Echo default symlink
+        run: |
+          ls -l /usr/local/opt | grep openssl
+
       - name: yarn install
         run: |
           yarn install
