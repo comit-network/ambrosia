@@ -1,4 +1,4 @@
-name: Test
+name: Package
 
 on: push
 
@@ -8,7 +8,8 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest, windows-2019, ubuntu-18.04]
+        os: [macos-latest]
+        # os: [macos-latest, windows-2019, ubuntu-18.04]
 
     steps:
       - name: Check out Git repository
@@ -23,17 +24,24 @@ jobs:
         run: |
           yarn install
 
-      - name: yarn test
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: yarn lint
         run: |
-          yarn package-ci
           yarn lint
           yarn tsc
 
-      - uses: actions/upload-artifact@v2
+      - name: yarn package
+        run: |
+          yarn package
+
+      - name: Check directory
+        run: |
+          ls
+          ls release
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v1
         with:
-          name: mac-app
+          name: ${{ matrix.os }}
           path: release
 # Failing because virtual framebuffer not installed
 #          yarn build-e2e
