@@ -8,8 +8,7 @@ jobs:
 
     strategy:
       matrix:
-        os: [macos-latest]
-        # os: [macos-latest, windows-latest, ubuntu-latest]
+        os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -29,22 +28,35 @@ jobs:
           yarn lint
           yarn tsc
 
+      - name: yarn test
+        run: |
+          yarn build
+          yarn test
+
+      - name: Run E2E test
+        uses: GabrielBB/xvfb-action@v1.2
+        with:
+          working-directory: ./ #optional
+          run: |
+            yarn build-e2e
+            yarn test-e2e
+
       - name: yarn package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn package
 
-      - name: Check directory
+      - name: Check release directory
         run: |
-          ls
           ls release
-
-      - uses: actions/upload-artifact@v2
-        if: ${{ matrix.os }} == 'macOS-latest'
-        with:
-          name: ${{ matrix.os }}-app
-          path: release/*.dmg
+      # TODO: CI should use https://github.com/marketplace/actions/upload-files-to-a-github-release
+      # because of artifact storage limits
+      # - uses: actions/upload-artifact@v2
+      #   if: ${{ matrix.os }} == 'macOS-latest'
+      #   with:
+      #     name: ${{ matrix.os }}-app
+      #     path: release/*.dmg
       # - uses: actions/upload-artifact@v2
       #   if: ${{ matrix.os }} == 'windows-latest'
       #   with:
@@ -56,14 +68,6 @@ jobs:
       #     name: ${{ matrix.os }}-app
       #     path: release
 
-      - name: yarn test
-        run: |
-          yarn test
-
-      - name: Run E2E test
-        uses: GabrielBB/xvfb-action@v1.2
-        with:
-          working-directory: ./ #optional
-          run: |
-            yarn build-e2e
-            yarn test-e2e
+# Failing because virtual framebuffer not installed
+#          yarn build-e2e
+#          yarn test-e2e
