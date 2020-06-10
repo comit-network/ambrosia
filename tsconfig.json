@@ -7,7 +7,8 @@
     "declarationMap": true,
     "noEmit": true,
     "jsx": "react",
-    "strict": true,
+    /* TODO: Set strict to true once migration is stable */
+    "strict": false,
     "pretty": true,
     "sourceMap": true,
     /* Additional Checks */
