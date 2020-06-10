@@ -9,7 +9,7 @@ jobs:
     strategy:
       matrix:
         os: [macos-latest]
-        # os: [macos-latest, windows-2019, ubuntu-18.04]
+        # os: [macos-latest, windows-latest, ubuntu-latest]
 
     steps:
       - name: Check out Git repository
@@ -29,18 +29,6 @@ jobs:
           yarn lint
           yarn tsc
 
-      - name: yarn test
-        run: |
-          yarn test
-
-      - name: Run E2E test
-        uses: GabrielBB/xvfb-action@v1.2
-        with:
-          working-directory: ./ #optional
-          run: |
-            yarn build-e2e
-            yarn test-e2e
-
       - name: yarn package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -53,9 +41,29 @@ jobs:
           ls release
 
       - uses: actions/upload-artifact@v2
+        if: ${{ matrix.os }} == 'macOS-latest'
         with:
           name: ${{ matrix.os }}-app
-          path: release
-# Failing because virtual framebuffer not installed
-#          yarn build-e2e
-#          yarn test-e2e
+          path: release/*.dmg
+      # - uses: actions/upload-artifact@v2
+      #   if: ${{ matrix.os }} == 'windows-latest'
+      #   with:
+      #     name: ${{ matrix.os }}-app
+      #     path: release
+      # - uses: actions/upload-artifact@v2
+      #   if: ${{ matrix.os }} == 'ubuntu-latest'
+      #   with:
+      #     name: ${{ matrix.os }}-app
+      #     path: release
+
+      - name: yarn test
+        run: |
+          yarn test
+
+      - name: Run E2E test
+        uses: GabrielBB/xvfb-action@v1.2
+        with:
+          working-directory: ./ #optional
+          run: |
+            yarn build-e2e
+            yarn test-e2e
