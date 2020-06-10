@@ -1,8 +1,8 @@
 import React from 'react';
 import { Switch, Route } from 'react-router-dom';
 import routes from './constants/routes.json';
-import HomePage from './containers/HomePage';
-import CounterPage from './containers/CounterPage';
+import HomePage from './pages/HomePage';
+import CounterPage from './pages/CounterPage';
 
 export default function Routes() {
   return (
