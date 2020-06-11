@@ -1,4 +1,7 @@
 {
   "HOME": "/",
-  "COUNTER": "/counter"
+  "COUNTER": "/counter",
+  "HISTORY": "/history",
+  "EXCHANGE": "/exchange",
+  "SETTINGS": "/settings"
 }

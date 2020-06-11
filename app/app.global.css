@@ -14,14 +14,13 @@ body {
   display: flex;
 }
 #sidebar {
-  background: white;
   order: -1;
-  flex: 0 0 200px;
+  flex: 0 0 180px;
   min-height: 100vh;
+  padding: 20px;
 }
 #content {
   width: 100%;
-  background: gray;
   order: 1;
   padding: 1rem;
 }
