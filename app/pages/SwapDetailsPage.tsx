@@ -2,8 +2,8 @@ import React from 'react';
 import { useParams } from 'react-router-dom';
 import { Box, Heading, Text } from '@chakra-ui/core';
 
-export default function OrderDetailsPage() {
-  const { id } = useParams();
+export default function SwapDetailsPage() {
+  const { id: swapId } = useParams();
 
   return (
     <Box width="100%">
@@ -11,8 +11,8 @@ export default function OrderDetailsPage() {
         Order Details
       </Heading>
       <Text>
-        This is the OrderDetails page for Order
-        {id}
+        This is the details for Swap
+        {swapId}
       </Text>
     </Box>
   );

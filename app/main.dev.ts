@@ -59,6 +59,12 @@ const createWindow = async () => {
     width: 1024,
     height: 728,
     resizable: false,
+    ...(process.platform === 'darwin'
+      ? {
+          frame: false,
+          titleBarStyle: 'hiddenInset'
+        }
+      : {}),
     webPreferences:
       process.env.NODE_ENV === 'development' || process.env.E2E_BUILD === 'true'
         ? {

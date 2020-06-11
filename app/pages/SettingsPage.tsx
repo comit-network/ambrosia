@@ -13,6 +13,9 @@ export default function SettingsPage() {
         <Text mt={4}>desc</Text>
 
         <Divider />
+
+        {/* TODO */}
+        {/* <Text mt={4}>HTTP_URL_CND_0: {process.env.HTTP_URL_CND_0}</Text> */}
       </Box>
     </Box>
   );

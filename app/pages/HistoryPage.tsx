@@ -10,7 +10,7 @@ export default function HistoryPage() {
         Order History
       </Heading>
 
-      <Link to="/orders/1">
+      <Link to="/swaps/1">
         <Order status="Pending" />
       </Link>
 

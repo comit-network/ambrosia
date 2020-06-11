@@ -1,8 +1,10 @@
 {
   "HOME": "/",
+  "ABOUT": "/about",
   "COUNTER": "/counter",
   "HISTORY": "/history",
   "EXCHANGE": "/exchange",
   "SETTINGS": "/settings",
+  "SWAPS": "/swaps/:id",
   "ORDERS": "/orders/:id"
 }

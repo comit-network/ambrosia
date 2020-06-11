@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Tooltip, Icon, Divider, Box, Heading } from '@chakra-ui/core';
 import MarketData from '../components/MarketData';
 import Order from '../components/Order';
@@ -10,9 +11,12 @@ export default function ExchangePage() {
         Exchange
       </Heading>
 
+      <Heading fontSize="1.4em" mt={8} mb={4}>
+        Market Data
+      </Heading>
       <MarketData />
 
-      <Divider />
+      <Divider p={6} />
 
       <Heading fontSize="1.4em" mt={8} mb={4}>
         Available Orders
@@ -25,7 +29,9 @@ export default function ExchangePage() {
         </Tooltip>
       </Heading>
 
-      <Order status="New" />
+      <Link to="/orders/1">
+        <Order status="New" />
+      </Link>
     </Box>
   );
 }

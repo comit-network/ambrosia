@@ -7,8 +7,10 @@ import routes from '../constants/routes.json';
 import DashboardPage from './DashboardPage';
 import HistoryPage from './HistoryPage';
 import ExchangePage from './ExchangePage';
-import OrderDetailsPage from './OrderDetailsPage';
+import OrderConfirmationPage from './OrderConfirmationPage';
+import SwapDetailsPage from './SwapDetailsPage';
 import SettingsPage from './SettingsPage';
+import AboutPage from './AboutPage';
 import CounterPage from './CounterPage';
 
 const NavIcon = styled(Icon)`
@@ -42,7 +44,7 @@ export default function Layout() {
     <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
       <Flex backgroundColor="white" id="sidebar">
         <Stack w="200px" spacing="20px">
-          <Text fontSize="0.7em" fontWeight="600">
+          <Text fontSize="0.7em" mt={6} fontWeight="600">
             MENU
           </Text>
 
@@ -77,6 +79,12 @@ export default function Layout() {
                 <NavText>Settings</NavText>
               </NavBox>
             </Link>
+            <Link to={routes.ABOUT}>
+              <NavBox>
+                <NavIcon name="info" />
+                <NavText>About</NavText>
+              </NavBox>
+            </Link>
           </Stack>
         </Stack>
       </Flex>
@@ -86,7 +94,9 @@ export default function Layout() {
           <Route path={routes.HISTORY} component={HistoryPage} />
           <Route path={routes.SETTINGS} component={SettingsPage} />
           <Route path={routes.COUNTER} component={CounterPage} />
-          <Route path={routes.ORDERS} component={OrderDetailsPage} />
+          <Route path={routes.ORDERS} component={OrderConfirmationPage} />
+          <Route path={routes.SWAPS} component={SwapDetailsPage} />
+          <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>

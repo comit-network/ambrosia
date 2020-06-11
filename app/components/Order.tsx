@@ -43,10 +43,10 @@ function getVariant(status: string) {
 }
 
 function Order(props: OrderProps) {
-  const { status } = props;
+  const { status, onClick } = props;
 
   return (
-    <HoverFlex>
+    <HoverFlex onClick={onClick}>
       <Box d="flex" alignItems="baseline">
         <Box
           color="gray.500"
