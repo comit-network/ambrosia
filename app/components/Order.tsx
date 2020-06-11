@@ -1,8 +1,35 @@
 import React from 'react';
-import { Badge, Flex, Icon, TagLabel, Box, Tag } from '@chakra-ui/core';
+import PropTypes from 'prop-types';
+import {
+  PseudoBox,
+  Badge,
+  Flex,
+  Icon,
+  TagLabel,
+  Box,
+  Tag
+} from '@chakra-ui/core';
 
 type OrderProps = {
   status: string;
+};
+
+const HoverFlex = ({ children }) => {
+  return (
+    <PseudoBox
+      as={Flex}
+      justifyContent="space-between"
+      bg="white"
+      p={4}
+      mb={3}
+      shadow="md"
+      borderWidth="1px"
+      borderRadius="8px"
+      _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
+    >
+      {children}
+    </PseudoBox>
+  );
 };
 
 const VARIANT_MAP = {
@@ -15,19 +42,11 @@ function getVariant(status: string) {
   return VARIANT_MAP[status.toLowerCase()];
 }
 
-export default function Order(props: OrderProps) {
+function Order(props: OrderProps) {
   const { status } = props;
 
   return (
-    <Flex
-      justifyContent="space-between"
-      bg="white"
-      p={4}
-      mb={3}
-      shadow="md"
-      borderWidth="1px"
-      borderRadius="8px"
-    >
+    <HoverFlex>
       <Box d="flex" alignItems="baseline">
         <Box
           color="gray.500"
@@ -58,6 +77,12 @@ export default function Order(props: OrderProps) {
       <Box mt={1} as="span" color="gray.600" fontSize="sm">
         Rate: 1 BTC = 18274 DAI
       </Box>
-    </Flex>
+    </HoverFlex>
   );
 }
+
+export default Order;
+
+HoverFlex.propTypes = {
+  children: PropTypes.node.isRequired
+};

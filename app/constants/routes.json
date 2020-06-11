@@ -3,5 +3,6 @@
   "COUNTER": "/counter",
   "HISTORY": "/history",
   "EXCHANGE": "/exchange",
-  "SETTINGS": "/settings"
+  "SETTINGS": "/settings",
+  "ORDERS": "/orders/:id"
 }

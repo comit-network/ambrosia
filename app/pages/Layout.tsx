@@ -1,12 +1,13 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Link } from 'react-router-dom';
-import { Flex, PseudoBox, Icon, Stack, Text } from '@chakra-ui/core';
+import { Box, Flex, PseudoBox, Icon, Stack, Text } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
 import DashboardPage from './DashboardPage';
 import HistoryPage from './HistoryPage';
 import ExchangePage from './ExchangePage';
+import OrderDetailsPage from './OrderDetailsPage';
 import SettingsPage from './SettingsPage';
 import CounterPage from './CounterPage';
 
@@ -22,7 +23,7 @@ const NavText = styled(Text)`
 const NavBox = ({ children }) => {
   return (
     <PseudoBox
-      as="Box"
+      as={Box}
       py={3}
       px={4}
       p={3}
@@ -85,6 +86,7 @@ export default function Layout() {
           <Route path={routes.HISTORY} component={HistoryPage} />
           <Route path={routes.SETTINGS} component={SettingsPage} />
           <Route path={routes.COUNTER} component={CounterPage} />
+          <Route path={routes.ORDERS} component={OrderDetailsPage} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>
