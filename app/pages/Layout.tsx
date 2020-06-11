@@ -25,6 +25,8 @@ const NavBox = ({ children }) => {
       as="Box"
       py={3}
       px={4}
+      p={3}
+      display="block"
       rounded="md"
       _hover={{ bg: 'blue.300', color: 'white', cursor: 'pointer' }}
       _focus={{ boxShadow: 'outline' }}
@@ -44,36 +46,36 @@ export default function Layout() {
           </Text>
 
           <Stack w="200px">
-            <NavBox>
-              <Link to={routes.HOME}>
+            <Link to={routes.HOME}>
+              <NavBox>
                 <NavIcon name="calendar" />
                 <NavText>Wallet</NavText>
-              </Link>
-            </NavBox>
-            <NavBox>
-              <Link to={routes.EXCHANGE}>
+              </NavBox>
+            </Link>
+            <Link to={routes.EXCHANGE}>
+              <NavBox>
                 <NavIcon name="repeat" />
                 <NavText>Exchange</NavText>
-              </Link>
-            </NavBox>
-            <NavBox>
-              <Link to={routes.HISTORY}>
+              </NavBox>
+            </Link>
+            <Link to={routes.HISTORY}>
+              <NavBox>
                 <NavIcon name="repeat-clock" />
                 <NavText>History</NavText>
-              </Link>
-            </NavBox>
-            <NavBox>
-              <Link disabled to={routes.COUNTER}>
+              </NavBox>
+            </Link>
+            <Link disabled to={routes.COUNTER}>
+              <NavBox>
                 <NavIcon style={{ opacity: '0.4' }} name="download" />
                 <NavText style={{ opacity: '0.4' }}>Buy Crypto</NavText>
-              </Link>
-            </NavBox>
-            <NavBox>
-              <Link to={routes.SETTINGS}>
+              </NavBox>
+            </Link>
+            <Link to={routes.SETTINGS}>
+              <NavBox>
                 <NavIcon name="settings" />
                 <NavText>Settings</NavText>
-              </Link>
-            </NavBox>
+              </NavBox>
+            </Link>
           </Stack>
         </Stack>
       </Flex>

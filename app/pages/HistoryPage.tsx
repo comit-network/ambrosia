@@ -1,5 +1,6 @@
 import React from 'react';
 import { Heading, Box } from '@chakra-ui/core';
+import { Link } from 'react-router-dom';
 import Order from '../components/Order';
 
 export default function HistoryPage() {
@@ -9,7 +10,10 @@ export default function HistoryPage() {
         Order History
       </Heading>
 
-      <Order status="Pending" />
+      <Link to="/orders/1">
+        <Order status="Pending" />
+      </Link>
+
       <Order status="Failed" />
       <Order status="Success" />
     </Box>
