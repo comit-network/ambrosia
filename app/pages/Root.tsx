@@ -3,7 +3,9 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
-import { Switch, Route } from 'react-router-dom';
+import { Switch, Route, Link } from 'react-router-dom';
+import { Flex, Box, Text, ThemeProvider, CSSReset } from '@chakra-ui/core';
+import customTheme from '../theme';
 import { Store } from '../reducers/types';
 import routes from '../constants/routes.json';
 import HomePage from './HomePage';
@@ -24,15 +26,35 @@ type Props = {
 // Note: App should be the one to contain routes
 
 const Root = ({ store, history }: Props) => (
-  <Provider store={store}>
-    <ConnectedRouter history={history}>
-      {/* TODO: <Sidebar> */}
-      <Switch>
-        <Route path={routes.COUNTER} component={CounterPage} />
-        <Route path={routes.HOME} component={HomePage} />
-      </Switch>
-    </ConnectedRouter>
-  </Provider>
+  <ThemeProvider theme={customTheme}>
+    <CSSReset />
+    <Provider store={store}>
+      <ConnectedRouter history={history}>
+        <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
+          <Flex id="sidebar">
+            <div className="fixed">
+              <h2>
+                <i>Menu</i>
+              </h2>
+
+              <div>
+                <Link to={routes.HOME}>Home</Link>
+              </div>
+              <div>
+                <Link to={routes.COUNTER}>Counter</Link>
+              </div>
+            </div>
+          </Flex>
+          <Flex id="content">
+            <Switch>
+              <Route path={routes.COUNTER} component={CounterPage} />
+              <Route path={routes.HOME} component={HomePage} />
+            </Switch>
+          </Flex>
+        </Flex>
+      </ConnectedRouter>
+    </Provider>
+  </ThemeProvider>
 );
 
 export default hot(Root);
