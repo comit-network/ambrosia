@@ -4,7 +4,7 @@ import { Switch, Route, Link } from 'react-router-dom';
 import { Flex, PseudoBox, Icon, Stack, Text } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
-import WalletPage from './WalletPage';
+import DashboardPage from './DashboardPage';
 import HistoryPage from './HistoryPage';
 import ExchangePage from './ExchangePage';
 import SettingsPage from './SettingsPage';
@@ -83,7 +83,7 @@ export default function Layout() {
           <Route path={routes.HISTORY} component={HistoryPage} />
           <Route path={routes.SETTINGS} component={SettingsPage} />
           <Route path={routes.COUNTER} component={CounterPage} />
-          <Route path={routes.HOME} component={WalletPage} />
+          <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>
     </Flex>

@@ -1,9 +1,19 @@
 import React from 'react';
+import { Heading, Text, Box, Divider } from '@chakra-ui/core';
 
 export default function SettingsPage() {
   return (
-    <div>
-      <h2>This is the Settings page</h2>
-    </div>
+    <Box width="100%">
+      <Heading fontSize="1.8em" mb={8}>
+        Settings
+      </Heading>
+
+      <Box bg="white" p={5} shadow="md" borderWidth="1px">
+        <h2>This is the Settings page</h2>
+        <Text mt={4}>desc</Text>
+
+        <Divider />
+      </Box>
+    </Box>
   );
 }

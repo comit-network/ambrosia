@@ -12309,6 +12309,11 @@ react-spring@^8.0.27:
     "@babel/runtime" "^7.3.1"
     prop-types "^15.5.8"
 
+react-step-progress@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-step-progress/-/react-step-progress-1.0.2.tgz#74d85562e9b0983efc0b194615081579ef287ea0"
+  integrity sha512-x1d0j9axTniMaUBSl+gLsVD8KObwqnif5P/+GnrzAYRuY0SoFWsfGDNMipWkI3ueYiE6Dr2+w7GXjqEw0epSPA==
+
 react-test-renderer@^16.0.0-0, react-test-renderer@^16.12.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-test-renderer/-/react-test-renderer-16.13.1.tgz#de25ea358d9012606de51e012d9742e7f0deabc1"

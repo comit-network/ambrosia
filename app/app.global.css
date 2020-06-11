@@ -15,16 +15,14 @@ body {
 }
 #sidebar {
   order: -1;
-  flex: 0 0 180px;
   min-height: 100vh;
-  padding: 20px;
+  padding: 1.5rem;
 }
 #content {
   width: 100%;
   order: 1;
-  padding: 1rem;
+  padding: 2rem;
 }
 .fixed {
   position: fixed;
-  width: 200px;
 }
