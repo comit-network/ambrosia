@@ -7,7 +7,7 @@ export default function HistoryPage() {
   return (
     <Box width="100%">
       <Heading fontSize="1.8em" mb={8}>
-        Order History
+        History
       </Heading>
 
       <Link to="/swaps/1">

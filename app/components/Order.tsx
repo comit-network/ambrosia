@@ -65,7 +65,7 @@ function Order(props: OrderProps) {
         </Box>
       </Box>
 
-      <Box fontWeight="semibold" isTruncated>
+      <Box fontWeight="semibold">
         <Tag variantColor="cyan" minWidth="8rem">
           <TagLabel>100 DAI</TagLabel>
         </Tag>

@@ -33,7 +33,7 @@ export default function Balances() {
         <Stat>
           <StatLabel>DAI</StatLabel>
           <StatNumber>547</StatNumber>
-          <StatHelpText>$547.00</StatHelpText>
+          <StatHelpText>USD $547.00</StatHelpText>
         </Stat>
       </Flex>
     </StatGroup>
