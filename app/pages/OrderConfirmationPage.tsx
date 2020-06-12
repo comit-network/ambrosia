@@ -29,11 +29,14 @@ export default function OrderConfirmationPage() {
       </Breadcrumb>
 
       <Heading fontSize="1.8em" mb={8}>
-        Viewing Order [id]
+        Confirm your order
       </Heading>
       <Text>
         This is the details for Order
         {orderId}
+        {/* - details about the maker - details about addresses - details
+        about asset tokens and amounts - details about rates - details about
+        expiry - maybe multi-step progress bar that shows next steps */}
       </Text>
 
       <Button variantColor="green">Submit Order</Button>

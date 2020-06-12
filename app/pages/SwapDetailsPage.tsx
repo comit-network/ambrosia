@@ -29,7 +29,7 @@ export default function SwapDetailsPage() {
       </Breadcrumb>
 
       <Heading fontSize="1.8em" mb={8}>
-        Order Details
+        Your order details
       </Heading>
       <Text>
         This is the details for Swap
