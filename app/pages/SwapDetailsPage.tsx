@@ -18,9 +18,7 @@ export default function SwapDetailsPage() {
     <Box width="100%">
       <Breadcrumb>
         <BreadcrumbItem>
-          <Link to={routes.HISTORY}>
-            <BreadcrumbLink>History</BreadcrumbLink>
-          </Link>
+          <Link to={routes.HISTORY}>History</Link>
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage>

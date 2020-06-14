@@ -73,6 +73,18 @@ export default function Layout() {
                 <NavText style={{ opacity: '0.4' }}>Buy Crypto</NavText>
               </NavBox>
             </Link>
+            <Link disabled to={routes.COUNTER}>
+              <NavBox>
+                <NavIcon style={{ opacity: '0.4' }} name="star" />
+                <NavText style={{ opacity: '0.4' }}>Maker</NavText>
+              </NavBox>
+            </Link>
+            <Link disabled to={routes.COUNTER}>
+              <NavBox>
+                <NavIcon style={{ opacity: '0.4' }} name="star" />
+                <NavText style={{ opacity: '0.4' }}>DCA</NavText>
+              </NavBox>
+            </Link>
             <Link to={routes.SETTINGS}>
               <NavBox>
                 <NavIcon name="settings" />

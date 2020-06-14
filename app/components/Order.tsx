@@ -20,7 +20,7 @@ const HoverFlex = ({ children }) => {
       as={Flex}
       justifyContent="space-between"
       bg="white"
-      p={4}
+      p={3}
       mb={3}
       shadow="md"
       borderWidth="1px"
@@ -43,10 +43,10 @@ function getVariant(status: string) {
 }
 
 function Order(props: OrderProps) {
-  const { status, onClick } = props;
+  const { status } = props;
 
   return (
-    <HoverFlex onClick={onClick}>
+    <HoverFlex>
       <Box d="flex" alignItems="baseline">
         <Box
           color="gray.500"
@@ -54,8 +54,8 @@ function Order(props: OrderProps) {
           letterSpacing="wide"
           fontSize="xs"
           textTransform="uppercase"
-          mr="2"
-          mt="2"
+          mr={2}
+          mt={2}
           width="10rem"
         >
           DAI &bull; BTC
@@ -69,13 +69,13 @@ function Order(props: OrderProps) {
         <Tag variantColor="cyan" minWidth="8rem">
           <TagLabel>100 DAI</TagLabel>
         </Tag>
-        <Icon name="arrow-forward" />
+        <Icon name="arrow-forward" mx={2} />
         <Tag variantColor="orange" minWidth="8rem">
-          <TagLabel>1.2 BTC</TagLabel>
+          <TagLabel>0.01 BTC</TagLabel>
         </Tag>
       </Box>
       <Box mt={1} as="span" color="gray.600" fontSize="sm">
-        Rate: 1 BTC = 18274 DAI
+        Rate: 1 BTC = 9393.23 DAI
       </Box>
     </HoverFlex>
   );

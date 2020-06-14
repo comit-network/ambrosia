@@ -66,6 +66,7 @@ export default function SettingsPage() {
           <TabPanel>
             <Box bg="white" p={5} shadow="md" borderWidth="1px">
               <p>Read and display .env contents</p>
+              {/* TODO: https://github.com/sindresorhus/electron-store */}
             </Box>
           </TabPanel>
         </TabPanels>
