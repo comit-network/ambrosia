@@ -9,6 +9,6 @@
     "postinstall": "yarn electron-rebuild"
   },
   "dependencies": {
-    "comit-sdk": "0.14.1"
+    "comit-sdk": "0.17.0"
   }
 }

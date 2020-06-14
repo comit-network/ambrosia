@@ -24,10 +24,7 @@ export default function SwapActions() {
       <Box bg="white" p={5} shadow="md">
         <Collapse startingHeight={80} isOpen={show}>
           <SwapProgress />
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
-          terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
-          labore wes anderson cred nesciunt sapiente ea proident. Links to
-          transactions and steps here.
+          TODO: Links to transactions and more details here.
         </Collapse>
         <Flex alignItems="center" justifyContent="center">
           <Button size="sm" onClick={handleToggle} mt={2}>
