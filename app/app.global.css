@@ -3,28 +3,19 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-html {
-  background: #f9f9f9;
-}
-
-body {
-  margin: 0; /* removes default style */
-}
-.flexitem {
-  display: flex;
-}
 #sidebar {
-  order: -1;
+  width: 225px;
   min-height: 100vh;
   padding: 1.5rem;
+  position: fixed;
 }
 #content {
-  width: 100%;
-  order: 1;
+  min-height: 100vh;
+  width: calc(100% - 225px);
   padding: 2rem;
-}
-.fixed {
-  position: fixed;
+  padding-bottom: 3rem;
+  position: absolute;
+  left: 225px;
 }
 
 /* Swap Progress */

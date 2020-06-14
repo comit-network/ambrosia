@@ -1,24 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import {
-  Flex,
-  Stack,
-  Button,
-  Box,
-  Text,
-  Icon,
-  Tag,
-  TagLabel,
-  Divider,
-  Collapse
-} from '@chakra-ui/core';
-import routes from '../constants/routes.json';
-import SwapProgress from './SwapProgress';
+import React from 'react';
+import { Box, Text, Icon, Tag, TagLabel } from '@chakra-ui/core';
 
 export default function SwapDetails() {
-  const [show, setShow] = useState(false);
-  const handleToggle = () => setShow(!show);
-
   return (
     <div>
       <Text mb={2} fontSize="0.8em" color="gray.600">
@@ -48,37 +31,6 @@ export default function SwapDetails() {
           <Icon mt="-4px" fontSize="0.8em" name="time" mr={2} />
           <strong>40 minutes</strong> untl this swap expires
         </Text>
-
-        <Divider my={6} />
-
-        <Collapse startingHeight={80} isOpen={show}>
-          <SwapProgress />
-          Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus
-          terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer
-          labore wes anderson cred nesciunt sapiente ea proident. Links to
-          transactions and steps here.
-        </Collapse>
-        <Flex alignItems="center" justifyContent="center">
-          <Button size="sm" onClick={handleToggle} mt={2}>
-            View {show ? 'Less' : 'More'} Details
-          </Button>
-        </Flex>
-
-        <Divider my={6} />
-
-        <Stack mt={6} isInline>
-          <Link
-            style={{ width: '100% ', marginRight: '1rem' }}
-            to={routes.EXCHANGE}
-          >
-            <Button variantColor="teal" variant="outline" width="100%">
-              Refund
-            </Button>
-          </Link>
-          <Button leftIcon="check" variantColor="blue" shadow="sm" width="100%">
-            Redeem
-          </Button>
-        </Stack>
       </Box>
     </div>
   );

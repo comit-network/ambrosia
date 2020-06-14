@@ -43,12 +43,12 @@ export default function Layout() {
   return (
     <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
       <Flex backgroundColor="white" id="sidebar">
-        <Stack w="200px" spacing="20px">
+        <Stack spacing="20px">
           <Text fontSize="0.7em" mt={6} fontWeight="600">
             MENU
           </Text>
 
-          <Stack w="200px">
+          <Stack w="175px">
             <Link to={routes.HOME}>
               <NavBox>
                 <NavIcon name="calendar" />

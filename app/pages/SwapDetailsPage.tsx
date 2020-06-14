@@ -10,6 +10,7 @@ import {
 import routes from '../constants/routes.json';
 import Maker from '../components/Maker';
 import SwapDetails from '../components/SwapDetails';
+import SwapActions from '../components/SwapActions';
 
 export default function SwapDetailsPage() {
   const { id: swapId } = useParams();
@@ -35,6 +36,10 @@ export default function SwapDetailsPage() {
       <br />
 
       <SwapDetails />
+
+      <br />
+
+      <SwapActions />
     </Box>
   );
 }
