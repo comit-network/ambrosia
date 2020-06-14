@@ -12,7 +12,9 @@ import {
   BreadcrumbLink,
   Link as HTMLLink,
   Tag,
-  TagLabel
+  TagLabel,
+  Alert,
+  AlertIcon
 } from '@chakra-ui/core';
 import routes from '../constants/routes.json';
 
@@ -87,7 +89,7 @@ export default function OrderConfirmationPage() {
         </Text>
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="time" mr={2} />
-          <strong>15 minutes</strong> remaining
+          <strong>15 minutes</strong> untl this offer expires
         </Text>
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="view" mr={2} />
@@ -95,9 +97,39 @@ export default function OrderConfirmationPage() {
         </Text>
       </Box>
 
-      <Button leftIcon="check" mt={8} variantColor="blue" float="right">
-        Submit Order
-      </Button>
+      <Alert status="info" mt={2}>
+        <AlertIcon />
+        <Text>
+          <strong>Next steps:</strong> After you submit your order, you and the
+          maker will start a swap.{' '}
+          <HTMLLink textDecoration="underline" color="cyan.800" href="#">
+            Learn more.
+          </HTMLLink>
+        </Text>
+      </Alert>
+
+      <Link to="/swaps/1">
+        <Button
+          leftIcon="check"
+          mt={8}
+          variantColor="blue"
+          float="right"
+          shadow="sm"
+        >
+          Submit Order
+        </Button>
+      </Link>
+      <Link to={routes.EXCHANGE}>
+        <Button
+          mt={8}
+          mr={4}
+          variantColor="teal"
+          float="right"
+          variant="outline"
+        >
+          Cancel
+        </Button>
+      </Link>
     </Box>
   );
 }

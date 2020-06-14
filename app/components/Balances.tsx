@@ -24,13 +24,13 @@ export default function Balances() {
           <Stat>
             <StatLabel>BTC</StatLabel>
             <StatNumber>1.546</StatNumber>
-            <StatHelpText>USD $15,670</StatHelpText>
+            <StatHelpText>USD $15,670.23</StatHelpText>
           </Stat>
 
           <Stat>
             <StatLabel>ETH</StatLabel>
             <StatNumber>0.546</StatNumber>
-            <StatHelpText>USD $370</StatHelpText>
+            <StatHelpText>USD $370.32</StatHelpText>
           </Stat>
 
           <Stat>

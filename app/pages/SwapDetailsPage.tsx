@@ -22,12 +22,12 @@ export default function SwapDetailsPage() {
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink href="#">Order [id]</BreadcrumbLink>
+          <BreadcrumbLink href="#">Swap [id]</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
 
       <Heading fontSize="1.8em" mb={8}>
-        Your order details
+        Your swap details
       </Heading>
       <Text>
         This is the details for Swap
