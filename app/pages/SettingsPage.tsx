@@ -98,12 +98,12 @@ export default function SettingsPage() {
                   <FormLabel>ERC20_CONTRACT_ADDRESS</FormLabel>
                   <Input value={ERC20_CONTRACT_ADDRESS} isReadOnly />
                 </FormControl>
-              </Stack>
 
-              <FormControl>
-                <FormLabel>HTTP_URL_CND</FormLabel>
-                <Input value={HTTP_URL_CND} isReadOnly />
-              </FormControl>
+                <FormControl>
+                  <FormLabel>HTTP_URL_CND</FormLabel>
+                  <Input value={HTTP_URL_CND} isReadOnly />
+                </FormControl>
+              </Stack>
             </Box>
           </TabPanel>
         </TabPanels>

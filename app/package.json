@@ -4,6 +4,11 @@
   "version": "0.0.1",
   "description": "COMIT Taker UI Desktop App.",
   "main": "./main.prod.js",
+  "author": {
+    "name": "COMIT Team",
+    "email": "hello@comit.network",
+    "url": "https://github.com/comit-network"
+  },
   "scripts": {
     "electron-rebuild": "node -r ../internals/scripts/BabelRegister.js ../internals/scripts/ElectronRebuild.js",
     "postinstall": "yarn electron-rebuild"
