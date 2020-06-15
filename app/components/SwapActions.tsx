@@ -40,7 +40,7 @@ export default function SwapActions() {
             to={routes.EXCHANGE}
           >
             <Button variantColor="teal" variant="outline" width="100%">
-              Refund
+              Back
             </Button>
           </Link>
           <Button leftIcon="check" variantColor="blue" shadow="sm" width="100%">
