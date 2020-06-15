@@ -1,31 +1,33 @@
+import { BigNumber } from 'comit-sdk';
+
 export type Action = SetBTCBalance | SetETHBalance | SetDAIBalance;
 
 interface SetBTCBalance {
   kind: 'setBTCBalance';
-  value: number;
+  value: BigNumber;
 }
 
-export const setBTCBalance = (value: number): SetBTCBalance => ({
+export const setBTCBalance = (value: BigNumber): SetBTCBalance => ({
   kind: 'setBTCBalance',
   value
 });
 
 interface SetETHBalance {
   kind: 'setETHBalance';
-  value: number;
+  value: BigNumber;
 }
 
-export const setETHBalance = (value: number): SetETHBalance => ({
+export const setETHBalance = (value: BigNumber): SetETHBalance => ({
   kind: 'setETHBalance',
   value
 });
 
 interface SetDAIBalance {
   kind: 'setDAIBalance';
-  value: number;
+  value: BigNumber;
 }
 
-export const setDAIBalance = (value: number): SetDAIBalance => ({
+export const setDAIBalance = (value: BigNumber): SetDAIBalance => ({
   kind: 'setDAIBalance',
   value
 });

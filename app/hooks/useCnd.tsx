@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { Cnd } from 'comit-sdk';
 
 interface CndContextProps {
@@ -43,11 +42,6 @@ export const CndProvider: React.FunctionComponent<CndProviderProps> = ({
   const value = { cnd, loading, loaded };
 
   return <CndContext.Provider value={value}>{children}</CndContext.Provider>;
-};
-
-CndProvider.propTypes = {
-  url: PropTypes.string.isRequired,
-  children: PropTypes.node.isRequired
 };
 
 export const useCnd = () => useContext(CndContext);

@@ -17,11 +17,21 @@ export default function Maker() {
       <Box bg="white" p={5} shadow="md">
         <Heading fontSize="1.8em">
           Maker Bob
-          <Tooltip hasArrow label="Maker reviewed by CoBlox" placement="top">
-            <Icon ml={2} fontSize="0.6em" opacity="0.6" name="view" />
+          <Tooltip
+            hasArrow
+            aria-label="Maker reviewed by CoBlox"
+            label="Maker reviewed by CoBlox"
+            placement="top"
+          >
+            <Icon ml={2} fontSize="0.6em" opacity={0.6} name="view" />
           </Tooltip>
-          <Tooltip hasArrow label="User verified by Keybase" placement="top">
-            <Icon ml={2} fontSize="0.6em" opacity="0.6" name="check-circle" />
+          <Tooltip
+            hasArrow
+            aria-label="User verified by Keybase"
+            label="User verified by Keybase"
+            placement="top"
+          >
+            <Icon ml={2} fontSize="0.6em" opacity={0.6} name="check-circle" />
           </Tooltip>
         </Heading>
         <Text>

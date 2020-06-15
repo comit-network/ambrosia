@@ -1,5 +1,5 @@
 import React from 'react';
-import { Box, Text } from '@chakra-ui/core';
+import { Box } from '@chakra-ui/core';
 
 export default function SwapProgress() {
   return (

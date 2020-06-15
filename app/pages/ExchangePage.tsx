@@ -22,10 +22,11 @@ export default function ExchangePage() {
         Available Orders
         <Tooltip
           hasArrow
+          aria-label="You can pick and choose any order below to proceed with a swap."
           label="You can pick and choose any order below to proceed with a swap."
           placement="right"
         >
-          <Icon ml={2} opacity="0.2" name="question" />
+          <Icon ml={2} opacity={0.2} name="question" />
         </Tooltip>
       </Heading>
 

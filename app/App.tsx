@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
-import { ThemeProvider, CSSReset, Box, Flex } from '@chakra-ui/core';
+import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
 import { Store } from './reducers/types';

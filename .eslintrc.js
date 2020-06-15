@@ -3,7 +3,8 @@ module.exports = {
   rules: {
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
-    'react/jsx-one-expression-per-line': 'off'
+    'react/jsx-one-expression-per-line': 'off',
+    'react/prop-types': 'off'
   },
   settings: {
     'import/resolver': {

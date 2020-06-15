@@ -3,7 +3,8 @@ import PropTypes from 'prop-types';
 // import { InMemoryBitcoinWallet } from 'comit-sdk';
 
 interface BitcoinWalletContextProps {
-  wallet: InMemoryBitcoinWallet;
+  // wallet: InMemoryBitcoinWallet;
+  wallet: object;
   loading: boolean;
   loaded: boolean;
 }
@@ -17,7 +18,8 @@ export const BitcoinWalletContext = createContext<BitcoinWalletContextProps>({
 // TODO: can add props here for e.g. wallet uris
 // ({ params, children })
 export const BitcoinWalletProvider: React.FC = ({ children }) => {
-  const [wallet, setWallet] = useState(null);
+  // const [wallet, setWallet] = useState({});
+  const [wallet] = useState({});
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
