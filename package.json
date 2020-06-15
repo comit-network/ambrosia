@@ -96,10 +96,14 @@
     },
     "publish": {
       "provider": "github",
-      "owner": "TODO",
-      "repo": "TODO",
+      "owner": "comit-network",
+      "repo": "taker-ui",
       "private": false
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/comit-network/taker-ui.git"
   },
   "jest": {
     "testURL": "http://localhost/",

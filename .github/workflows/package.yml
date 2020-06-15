@@ -45,7 +45,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          yarn package
+          yarn package-ci
 
       # TODO: CI should use https://github.com/marketplace/actions/upload-files-to-a-github-release
       # because of artifact storage limits
