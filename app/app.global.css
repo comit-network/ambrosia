@@ -80,6 +80,8 @@
 .multi-steps > li.is-active::before {
   background-color: #fff;
   border-color: #63b3ed;
+}
+.multi-steps > li.is-active + li::before {
   animation: pulse 2s infinite;
 }
 .multi-steps > li.is-active ~ li::before {
