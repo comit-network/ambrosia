@@ -1,7 +1,7 @@
 {
   "name": "taker-ui",
   "productName": "TakerUI",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "COMIT Taker UI Desktop App.",
   "main": "./main.prod.js",
   "author": {

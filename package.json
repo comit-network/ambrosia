@@ -1,7 +1,6 @@
 {
   "name": "taker-ui",
   "productName": "TakerUI",
-  "version": "0.0.1",
   "description": "COMIT Taker UI Desktop App.",
   "scripts": {
     "comit:env": "node ./app/scripts/importComitEnv.js",
