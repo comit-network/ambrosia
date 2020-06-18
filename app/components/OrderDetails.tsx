@@ -33,31 +33,6 @@ export default function OrderDetails() {
           <Icon mt="-4px" fontSize="0.8em" name="time" mr={2} />
           <strong>15 minutes</strong> untl this offer expires
         </Text>
-        <Text color="teal.800">
-          <Icon mt="-4px" fontSize="0.8em" name="view" mr={2} />
-          <strong>2</strong> takers
-        </Text>
-
-        <Stack mt={6} isInline>
-          <Link
-            style={{ width: '100% ', marginRight: '1rem' }}
-            to={routes.EXCHANGE}
-          >
-            <Button variantColor="teal" variant="outline" width="100%">
-              Cancel
-            </Button>
-          </Link>
-          <Link style={{ width: '100% ' }} to="/swaps/1">
-            <Button
-              leftIcon="check"
-              variantColor="blue"
-              shadow="sm"
-              width="100%"
-            >
-              Submit Order
-            </Button>
-          </Link>
-        </Stack>
       </Box>
     </div>
   );

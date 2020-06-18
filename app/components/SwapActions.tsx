@@ -23,7 +23,7 @@ export default function SwapActions() {
       </Text>
       <Box bg="white" p={5} shadow="md">
         <Collapse startingHeight={80} isOpen={show}>
-          <SwapProgress />
+          <SwapProgress started />
           TODO: Links to transactions and more details here.
         </Collapse>
         <Flex alignItems="center" justifyContent="center">

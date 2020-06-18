@@ -9,11 +9,15 @@ import {
   BreadcrumbLink,
   Link as HTMLLink,
   Alert,
-  AlertIcon
+  AlertIcon,
+  Divider,
+  Stack,
+  Button
 } from '@chakra-ui/core';
 import routes from '../constants/routes.json';
 import Maker from '../components/Maker';
 import OrderDetails from '../components/OrderDetails';
+import SwapProgress from '../components/SwapProgress';
 
 export default function OrderConfirmationPage() {
   const { id: orderId } = useParams();
@@ -43,16 +47,48 @@ export default function OrderConfirmationPage() {
 
       <OrderDetails />
 
-      <Alert status="info" mt={2}>
-        <AlertIcon />
-        <Text>
-          <strong>Next steps:</strong> After you submit your order, you and the
-          maker will start a swap.{' '}
-          <HTMLLink textDecoration="underline" color="cyan.800" href="#">
-            Learn more.
-          </HTMLLink>
-        </Text>
-      </Alert>
+      <br />
+
+      <Text mb={2} fontSize="0.8em" color="gray.600">
+        Swap Progress
+      </Text>
+      <Box bg="white" p={5} shadow="md">
+        <Alert status="info" mb={6}>
+          <AlertIcon />
+          <Text>
+            <strong>Next steps:</strong> After you submit your order, you and
+            the maker will start a swap.{' '}
+            <HTMLLink textDecoration="underline" color="cyan.800" href="#">
+              Learn more.
+            </HTMLLink>
+          </Text>
+        </Alert>
+
+        <SwapProgress />
+
+        <Divider my={4} />
+
+        <Stack mt={6} isInline>
+          <Link
+            style={{ width: '100% ', marginRight: '1rem' }}
+            to={routes.EXCHANGE}
+          >
+            <Button variantColor="teal" variant="outline" width="100%">
+              Cancel
+            </Button>
+          </Link>
+          <Link style={{ width: '100% ' }} to="/swaps/1">
+            <Button
+              leftIcon="check"
+              variantColor="blue"
+              shadow="sm"
+              width="100%"
+            >
+              Submit Order
+            </Button>
+          </Link>
+        </Stack>
+      </Box>
     </Box>
   );
 }
