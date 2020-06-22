@@ -1,5 +1,4 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import { EthereumWallet } from 'comit-sdk';
 import Store from 'electron-store';
 
@@ -15,9 +14,14 @@ export const EthereumWalletContext = createContext<EthereumWalletContextProps>({
   loaded: false
 });
 
-// TODO: can add props here for e.g. wallet uris
-// ({ params, children })
-export const EthereumWalletProvider: React.FC = ({ children }) => {
+export interface EthereumWalletProviderProps {
+  settings: Store;
+}
+
+export const EthereumWalletProvider: React.FC<EthereumWalletProviderProps> = ({
+  settings,
+  children
+}) => {
   const [wallet, setWallet] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loaded, setLoaded] = useState(false);
@@ -25,8 +29,6 @@ export const EthereumWalletProvider: React.FC = ({ children }) => {
   useEffect(() => {
     async function initializeEthereumWallet() {
       setLoading(true);
-
-      const settings = new Store();
 
       const w = new EthereumWallet(
         settings.get('ETHEREUM_NODE_HTTP_URL'),
@@ -51,10 +53,6 @@ export const EthereumWalletProvider: React.FC = ({ children }) => {
       {children}
     </EthereumWalletContext.Provider>
   );
-};
-
-EthereumWalletProvider.propTypes = {
-  children: PropTypes.node.isRequired
 };
 
 export const useEthereumWallet = () => useContext(EthereumWalletContext);

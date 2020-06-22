@@ -27,13 +27,13 @@ function initAppSettings(): Store {
   return settings;
 }
 
-initAppSettings();
+const settings = initAppSettings();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 document.addEventListener('DOMContentLoaded', () =>
   render(
     <AppContainer>
-      <App store={reduxStore} history={history} />
+      <App store={reduxStore} history={history} settings={settings} />
     </AppContainer>,
     document.getElementById('root')
   )
