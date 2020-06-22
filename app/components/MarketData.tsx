@@ -51,8 +51,8 @@ export default function MarketData() {
         </Flex>
       </StatGroup>
       <Text mt={2} fontSize="0.7em" float="left" color="gray.600">
-        <Icon name="info" mt="-2px" color="gray.300" mr={1} /> Live market data
-        from CoinMarketCap &bull; Last updated 4 minutes ago.
+        <Icon name="info" mt="-2px" color="gray.300" mr={1} /> Last 24h market
+        data from CoinMarketCap &bull; Last updated 4 minutes ago.
       </Text>
     </div>
   );

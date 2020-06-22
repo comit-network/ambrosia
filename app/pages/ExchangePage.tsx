@@ -12,10 +12,7 @@ export default function ExchangePage() {
       </Heading>
 
       <Heading fontSize="1.4em" mt={8} mb={4}>
-        Market Data{' '}
-        <Text display="inline" opacity={0.3}>
-          (24h)
-        </Text>
+        Market Data
       </Heading>
       <MarketData />
 

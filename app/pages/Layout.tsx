@@ -52,7 +52,7 @@ export default function Layout() {
             <Link to={routes.HOME}>
               <NavBox>
                 <NavIcon name="calendar" />
-                <NavText>Wallet</NavText>
+                <NavText>Dashboard</NavText>
               </NavBox>
             </Link>
             <Link to={routes.EXCHANGE}>

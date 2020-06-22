@@ -9,14 +9,20 @@ export default function DashboardPage() {
   return (
     <Box width="100%">
       <Heading fontSize="1.8em" mb={8}>
-        My Wallet
+        Dashboard
       </Heading>
 
+      <Heading fontSize="1.4em" mt={8} mb={4}>
+        My Wallet
+      </Heading>
       <Balances />
 
       <Box mt={58}>
+        <Heading fontSize="1.4em" mt={8} mb={4}>
+          Active Orders
+        </Heading>
         <Flex justifyContent="center" alignItems="center">
-          <Image src={browseImage} size="15rem" />
+          <Image src={browseImage} size="12rem" />
         </Flex>
         <Text textAlign="center" fontWeight="600">
           Choose an order to get started

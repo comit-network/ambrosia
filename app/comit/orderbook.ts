@@ -12,6 +12,8 @@ export default class Orderbook {
    */
   // eslint-disable-next-line class-methods-use-this
   async getOrders() {
+    // TODO: read env
+    // TODO: use axios to call cnd url
     const orders = {
       entities: [
         {
