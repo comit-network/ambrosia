@@ -67,36 +67,18 @@ export default function Layout() {
                 <NavText>History</NavText>
               </NavBox>
             </Link>
-            <Link to={routes.COUNTER}>
-              <NavBox>
-                <NavIcon style={{ opacity: '0.4' }} name="download" />
-                <NavText style={{ opacity: '0.4' }}>Buy Crypto</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.COUNTER}>
-              <NavBox>
-                <NavIcon style={{ opacity: '0.4' }} name="star" />
-                <NavText style={{ opacity: '0.4' }}>Maker</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.COUNTER}>
-              <NavBox>
-                <NavIcon style={{ opacity: '0.4' }} name="star" />
-                <NavText style={{ opacity: '0.4' }}>DCA</NavText>
-              </NavBox>
-            </Link>
             <Link to={routes.SETTINGS}>
               <NavBox>
                 <NavIcon name="settings" />
                 <NavText>Settings</NavText>
               </NavBox>
             </Link>
-            <Link to={routes.ABOUT}>
+            {/* <Link to={routes.ABOUT}>
               <NavBox>
                 <NavIcon name="info" />
                 <NavText>About</NavText>
               </NavBox>
-            </Link>
+            </Link> */}
           </Stack>
         </Stack>
       </Flex>

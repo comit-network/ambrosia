@@ -6,33 +6,31 @@ import { History } from 'history';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
-import { Store } from './reducers/types';
+import { Store as ReduxStore } from './reducers/types';
 import Layout from './pages/Layout';
-// import { WalletStoreProvider } from '../hooks/useWalletStore';
-// import { BitcoinWalletProvider } from '../hooks/useBitcoinWallet';
-// import { EthereumWalletProvider } from '../hooks/useEthereumWallet';
-// import { CndProvider } from '../hooks/useCnd';
-// import { ComitClientProvider } from '../hooks/useComitClient';
+// import { BitcoinWalletProvider } from './hooks/useBitcoinWallet';
+import { EthereumWalletProvider } from './hooks/useEthereumWallet';
+// import { CndProvider } from './hooks/useCnd';
 
 type Props = {
-  store: Store;
+  store: ReduxStore;
   history: History;
 };
 
-// TODO: Insert all COMITproviders here
-// TODO: Insert Chakra theme provider here
-// Note: App should be the one to contain routes
+// TODO: Insert providers here
 
 const App = ({ store, history }: Props) => (
-  <ThemeProvider theme={customTheme}>
-    <CSSReset />
-    <Provider store={store}>
-      <ConnectedRouter history={history}>
-        {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-        <Layout />
-      </ConnectedRouter>
-    </Provider>
-  </ThemeProvider>
+  <EthereumWalletProvider>
+    <ThemeProvider theme={customTheme}>
+      <CSSReset />
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          {process.platform === 'darwin' ? <AppRegionDrag /> : null}
+          <Layout />
+        </ConnectedRouter>
+      </Provider>
+    </ThemeProvider>
+  </EthereumWalletProvider>
 );
 
 export default hot(App);

@@ -10,8 +10,8 @@ import readComitScriptsEnv from './utils/readComitScriptsEnv';
 
 const reduxStore = configureStore();
 
-// TEMPORARY FOR TESTING PURPOSES: load environment from ~/.create-comit-app/env
-function loadAppSettings() {
+// TEMPORARY: loads environment from ~/.create-comit-app/env
+function initAppSettings(): Store {
   const comitEnv = readComitScriptsEnv();
   const settings = new Store();
   if (!_.isEmpty(comitEnv)) {
@@ -24,17 +24,10 @@ function loadAppSettings() {
   } else {
     console.log('No comit env found');
   }
+  return settings;
 }
-loadAppSettings();
-// const settings = new Store();
-// settings.set('BITCOIN_HD_KEY', '');
-// settings.set('BITCOIN_P2P_URI', '');
-// settings.set('ETHEREUM_KEY', '');
-// settings.set('ETHEREUM_NODE_HTTP_URL', '');
-// settings.set('ERC20_CONTRACT_ADDRESS', '');
-// settings.set('HTTP_URL_CND', '');
-// finish loading environment
 
+initAppSettings();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 document.addEventListener('DOMContentLoaded', () =>

@@ -74,7 +74,7 @@ export default function OrderConfirmationPage() {
             to={routes.EXCHANGE}
           >
             <Button variantColor="teal" variant="outline" width="100%">
-              Cancel
+              Back to Orders
             </Button>
           </Link>
           <Link style={{ width: '100% ' }} to="/swaps/1">
