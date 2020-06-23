@@ -265,7 +265,8 @@
     "redux": "^4.0.5",
     "redux-thunk": "^2.3.0",
     "satoshi-bitcoin-ts": "^0.2.4",
-    "source-map-support": "^0.5.16"
+    "source-map-support": "^0.5.16",
+    "swr": "^0.2.3"
   },
   "devEngines": {
     "node": ">=7.x",

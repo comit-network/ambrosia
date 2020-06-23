@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { Tooltip, Icon, Divider, Box, Heading, Text } from '@chakra-ui/core';
+import { Tooltip, Icon, Divider, Box, Heading } from '@chakra-ui/core';
 import MarketData from '../components/MarketData';
 import Order from '../components/Order';
 

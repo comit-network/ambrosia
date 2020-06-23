@@ -1,7 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
-import { Stack, Button, Box, Text, Icon, Tag, TagLabel } from '@chakra-ui/core';
-import routes from '../constants/routes.json';
+import { Box, Text, Icon, Tag, TagLabel } from '@chakra-ui/core';
 
 export default function OrderDetails() {
   return (
