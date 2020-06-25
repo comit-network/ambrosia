@@ -1,10 +1,8 @@
-import { Cnd } from 'comit-sdk';
-
 export default class Orderbook {
-  cnd: Cnd;
+  cndURL: string;
 
-  constructor(cnd: Cnd) {
-    this.cnd = cnd;
+  constructor(cndURL: string) {
+    this.cndURL = cndURL;
   }
 
   /**
@@ -31,19 +29,7 @@ export default class Orderbook {
     return orders;
   }
 
-  // async placeOrder(_order_) {
-  //   return 'TODO';
-  // }
-
   // async takeOrder(_orderId_) {
-  //   return 'TODO';
-  // }
-
-  // async getMakers() {
-  //   return 'TODO';
-  // }
-
-  // async subscribe(_makerId_, _pair_) {
   //   return 'TODO';
   // }
 }

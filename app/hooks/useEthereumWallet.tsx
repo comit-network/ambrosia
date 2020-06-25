@@ -36,9 +36,6 @@ export const EthereumWalletProvider: React.FC<EthereumWalletProviderProps> = ({
       );
       setWallet(w);
 
-      // const ethBalance = await w.getBalance();
-      // console.log(ethBalance.toString());
-
       setLoading(false);
       setLoaded(true);
     }

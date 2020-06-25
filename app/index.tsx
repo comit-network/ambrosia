@@ -27,6 +27,7 @@ function initAppSettings(): Store {
   return settings;
 }
 
+// TODO: convert this into a provider
 const settings = initAppSettings();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 

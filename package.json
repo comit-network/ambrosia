@@ -253,6 +253,7 @@
     "electron-store": "^5.2.0",
     "electron-updater": "^4.2.0",
     "emotion-theming": "^10.0.27",
+    "ethers": "^5.0.2",
     "history": "^4.10.1",
     "lodash": "^4.17.15",
     "moment": "^2.26.0",
@@ -266,7 +267,8 @@
     "redux-thunk": "^2.3.0",
     "satoshi-bitcoin-ts": "^0.2.4",
     "source-map-support": "^0.5.16",
-    "swr": "^0.2.3"
+    "swr": "^0.2.3",
+    "unstated-next": "^1.1.0"
   },
   "devEngines": {
     "node": ">=7.x",

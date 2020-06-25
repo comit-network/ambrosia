@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Flex,
   Stat,
@@ -9,8 +9,98 @@ import {
   Text,
   Icon
 } from '@chakra-ui/core';
+import { ethers } from 'ethers';
+import Store from 'electron-store';
+import useSWR from 'swr';
+import { useEthereumWallet } from '../hooks/useEthereumWallet';
+import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 
 export default function Balances() {
+  const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
+  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
+  const [ETHBalance, setETHBalance] = useState(null);
+  const [DAIBalance, setDAIBalance] = useState(null);
+  const [BTCBalance, setBTCBalance] = useState(null);
+
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const { data: BTCPriceData } = useSWR(
+    'https://api.coincap.io/v2/rates/bitcoin',
+    fetcher
+  );
+  const { data: ETHPriceData } = useSWR(
+    'https://api.coincap.io/v2/rates/ethereum',
+    fetcher
+  );
+  const { data: DAIPriceData } = useSWR(
+    'https://api.coincap.io/v2/rates/multi-collateral-dai',
+    fetcher
+  );
+
+  const [BTCFiatAmount, setBTCFiatAmount] = useState(null);
+  const [ETHFiatAmount, setETHFiatAmount] = useState(null);
+  const [DAIFiatAmount, setDAIFiatAmount] = useState(null);
+
+  const settings = new Store();
+
+  useEffect(() => {
+    async function loadETHBalance() {
+      const eth = await ETHWallet.getBalance();
+      setETHBalance(ethers.utils.formatEther(eth));
+    }
+
+    loadETHBalance();
+  }, [ETHLoaded]);
+
+  useEffect(() => {
+    async function loadDAIBalance() {
+      const dai = await ETHWallet.getErc20Balance(
+        settings.get('ERC20_CONTRACT_ADDRESS')
+      );
+      setDAIBalance(dai.toString());
+    }
+
+    loadDAIBalance();
+  }, [ETHLoaded]);
+
+  useEffect(() => {
+    async function loadBTCBalance() {
+      const BTC = await BTCWallet.getBalance();
+      setBTCBalance(BTC);
+    }
+
+    loadBTCBalance();
+  }, [BTCLoaded]);
+
+  useEffect(() => {
+    async function calculateETHFiatAmount() {
+      if (ETHPriceData) {
+        const rate = ETHPriceData.data.rateUsd;
+        setETHFiatAmount((ETHBalance * rate).toFixed(2));
+      }
+    }
+    calculateETHFiatAmount();
+  }, [ETHBalance]);
+
+  useEffect(() => {
+    async function calculateDAIFiatAmount() {
+      if (DAIPriceData) {
+        const rate = DAIPriceData.data.rateUsd;
+        setDAIFiatAmount((DAIBalance * rate).toFixed(2));
+      }
+    }
+    calculateDAIFiatAmount();
+  }, [DAIBalance]);
+
+  useEffect(() => {
+    async function calculateBTCFiatAmount() {
+      if (BTCPriceData) {
+        const rate = BTCPriceData.data.rateUsd;
+        setBTCFiatAmount((BTCBalance * rate).toFixed(2));
+      }
+    }
+    calculateBTCFiatAmount();
+  }, [BTCBalance]);
+
   return (
     <div>
       <StatGroup>
@@ -23,20 +113,21 @@ export default function Balances() {
         >
           <Stat>
             <StatLabel>BTC</StatLabel>
-            <StatNumber>1.546</StatNumber>
-            <StatHelpText>USD $15,670.23</StatHelpText>
+            <StatNumber>{BTCBalance}</StatNumber>
+            <StatHelpText>USD ${BTCFiatAmount}</StatHelpText>
           </Stat>
 
           <Stat>
+            {/* TODO: pull actual wallet balance */}
             <StatLabel>ETH</StatLabel>
-            <StatNumber>0.546</StatNumber>
-            <StatHelpText>USD $370.32</StatHelpText>
+            <StatNumber>{ETHBalance}</StatNumber>
+            <StatHelpText>USD ${ETHFiatAmount}</StatHelpText>
           </Stat>
 
           <Stat>
             <StatLabel>DAI</StatLabel>
-            <StatNumber>547</StatNumber>
-            <StatHelpText>USD $547.00</StatHelpText>
+            <StatNumber>{DAIBalance}</StatNumber>
+            <StatHelpText>USD ${DAIFiatAmount}</StatHelpText>
           </Stat>
         </Flex>
       </StatGroup>

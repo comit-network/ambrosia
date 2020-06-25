@@ -1,17 +1,17 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { ComitClient } from 'comit-sdk';
-// import { useBitcoinWallet } from './useBitcoinWallet';
+import { useBitcoinWallet } from './useBitcoinWallet';
 import { useEthereumWallet } from './useEthereumWallet';
 import { useCnd } from './useCnd';
 
 export const ComitClientContext = createContext({});
 
 export const ComitClientProvider: React.FunctionComponent = ({ children }) => {
-  // const {
-  //   wallet: bitcoinWallet,
-  //   loaded: bitcoinWalletLoaded
-  // } = useBitcoinWallet();
+  const {
+    wallet: bitcoinWallet,
+    loaded: bitcoinWalletLoaded
+  } = useBitcoinWallet();
   const {
     wallet: ethereumWallet,
     loaded: ethereumWalletLoaded
@@ -27,7 +27,7 @@ export const ComitClientProvider: React.FunctionComponent = ({ children }) => {
       setLoading(true);
 
       const cl = new ComitClient(cnd)
-        // .withBitcoinWallet(bitcoinWallet)
+        .withBitcoinWallet(bitcoinWallet)
         .withEthereumWallet(ethereumWallet);
       setComitClient(cl);
 
@@ -36,11 +36,11 @@ export const ComitClientProvider: React.FunctionComponent = ({ children }) => {
     }
     if (ethereumWalletLoaded && cndLoaded) initializeComitClient();
   }, [
-    // bitcoinWalletLoaded,
+    bitcoinWalletLoaded,
     ethereumWalletLoaded,
     cndLoaded,
     cnd,
-    // bitcoinWallet,
+    bitcoinWallet,
     ethereumWallet
   ]);
 

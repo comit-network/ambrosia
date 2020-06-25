@@ -11,12 +11,11 @@ export default function ExchangePage() {
         Exchange
       </Heading>
 
-      <Heading fontSize="1.4em" mt={8} mb={4}>
+      {/* <Heading fontSize="1.4em" mt={8} mb={4}>
         Market Data
       </Heading>
       <MarketData />
-
-      <Divider p={6} />
+      <Divider p={6} /> */}
 
       <Heading fontSize="1.4em" mt={8} mb={4}>
         Available Orders
