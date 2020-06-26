@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import {
   Box,
@@ -14,13 +14,39 @@ import {
   Stack,
   Button
 } from '@chakra-ui/core';
+import useSWR from 'swr';
+import Store from 'electron-store';
 import routes from '../constants/routes.json';
 import Maker from '../components/Maker';
 import OrderDetails from '../components/OrderDetails';
 import SwapProgress from '../components/SwapProgress';
 
+const settings = new Store();
+
 export default function OrderConfirmationPage() {
   const { id: orderId } = useParams();
+
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const { data: takerOrdersResponse } = useSWR(
+    `${settings.get('HTTP_URL_CND')}/orders`,
+    fetcher
+  );
+  const [order, setOrder] = useState({});
+
+  useEffect(() => {
+    async function parseOrders() {
+      if (takerOrdersResponse) {
+        const parsedOrders = takerOrdersResponse.entities.map(r => {
+          return r.properties;
+        });
+        const parsedOrder = parsedOrders.filter(o => o.id === orderId);
+        setOrder(parsedOrder[0] || null); // TODO: handle order not found
+      }
+    }
+    // TODO: API makes no sense here
+    // We need to GET /orders because GET /orders/:id returns nothing
+    parseOrders();
+  }, [takerOrdersResponse]);
 
   return (
     <Box width="100%">
@@ -38,11 +64,11 @@ export default function OrderConfirmationPage() {
         Confirm your order
       </Heading>
 
-      <Maker />
+      <Maker id={order.maker} />
 
       <br />
 
-      <OrderDetails />
+      <OrderDetails details={order} />
 
       <br />
 

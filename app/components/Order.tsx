@@ -92,7 +92,7 @@ function Order(props: OrderProps) {
         </Tag>
       </Box>
       <Box mt={1} as="span" color="gray.600" fontSize="sm">
-        Expires in {properties.absolute_expiry}s
+        Expires in {properties.absolute_expiry / 60} mins
       </Box>
     </HoverFlex>
   );

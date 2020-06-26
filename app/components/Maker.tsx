@@ -1,5 +1,6 @@
 import React from 'react';
 import {
+  Flex,
   Box,
   Heading,
   Text,
@@ -8,15 +9,26 @@ import {
   Link as HTMLLink
 } from '@chakra-ui/core';
 
-export default function Maker() {
+type MakerProps = {
+  id: string;
+};
+
+export default function Maker({ id }: MakerProps) {
   return (
     <div>
       <Text mb={2} fontSize="0.8em" color="gray.600">
         Maker Details
       </Text>
       <Box bg="white" p={5} shadow="md">
-        <Heading fontSize="1.8em">
-          Maker Bob
+        <Heading fontSize="1em">{id}</Heading>
+        <Text>
+          Nodes you can trust. The leading maker in the COMIT network.
+        </Text>
+        <HTMLLink color="teal.500" href="https://comit.network" isExternal>
+          <Icon mt="-4px" fontSize="0.7em" name="link" mr={1} />
+          https://mywebsite.io
+        </HTMLLink>
+        <Flex mt="-5px" flexDirection="row-reverse" fontSize="1.8em">
           <Tooltip
             hasArrow
             aria-label="Maker reviewed by CoBlox"
@@ -31,16 +43,9 @@ export default function Maker() {
             label="User verified by Keybase"
             placement="top"
           >
-            <Icon ml={2} fontSize="0.6em" opacity={0.6} name="check-circle" />
+            <Icon fontSize="0.6em" opacity={0.6} name="check-circle" />
           </Tooltip>
-        </Heading>
-        <Text>
-          Nodes you can trust. The leading maker in the COMIT network.
-        </Text>
-        <HTMLLink color="teal.500" href="https://comit.network" isExternal>
-          <Icon mt="-4px" fontSize="0.7em" name="link" mr={1} />
-          https://mywebsite.io
-        </HTMLLink>
+        </Flex>
       </Box>
     </div>
   );

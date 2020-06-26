@@ -1,7 +1,19 @@
 import React from 'react';
 import { Box, Text, Icon, Tag, TagLabel } from '@chakra-ui/core';
 
-export default function OrderDetails() {
+type OrderDetailsProps = {
+  details: OrderDetails;
+};
+
+type OrderDetails = {
+  absolute_expiry: number;
+  buy_quantity: string;
+  sell_quantity: string;
+};
+
+export default function OrderDetails(props: OrderDetailsProps) {
+  const { details } = props;
+
   return (
     <div>
       <Text mb={2} fontSize="0.8em" color="gray.600">
@@ -10,26 +22,24 @@ export default function OrderDetails() {
       <Box bg="white" p={5} shadow="md">
         <Box fontSize="1.2em" mb={4} width="100%" fontWeight="semibold">
           <Tag p={3} variantColor="cyan" width="45%">
-            <TagLabel>100 DAI</TagLabel>
+            <TagLabel>{details.buy_quantity}</TagLabel>
           </Tag>
           <Icon name="arrow-forward" width="10%" />
           <Tag p={3} variantColor="orange" width="45%">
-            <TagLabel>0.01 BTC</TagLabel>
+            {/* TODO: get token symbol for order.sell_token_contract */}
+            <TagLabel>{details.sell_quantity} DAI</TagLabel>
           </Tag>
         </Box>
 
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="repeat" mr={2} />
-          you will send <strong>100 DAI</strong> and receive{' '}
-          <strong>0.01 BTC</strong>
-        </Text>
-        <Text color="teal.800">
-          <Icon mt="-4px" fontSize="0.8em" name="info" mr={2} />
-          Rate: <strong>1 BTC = 9393.23 DAI</strong> (10% below market rate!)
+          you will send <strong>{details.buy_quantity}</strong> and receive{' '}
+          <strong>{details.sell_quantity} DAI</strong>
         </Text>
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="time" mr={2} />
-          <strong>15 minutes</strong> untl this offer expires
+          <strong>{details.absolute_expiry / 60} mins</strong> until this offer
+          expires
         </Text>
       </Box>
     </div>
