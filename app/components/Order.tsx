@@ -10,10 +10,6 @@ import {
   Tag
 } from '@chakra-ui/core';
 
-type OrderProps = {
-  status: string;
-};
-
 const HoverFlex = ({ children }) => {
   return (
     <PseudoBox
@@ -42,8 +38,21 @@ function getVariant(status: string) {
   return VARIANT_MAP[status.toLowerCase()];
 }
 
+type OrderProperties = {
+  absolute_expiry: number;
+  buy_quantity: string;
+  id: string;
+  maker: string;
+  sell_quantity: string;
+};
+
+type OrderProps = {
+  status?: string;
+  properties: OrderProperties; // TODO: type out ORder
+};
+
 function Order(props: OrderProps) {
-  const { status } = props;
+  const { status, properties } = props;
 
   return (
     <HoverFlex>
@@ -59,23 +68,31 @@ function Order(props: OrderProps) {
           width="10rem"
         >
           DAI &bull; BTC
-          <Badge ml={3} rounded="full" px="2" variantColor={getVariant(status)}>
-            {status}
-          </Badge>
+          {status ? (
+            <Badge
+              ml={3}
+              rounded="full"
+              px="2"
+              variantColor={getVariant(status)}
+            >
+              {status}
+            </Badge>
+          ) : null}
         </Box>
       </Box>
 
       <Box fontWeight="semibold">
         <Tag variantColor="cyan" minWidth="8rem">
-          <TagLabel>100 DAI</TagLabel>
+          <TagLabel>{properties.buy_quantity}</TagLabel>
         </Tag>
         <Icon name="arrow-forward" mx={2} />
         <Tag variantColor="orange" minWidth="8rem">
-          <TagLabel>0.01 BTC</TagLabel>
+          {/* TODO: get token symbol for properties.sell_token_contract */}
+          <TagLabel>{properties.sell_quantity} DAI</TagLabel>
         </Tag>
       </Box>
       <Box mt={1} as="span" color="gray.600" fontSize="sm">
-        Rate: 1 BTC = 9393.23 DAI
+        Expires in {properties.absolute_expiry}s
       </Box>
     </HoverFlex>
   );

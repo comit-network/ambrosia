@@ -11,7 +11,7 @@ import { Store as ReduxStore } from './reducers/types';
 import Layout from './pages/Layout';
 import { BitcoinWalletProvider } from './hooks/useBitcoinWallet';
 import { EthereumWalletProvider } from './hooks/useEthereumWallet';
-// import { CndProvider } from './hooks/useCnd';
+import { CndProvider } from './hooks/useCnd';
 
 type Props = {
   store: ReduxStore;
@@ -23,19 +23,21 @@ type Props = {
 
 const App = ({ store, history, settings }: Props) => {
   return (
-    <BitcoinWalletProvider settings={settings}>
-      <EthereumWalletProvider settings={settings}>
-        <ThemeProvider theme={customTheme}>
-          <CSSReset />
-          <Provider store={store}>
-            <ConnectedRouter history={history}>
-              {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-              <Layout />
-            </ConnectedRouter>
-          </Provider>
-        </ThemeProvider>
-      </EthereumWalletProvider>
-    </BitcoinWalletProvider>
+    <CndProvider settings={settings}>
+      <BitcoinWalletProvider settings={settings}>
+        <EthereumWalletProvider settings={settings}>
+          <ThemeProvider theme={customTheme}>
+            <CSSReset />
+            <Provider store={store}>
+              <ConnectedRouter history={history}>
+                {process.platform === 'darwin' ? <AppRegionDrag /> : null}
+                <Layout />
+              </ConnectedRouter>
+            </Provider>
+          </ThemeProvider>
+        </EthereumWalletProvider>
+      </BitcoinWalletProvider>
+    </CndProvider>
   );
 };
 

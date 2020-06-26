@@ -30,10 +30,7 @@ export default function OrderConfirmationPage() {
         </BreadcrumbItem>
 
         <BreadcrumbItem isCurrentPage>
-          <BreadcrumbLink href="#">
-            Order
-            {orderId}
-          </BreadcrumbLink>
+          <BreadcrumbLink href="#">{`Order ${orderId}`}</BreadcrumbLink>
         </BreadcrumbItem>
       </Breadcrumb>
 

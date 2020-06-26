@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Flex,
   Button,
@@ -19,6 +19,10 @@ import {
   TabPanel
 } from '@chakra-ui/core';
 import Store from 'electron-store';
+import useSWR from 'swr';
+import { useEthereumWallet } from '../hooks/useEthereumWallet';
+import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import { useCnd } from '../hooks/useCnd';
 
 const settings = new Store();
 
@@ -30,6 +34,72 @@ export default function SettingsPage() {
   const ERC20_CONTRACT_ADDRESS = settings.get('ERC20_CONTRACT_ADDRESS');
   const HTTP_URL_CND = settings.get('HTTP_URL_CND');
 
+  const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
+  const [ETHAddress, setETHAddress] = useState(null);
+  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
+  const [BTCAddress, setBTCAddress] = useState(null);
+  const { cnd, loaded: cndLoaded } = useCnd();
+  const [cndDetails, setCndDetails] = useState({
+    id: null,
+    listenAddresses: []
+  });
+
+  useEffect(() => {
+    async function loadETHBalance() {
+      const ethAddress = ETHWallet.getAccount();
+      setETHAddress(ethAddress);
+    }
+
+    loadETHBalance();
+  }, [ETHLoaded]);
+
+  useEffect(() => {
+    async function loadBTCBalance() {
+      const btcAddress = await BTCWallet.getAddress();
+      setBTCAddress(btcAddress);
+    }
+
+    loadBTCBalance();
+  }, [BTCLoaded]);
+
+  useEffect(() => {
+    async function loadCnd() {
+      const id = await cnd.getPeerId();
+      const listenAddresses = await cnd.getPeerListenAddresses();
+
+      setCndDetails({
+        id,
+        listenAddresses
+      });
+    }
+
+    loadCnd();
+  }, [cndLoaded]);
+
+  // Maker settings
+  const MAKER_ETHEREUM_KEY = settings.get('MAKER_ETHEREUM_KEY');
+  const MAKER_BITCOIN_HD_KEY = settings.get('MAKER_BITCOIN_HD_KEY');
+  const MAKER_HTTP_URL_CND = settings.get('MAKER_HTTP_URL_CND');
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const { data: makerCndDetails } = useSWR(
+    settings.get('MAKER_HTTP_URL_CND'),
+    fetcher
+  );
+
+  useEffect(() => {
+    async function loadCnd() {
+      const id = await cnd.getPeerId();
+      const listenAddresses = await cnd.getPeerListenAddresses();
+
+      setCndDetails({
+        id,
+        listenAddresses
+      });
+    }
+
+    loadCnd();
+  }, [cndLoaded]);
+
   return (
     <Box width="100%">
       <Heading fontSize="1.8em" mb={8}>
@@ -40,6 +110,7 @@ export default function SettingsPage() {
         <TabList mb={4}>
           <Tab>General</Tab>
           <Tab>Debug</Tab>
+          <Tab>Maker</Tab>
         </TabList>
         <TabPanels>
           <TabPanel>
@@ -70,13 +141,23 @@ export default function SettingsPage() {
             <Box bg="white" p={5} shadow="md" borderWidth="1px">
               <Stack spacing={4}>
                 <FormControl>
+                  <FormLabel>Cnd Id</FormLabel>
+                  <Input value={cndDetails.id} />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Cnd listen addresses</FormLabel>
+                  <Input value={cndDetails.listenAddresses.toString()} />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Bitcoin Wallet Address</FormLabel>
+                  <Input value={BTCAddress} />
+                </FormControl>
+
+                <FormControl>
                   <FormLabel>BITCOIN_HD_KEY</FormLabel>
-                  <Flex mb={2}>
-                    <Input value={BITCOIN_HD_KEY} />
-                    <Button onClick={console.log} ml={2}>
-                      Set
-                    </Button>
-                  </Flex>
+                  <Input value={BITCOIN_HD_KEY} />
                 </FormControl>
 
                 <FormControl>
@@ -87,6 +168,11 @@ export default function SettingsPage() {
                 <FormControl>
                   <FormLabel>ETHEREUM_KEY</FormLabel>
                   <Input value={ETHEREUM_KEY} isReadOnly />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Ethereum Wallet Address</FormLabel>
+                  <Input value={ETHAddress} />
                 </FormControl>
 
                 <FormControl>
@@ -102,6 +188,39 @@ export default function SettingsPage() {
                 <FormControl>
                   <FormLabel>HTTP_URL_CND</FormLabel>
                   <Input value={HTTP_URL_CND} isReadOnly />
+                </FormControl>
+              </Stack>
+            </Box>
+          </TabPanel>
+          <TabPanel>
+            <Box bg="white" p={5} shadow="md" borderWidth="1px">
+              <Heading>Maker</Heading>
+              <Stack spacing={4}>
+                <FormControl>
+                  <FormLabel>Maker id</FormLabel>
+                  <Input value={makerCndDetails.id} />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>Maker listen addresses</FormLabel>
+                  <Input
+                    value={JSON.stringify(makerCndDetails.listen_addresses)}
+                  />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>MAKER_BITCOIN_HD_KEY</FormLabel>
+                  <Input value={MAKER_BITCOIN_HD_KEY} />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>MAKER_ETHEREUM_KEY</FormLabel>
+                  <Input value={MAKER_ETHEREUM_KEY} isReadOnly />
+                </FormControl>
+
+                <FormControl>
+                  <FormLabel>MAKER_HTTP_URL_CND</FormLabel>
+                  <Input value={MAKER_HTTP_URL_CND} isReadOnly />
                 </FormControl>
               </Stack>
             </Box>

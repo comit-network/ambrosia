@@ -1,10 +1,33 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Tooltip, Icon, Divider, Box, Heading } from '@chakra-ui/core';
-import MarketData from '../components/MarketData';
+import { Text, Tooltip, Icon, Box, Heading } from '@chakra-ui/core';
+import useSWR from 'swr';
+import Store from 'electron-store';
+// import MarketData from '../components/MarketData';
 import Order from '../components/Order';
 
+const settings = new Store();
+
 export default function ExchangePage() {
+  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const { data: takerOrdersResponse } = useSWR(
+    `${settings.get('HTTP_URL_CND')}/orders`,
+    fetcher
+  );
+  const [orders, setOrders] = useState([]);
+
+  useEffect(() => {
+    async function parseOrders() {
+      if (takerOrdersResponse) {
+        const parsedOrders = takerOrdersResponse.entities.map(r => {
+          return r.properties;
+        });
+        setOrders(parsedOrders);
+      }
+    }
+    parseOrders();
+  }, [takerOrdersResponse]);
+
   return (
     <Box width="100%">
       <Heading fontSize="1.8em" mb={8}>
@@ -29,9 +52,15 @@ export default function ExchangePage() {
         </Tooltip>
       </Heading>
 
-      <Link to="/orders/1">
-        <Order status="New" />
-      </Link>
+      {orders ? (
+        orders.map(o => (
+          <Link key={o.id} to={`/orders/${o.id}`}>
+            <Order status="New" properties={o} />
+          </Link>
+        ))
+      ) : (
+        <Text>You have no orders</Text>
+      )}
     </Box>
   );
 }

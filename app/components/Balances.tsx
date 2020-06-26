@@ -48,7 +48,7 @@ export default function Balances() {
       setETHBalance(ethers.utils.formatEther(eth));
     }
 
-    loadETHBalance();
+    if (ETHWallet) loadETHBalance();
   }, [ETHLoaded]);
 
   useEffect(() => {
@@ -59,7 +59,7 @@ export default function Balances() {
       setDAIBalance(dai.toString());
     }
 
-    loadDAIBalance();
+    if (ETHWallet) loadDAIBalance();
   }, [ETHLoaded]);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function Balances() {
       setBTCBalance(BTC);
     }
 
-    loadBTCBalance();
+    if (BTCWallet) loadBTCBalance();
   }, [BTCLoaded]);
 
   useEffect(() => {
