@@ -23,7 +23,7 @@ export default function SwapActions() {
       </Text>
       <Box bg="white" p={5} shadow="md">
         <Collapse startingHeight={80} isOpen={show}>
-          <SwapProgress started />
+          <SwapProgress />
           TODO: Links to transactions and more details here.
         </Collapse>
         <Flex alignItems="center" justifyContent="center">
@@ -43,8 +43,8 @@ export default function SwapActions() {
               Back
             </Button>
           </Link>
-          <Button leftIcon="check" variantColor="blue" shadow="sm" width="100%">
-            Redeem
+          <Button disabled variantColor="blue" shadow="sm" width="100%">
+            Fund
           </Button>
         </Stack>
       </Box>

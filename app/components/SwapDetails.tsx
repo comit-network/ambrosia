@@ -1,7 +1,24 @@
 import React from 'react';
 import { Box, Text, Icon, Tag, TagLabel } from '@chakra-ui/core';
 
-export default function SwapDetails() {
+type SwapDetailsProps = {
+  properties: object;
+};
+
+// TODO: Hack, GET /swaps response should format decimals like GET /orders ?
+function insertDecimals(num, dec) {
+  return (num / 10 ** dec).toFixed(dec);
+}
+
+// TODO: Hack, asset name should be returned by GET /swaps ?
+function getAssetName(n) {
+  if (n === 'hbit') return 'BTC';
+  return 'DAI';
+}
+
+export default function SwapDetails(props: SwapDetailsProps) {
+  const { properties } = props;
+
   return (
     <div>
       <Text mb={2} fontSize="0.8em" color="gray.600">
@@ -10,22 +27,31 @@ export default function SwapDetails() {
       <Box bg="white" p={5} shadow="md">
         <Box fontSize="1.2em" mb={4} width="100%" fontWeight="semibold">
           <Tag p={3} variantColor="cyan" width="45%">
-            <TagLabel>100 DAI</TagLabel>
+            <TagLabel>
+              {/* TODO: hack to remove trailing zeros */}
+              {parseFloat(insertDecimals(properties.buy_quantity, 8))}{' '}
+              {getAssetName(properties.buy_asset)}
+            </TagLabel>
           </Tag>
           <Icon name="arrow-forward" width="10%" />
           <Tag p={3} variantColor="orange" width="45%">
-            <TagLabel>0.01 BTC</TagLabel>
+            <TagLabel>
+              {properties.sell_quantity} {getAssetName(properties.sell_asset)}
+            </TagLabel>
           </Tag>
         </Box>
 
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="repeat" mr={2} />
-          you are sending <strong>100 DAI</strong> to receive{' '}
-          <strong>0.01 BTC</strong>
-        </Text>
-        <Text color="teal.800">
-          <Icon mt="-4px" fontSize="0.8em" name="info" mr={2} />
-          Rate: <strong>1 BTC = 9393.23 DAI</strong> (10% below market rate!)
+          you are sending{' '}
+          <strong>
+            {properties.sell_quantity} {getAssetName(properties.sell_asset)}
+          </strong>{' '}
+          to receive{' '}
+          <strong>
+            {insertDecimals(properties.buy_quantity, 8)}{' '}
+            {getAssetName(properties.buy_asset)}
+          </strong>
         </Text>
         <Text color="teal.800">
           <Icon mt="-4px" fontSize="0.8em" name="time" mr={2} />

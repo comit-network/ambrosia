@@ -142,12 +142,14 @@ export default function SettingsPage() {
               <Stack spacing={4}>
                 <FormControl>
                   <FormLabel>Cnd Id</FormLabel>
-                  <Input value={cndDetails.id} />
+                  <Input value={cndDetails && cndDetails.id} />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>Cnd listen addresses</FormLabel>
-                  <Input value={cndDetails.listenAddresses.toString()} />
+                  <Input
+                    value={cndDetails && cndDetails.listenAddresses.toString()}
+                  />
                 </FormControl>
 
                 <FormControl>
@@ -194,17 +196,18 @@ export default function SettingsPage() {
           </TabPanel>
           <TabPanel>
             <Box bg="white" p={5} shadow="md" borderWidth="1px">
-              <Heading>Maker</Heading>
               <Stack spacing={4}>
                 <FormControl>
                   <FormLabel>Maker id</FormLabel>
-                  <Input value={makerCndDetails.id} />
+                  <Input value={makerCndDetails && makerCndDetails.id} />
                 </FormControl>
 
                 <FormControl>
                   <FormLabel>Maker listen addresses</FormLabel>
                   <Input
-                    value={JSON.stringify(makerCndDetails.listen_addresses)}
+                    value={JSON.stringify(
+                      makerCndDetails && makerCndDetails.listen_addresses
+                    )}
                   />
                 </FormControl>
 

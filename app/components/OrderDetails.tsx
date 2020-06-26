@@ -22,7 +22,10 @@ export default function OrderDetails(props: OrderDetailsProps) {
       <Box bg="white" p={5} shadow="md">
         <Box fontSize="1.2em" mb={4} width="100%" fontWeight="semibold">
           <Tag p={3} variantColor="cyan" width="45%">
-            <TagLabel>{details.buy_quantity}</TagLabel>
+            {/* TODO: hack to remove trailing zeros */}
+            <TagLabel>
+              {parseFloat(details.buy_quantity).toString()} BTC
+            </TagLabel>
           </Tag>
           <Icon name="arrow-forward" width="10%" />
           <Tag p={3} variantColor="orange" width="45%">

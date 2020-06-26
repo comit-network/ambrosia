@@ -83,7 +83,10 @@ function Order(props: OrderProps) {
 
       <Box fontWeight="semibold">
         <Tag variantColor="cyan" minWidth="8rem">
-          <TagLabel>{properties.buy_quantity}</TagLabel>
+          {/* TODO: hack for trailing zeros */}
+          <TagLabel>
+            {parseFloat(properties.buy_quantity).toString()} BTC
+          </TagLabel>
         </Tag>
         <Icon name="arrow-forward" mx={2} />
         <Tag variantColor="orange" minWidth="8rem">

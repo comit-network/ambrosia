@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useHistory } from 'react-router-dom';
+import { ReactReduxContext } from 'react-redux';
+import { push } from 'connected-react-router';
 import {
   Box,
   Heading,
@@ -14,17 +16,27 @@ import {
   Stack,
   Button
 } from '@chakra-ui/core';
+import axios from 'axios';
 import useSWR from 'swr';
 import Store from 'electron-store';
 import routes from '../constants/routes.json';
 import Maker from '../components/Maker';
 import OrderDetails from '../components/OrderDetails';
 import SwapProgress from '../components/SwapProgress';
+import { useEthereumWallet } from '../hooks/useEthereumWallet';
+import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 
 const settings = new Store();
 
-export default function OrderConfirmationPage() {
+type Props = {
+  history: History;
+};
+
+export default function OrderConfirmationPage(props: Props) {
   const { id: orderId } = useParams();
+  const history = useHistory();
+  const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
+  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
 
   const fetcher = (...args) => fetch(...args).then(res => res.json());
   const { data: takerOrdersResponse } = useSWR(
@@ -32,6 +44,27 @@ export default function OrderConfirmationPage() {
     fetcher
   );
   const [order, setOrder] = useState({});
+
+  async function takeOrder() {
+    if (BTCLoaded && ETHLoaded) {
+      const ethAddress = ETHWallet.getAccount();
+      const btcAddress = await BTCWallet.getAddress();
+      // TODO: refund identity should be the chain you are sending
+      // TODO: redeem identity should be the chain you are receiving
+      // Below assumes user is taking a BTC -> DAI offer
+      const res = await axios.post(
+        `${settings.get('HTTP_URL_CND')}/orders/${orderId}/take`,
+        {
+          refund_identity: btcAddress, // BTC wallet address
+          redeem_identity: ethAddress // ETH wallet address
+        }
+      );
+
+      // get headers from response after taking
+      const swapHref = res.headers.location; // e.g. /swaps/f5739e5b-0a9a-41b7-9512-60aeceb15624
+      history.push(swapHref);
+    }
+  }
 
   useEffect(() => {
     async function parseOrders() {
@@ -100,16 +133,15 @@ export default function OrderConfirmationPage() {
               Back to Orders
             </Button>
           </Link>
-          <Link style={{ width: '100% ' }} to="/swaps/1">
-            <Button
-              leftIcon="check"
-              variantColor="blue"
-              shadow="sm"
-              width="100%"
-            >
-              Submit Order
-            </Button>
-          </Link>
+          <Button
+            leftIcon="check"
+            variantColor="blue"
+            shadow="sm"
+            width="100%"
+            onClick={takeOrder}
+          >
+            Submit Order
+          </Button>
         </Stack>
       </Box>
     </Box>

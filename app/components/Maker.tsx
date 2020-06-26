@@ -21,13 +21,11 @@ export default function Maker({ id }: MakerProps) {
       </Text>
       <Box bg="white" p={5} shadow="md">
         <Heading fontSize="1em">{id}</Heading>
-        <Text>
-          Nodes you can trust. The leading maker in the COMIT network.
-        </Text>
-        <HTMLLink color="teal.500" href="https://comit.network" isExternal>
+        <Text>The leading maker in the COMIT network.</Text>
+        {/* <HTMLLink color="teal.500" href="https://comit.network" isExternal>
           <Icon mt="-4px" fontSize="0.7em" name="link" mr={1} />
           https://mywebsite.io
-        </HTMLLink>
+        </HTMLLink> */}
         <Flex mt="-5px" flexDirection="row-reverse" fontSize="1.8em">
           <Tooltip
             hasArrow

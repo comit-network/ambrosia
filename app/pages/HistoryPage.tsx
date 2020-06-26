@@ -1,7 +1,7 @@
 import React from 'react';
-import { Heading, Box } from '@chakra-ui/core';
-import { Link } from 'react-router-dom';
-import Order from '../components/Order';
+import { Heading, Box, Text } from '@chakra-ui/core';
+// import { Link } from 'react-router-dom';
+// import Order from '../components/Order';
 
 export default function HistoryPage() {
   return (
@@ -10,12 +10,13 @@ export default function HistoryPage() {
         History
       </Heading>
 
-      <Link to="/swaps/1">
+      <Text>TODO: no GET /swaps endpoint</Text>
+      {/* <Link to="/swaps/1">
         <Order status="Pending" />
       </Link>
 
       <Order status="Failed" />
-      <Order status="Success" />
+      <Order status="Success" /> */}
     </Box>
   );
 }
