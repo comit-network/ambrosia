@@ -3,7 +3,6 @@ import { Link } from 'react-router-dom';
 import { Text, Tooltip, Icon, Box, Heading } from '@chakra-ui/core';
 import useSWR from 'swr';
 import Store from 'electron-store';
-// import MarketData from '../components/MarketData';
 import Order from '../components/Order';
 
 const settings = new Store();
@@ -34,12 +33,6 @@ export default function ExchangePage() {
         Exchange
       </Heading>
 
-      {/* <Heading fontSize="1.4em" mt={8} mb={4}>
-        Market Data
-      </Heading>
-      <MarketData />
-      <Divider p={6} /> */}
-
       <Heading fontSize="1.4em" mt={8} mb={4}>
         Available Orders
         <Tooltip
@@ -52,14 +45,14 @@ export default function ExchangePage() {
         </Tooltip>
       </Heading>
 
-      {orders ? (
+      {orders && orders.length > 0 ? (
         orders.map(o => (
           <Link key={o.id} to={`/orders/${o.id}`}>
             <Order status="New" properties={o} />
           </Link>
         ))
       ) : (
-        <Text>You have no orders</Text>
+        <Text>You have no orders.</Text>
       )}
     </Box>
   );

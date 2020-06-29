@@ -118,7 +118,6 @@ export default function Balances() {
           </Stat>
 
           <Stat>
-            {/* TODO: pull actual wallet balance */}
             <StatLabel>ETH</StatLabel>
             <StatNumber>{ETHBalance}</StatNumber>
             <StatHelpText>USD ${ETHFiatAmount}</StatHelpText>

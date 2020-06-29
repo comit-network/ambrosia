@@ -46,8 +46,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           yarn package-ci
-      # TODO: CI should use https://github.com/marketplace/actions/upload-files-to-a-github-release
-      # because of artifact storage limits
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'macOS-latest'
         with:

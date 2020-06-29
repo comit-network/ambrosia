@@ -19,8 +19,6 @@ type Props = {
   settings: Store;
 };
 
-// TODO: Insert providers here
-
 const App = ({ store, history, settings }: Props) => {
   return (
     <CndProvider settings={settings}>

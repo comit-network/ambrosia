@@ -22,7 +22,7 @@ function initAppSettings(): Store {
     settings.set('ERC20_CONTRACT_ADDRESS', comitEnv.ERC20_CONTRACT_ADDRESS);
     settings.set('HTTP_URL_CND', comitEnv.HTTP_URL_CND_1);
 
-    // TODO: load Maker settings for testing purposes
+    // TEMP: load Maker settings for testing purposes
     settings.set('MAKER_ETHEREUM_KEY', comitEnv.ETHEREUM_KEY_0);
     settings.set('MAKER_BITCOIN_HD_KEY', comitEnv.BITCOIN_HD_KEY_0);
     settings.set('MAKER_HTTP_URL_CND', comitEnv.HTTP_URL_CND_0);
