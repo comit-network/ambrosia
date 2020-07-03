@@ -48,7 +48,7 @@ type OrderProperties = {
 
 type OrderProps = {
   status?: string;
-  properties: OrderProperties; // TODO: type out ORder
+  properties: OrderProperties;
 };
 
 function Order(props: OrderProps) {

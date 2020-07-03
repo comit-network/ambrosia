@@ -26,7 +26,7 @@ async function parseStatus(swap) {
   const SWAPPED = status === 'SWAPPED';
   if (SWAPPED) {
     return 'SWAPPED';
-  } // TODO: use to display completed status
+  }
 
   return 'WAITING_FOR_MAKER';
 }
@@ -115,8 +115,6 @@ export default class TakerStateMachine {
         await this.swap.fund(params);
       }, // results in TAKER_LEDGER_FUNDED
       MAKER_LEDGER_FUNDED: async params => {
-        // TODO: swap.refund is also possible here
-        // Note refund is possible when alpha ledger is Funded but not Redeemed
         console.log('running swap.redeem');
         await this.swap.redeem(params);
       }, // results in TAKER_LEDGER_REDEEMED

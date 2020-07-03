@@ -10,6 +10,7 @@ import readComitScriptsEnv from './utils/readComitScriptsEnv';
 const reduxStore = configureStore();
 
 // TEMPORARY: loads environment from ~/.create-comit-app/env
+// In production, we would not use create-comit-app to populate these values
 function initAppSettings(): Store {
   const comitEnv = readComitScriptsEnv();
   const settings = new Store();
