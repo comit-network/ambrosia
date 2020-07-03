@@ -17,7 +17,7 @@ import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 
 export default function Balances() {
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
-  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
+  // const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
   const [ETHBalance, setETHBalance] = useState(null);
   const [DAIBalance, setDAIBalance] = useState(null);
   const [BTCBalance, setBTCBalance] = useState(null);
@@ -62,14 +62,14 @@ export default function Balances() {
     if (ETHWallet) loadDAIBalance();
   }, [ETHLoaded]);
 
-  useEffect(() => {
-    async function loadBTCBalance() {
-      const BTC = await BTCWallet.getBalance();
-      setBTCBalance(BTC);
-    }
+  // useEffect(() => {
+  //   async function loadBTCBalance() {
+  //     const BTC = await BTCWallet.getBalance();
+  //     setBTCBalance(BTC);
+  //   }
 
-    if (BTCWallet) loadBTCBalance();
-  }, [BTCLoaded]);
+  //   if (BTCWallet) loadBTCBalance();
+  // }, [BTCLoaded]);
 
   useEffect(() => {
     async function calculateETHFiatAmount() {
@@ -91,15 +91,15 @@ export default function Balances() {
     calculateDAIFiatAmount();
   }, [DAIBalance]);
 
-  useEffect(() => {
-    async function calculateBTCFiatAmount() {
-      if (BTCPriceData) {
-        const rate = BTCPriceData.data.rateUsd;
-        setBTCFiatAmount((BTCBalance * rate).toFixed(2));
-      }
-    }
-    calculateBTCFiatAmount();
-  }, [BTCBalance]);
+  // useEffect(() => {
+  //   async function calculateBTCFiatAmount() {
+  //     if (BTCPriceData) {
+  //       const rate = BTCPriceData.data.rateUsd;
+  //       setBTCFiatAmount((BTCBalance * rate).toFixed(2));
+  //     }
+  //   }
+  //   calculateBTCFiatAmount();
+  // }, [BTCBalance]);
 
   return (
     <div>
@@ -113,8 +113,10 @@ export default function Balances() {
         >
           <Stat>
             <StatLabel>BTC</StatLabel>
-            <StatNumber>{BTCBalance}</StatNumber>
-            <StatHelpText>USD ${BTCFiatAmount}</StatHelpText>
+            <StatNumber>TODO</StatNumber>
+            <StatHelpText>USD $TODO</StatHelpText>
+            {/* <StatNumber>{BTCBalance}</StatNumber>
+            <StatHelpText>USD ${BTCFiatAmount}</StatHelpText> */}
           </Stat>
 
           <Stat>

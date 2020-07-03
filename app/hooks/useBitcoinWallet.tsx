@@ -1,5 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { InMemoryBitcoinWallet } from 'comit-sdk';
+// import { InMemoryBitcoinWallet } from 'comit-sdk';
 import Store from 'electron-store';
 
 interface BitcoinWalletContextProps {
@@ -32,14 +32,14 @@ export const BitcoinWalletProvider: React.FC<BitcoinWalletProviderProps> = ({
 
       // TODO: upgrade SDK to 0.17.0
       // https://github.com/comit-network/comit-js-sdk/blob/dev/src/wallet/bitcoin.ts#L71-L79
-      const w = await InMemoryBitcoinWallet.newInstance(
-        'regtest',
-        settings.get('BITCOIN_P2P_URI'),
-        settings.get('BITCOIN_HD_KEY')
-      );
-      await new Promise(resolve => setTimeout(resolve, 1000)); // bitcoin wallet workaround
+      // const w = await InMemoryBitcoinWallet.newInstance(
+      //   'regtest',
+      //   settings.get('BITCOIN_P2P_URI'),
+      //   settings.get('BITCOIN_HD_KEY')
+      // );
+      // await new Promise(resolve => setTimeout(resolve, 1000)); // bitcoin wallet workaround
 
-      setWallet(w);
+      // setWallet(w);
 
       setLoading(false);
       setLoaded(true);

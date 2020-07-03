@@ -3,7 +3,6 @@ import React, { Fragment } from 'react';
 import { render } from 'react-dom';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
 import Store from 'electron-store';
-import App from './App';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import readComitScriptsEnv from './utils/readComitScriptsEnv';
@@ -36,11 +35,13 @@ function initAppSettings(): Store {
 const settings = initAppSettings();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
-document.addEventListener('DOMContentLoaded', () =>
+document.addEventListener('DOMContentLoaded', () => {
+  // eslint-disable-next-line global-require
+  const App = require('./App').default;
   render(
     <AppContainer>
       <App store={reduxStore} history={history} settings={settings} />
     </AppContainer>,
     document.getElementById('root')
-  )
-);
+  );
+});
