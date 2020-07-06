@@ -3,13 +3,14 @@
 ## Prerequisites
 
 - [create-comit-app](https://github.com/comit-network/create-comit-app)
+- [nvm](https://github.com/nvm-sh/nvm)
 - [How run an unreleased version of cnd](https://gist.github.com/yosriady/5ad0401995599099aa68bd5cb34ff98b)
 
 ## Starting Development
 
 In another terminal:
 
-```
+```bash
 cd my-comit-app
 yarn start-env
 ```
@@ -18,6 +19,7 @@ Run the app:
 
 ```bash
 git clone git@github.com:comit-network/taker-ui.git
+nvm use
 yarn
 yarn dev
 ```
