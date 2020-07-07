@@ -11,7 +11,6 @@ import OrderConfirmationPage from './OrderConfirmationPage';
 import SwapDetailsPage from './SwapDetailsPage';
 import SettingsPage from './SettingsPage';
 import AboutPage from './AboutPage';
-import CounterPage from './CounterPage';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -73,12 +72,12 @@ export default function Layout() {
                 <NavText>Settings</NavText>
               </NavBox>
             </Link>
-            {/* <Link to={routes.ABOUT}>
+            <Link to={routes.ABOUT}>
               <NavBox>
                 <NavIcon name="info" />
                 <NavText>About</NavText>
               </NavBox>
-            </Link> */}
+            </Link>
           </Stack>
         </Stack>
       </Flex>
@@ -87,7 +86,6 @@ export default function Layout() {
           <Route path={routes.EXCHANGE} component={ExchangePage} />
           <Route path={routes.HISTORY} component={HistoryPage} />
           <Route path={routes.SETTINGS} component={SettingsPage} />
-          <Route path={routes.COUNTER} component={CounterPage} />
           <Route path={routes.ORDERS} component={OrderConfirmationPage} />
           <Route path={routes.SWAPS} component={SwapDetailsPage} />
           <Route path={routes.ABOUT} component={AboutPage} />
