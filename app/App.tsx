@@ -7,7 +7,6 @@ import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import Store from 'electron-store';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
-import { Store as ReduxStore } from './reducers/types';
 import Layout from './pages/Layout';
 import { BitcoinWalletProvider } from './hooks/useBitcoinWallet';
 import { EthereumWalletProvider } from './hooks/useEthereumWallet';
