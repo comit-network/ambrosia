@@ -1,5 +1,5 @@
 import React from 'react';
-import { Heading, Box } from '@chakra-ui/core';
+import { Heading, Text, Box } from '@chakra-ui/core';
 
 export default function AboutPage() {
   return (
@@ -7,6 +7,7 @@ export default function AboutPage() {
       <Heading fontSize="1.8em" mb={8}>
         About
       </Heading>
+      <Text>This is the about page.</Text>
     </Box>
   );
 }

@@ -4,6 +4,7 @@ import { Text, Tooltip, Icon, Box, Heading } from '@chakra-ui/core';
 import useSWR from 'swr';
 import Store from 'electron-store';
 import Order from '../components/Order';
+import MarketData from '../components/MarketData';
 
 const settings = new Store();
 
@@ -32,6 +33,10 @@ export default function ExchangePage() {
       <Heading fontSize="1.8em" mb={8}>
         Exchange
       </Heading>
+
+      <MarketData />
+
+      <br />
 
       <Heading fontSize="1.4em" mt={8} mb={4}>
         Available Orders

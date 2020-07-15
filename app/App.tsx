@@ -5,7 +5,6 @@ import { History } from 'history';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import Store from 'electron-store';
 import AppRegionDrag from './components/AppRegionDrag';
-import customTheme from './theme';
 import Layout from './pages/Layout';
 import { BitcoinWalletProvider } from './hooks/useBitcoinWallet';
 import { EthereumWalletProvider } from './hooks/useEthereumWallet';
@@ -21,7 +20,7 @@ const App = ({ history, settings }: Props) => {
     <CndProvider settings={settings}>
       <BitcoinWalletProvider settings={settings}>
         <EthereumWalletProvider settings={settings}>
-          <ThemeProvider theme={customTheme}>
+          <ThemeProvider>
             <CSSReset />
             <Router history={history}>
               {process.platform === 'darwin' ? <AppRegionDrag /> : null}

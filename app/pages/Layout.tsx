@@ -72,7 +72,7 @@ export default function Layout() {
                 <NavText>Settings</NavText>
               </NavBox>
             </Link>
-            <Link to={routes.ABOUT}>
+            <Link id="nav-about" to={routes.ABOUT}>
               <NavBox>
                 <NavIcon name="info" />
                 <NavText>About</NavText>

@@ -28,11 +28,7 @@
     "start": "cross-env NODE_ENV=production electron ./app/main.prod.js",
     "start-main-dev": "cross-env START_HOT=1 NODE_ENV=development electron -r ./internals/scripts/BabelRegister ./app/main.dev.ts",
     "start-renderer-dev": "cross-env NODE_ENV=development webpack-dev-server --config configs/webpack.config.renderer.dev.babel.js",
-    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest",
-    "test-all": "yarn lint && yarn tsc && yarn build && yarn test && yarn build-e2e && yarn test-e2e",
-    "test-e2e": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe electron:./app ./test/e2e/HomePage.e2e.ts",
-    "test-e2e-live": "node -r @babel/register ./internals/scripts/CheckBuildsExist.js && cross-env NODE_ENV=test testcafe --live electron:./app ./test/e2e/HomePage.e2e.ts",
-    "test-watch": "yarn test --watch"
+    "test": "cross-env NODE_ENV=test BABEL_DISABLE_CACHE=1 jest"
   },
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
@@ -148,6 +144,7 @@
     "@babel/preset-react": "^7.10.1",
     "@babel/preset-typescript": "^7.10.1",
     "@babel/register": "^7.10.1",
+    "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.6",
     "@types/bn.js": "^4.11.6",
     "@types/history": "^4.7.5",
@@ -194,7 +191,6 @@
     "eslint-plugin-promise": "^4.2.1",
     "eslint-plugin-react": "^7.18.0",
     "eslint-plugin-react-hooks": "^2.3.0",
-    "eslint-plugin-testcafe": "^0.2.1",
     "fbjs-scripts": "^1.2.0",
     "file-loader": "^5.0.2",
     "husky": "^4.2.0",
@@ -251,11 +247,7 @@
     "react-router-dom": "^5.1.2",
     "satoshi-bitcoin-ts": "^0.2.4",
     "source-map-support": "^0.5.16",
-    "swr": "^0.2.3",
-    "testcafe": "^1.8.8",
-    "testcafe-browser-provider-electron": "^0.0.15",
-    "testcafe-react-selectors": "^4.0.0",
-    "unstated-next": "^1.1.0"
+    "swr": "^0.2.3"
   },
   "devEngines": {
     "node": ">=7.x",
