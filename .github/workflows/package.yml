@@ -33,14 +33,6 @@ jobs:
       #     yarn build
       #     yarn test
 
-      # - name: Run E2E test
-      #   uses: GabrielBB/xvfb-action@v1.2
-      #   with:
-      #     working-directory: ./ #optional
-      #     run: |
-      #       yarn build-e2e
-      #       yarn test-e2e
-
       - name: yarn package
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
