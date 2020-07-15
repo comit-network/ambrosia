@@ -17,7 +17,7 @@ const settings = new Store();
 
 export default function SwapDetailsPage() {
   const { id: swapId } = useParams();
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data: swapResponse } = useSWR(
     `${settings.get('HTTP_URL_CND')}/swaps/${swapId}`,
     fetcher

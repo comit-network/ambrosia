@@ -22,7 +22,7 @@ export default function Balances() {
   const [DAIBalance, setDAIBalance] = useState(null);
   const [BTCBalance, setBTCBalance] = useState(null);
 
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data: BTCPriceData } = useSWR(
     'https://api.coincap.io/v2/rates/bitcoin',
     fetcher

@@ -36,7 +36,7 @@ export default function OrderConfirmationPage(props: Props) {
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
   const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
 
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data: takerOrdersResponse } = useSWR(
     `${settings.get('HTTP_URL_CND')}/orders`,
     fetcher

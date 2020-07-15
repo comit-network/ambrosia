@@ -8,7 +8,7 @@ import Order from '../components/Order';
 const settings = new Store();
 
 export default function ExchangePage() {
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data: takerOrdersResponse } = useSWR(
     `${settings.get('HTTP_URL_CND')}/orders`,
     fetcher

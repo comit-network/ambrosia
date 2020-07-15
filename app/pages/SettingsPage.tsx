@@ -80,7 +80,7 @@ export default function SettingsPage() {
   const MAKER_ETHEREUM_KEY = settings.get('MAKER_ETHEREUM_KEY');
   const MAKER_BITCOIN_HD_KEY = settings.get('MAKER_BITCOIN_HD_KEY');
   const MAKER_HTTP_URL_CND = settings.get('MAKER_HTTP_URL_CND');
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (url: string) => fetch(url).then(res => res.json());
   const { data: makerCndDetails } = useSWR(
     settings.get('MAKER_HTTP_URL_CND'),
     fetcher
