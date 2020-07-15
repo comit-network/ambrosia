@@ -63,7 +63,8 @@ React:
 - [Intro to React](https://reactjs.org/tutorial/tutorial.html)
 - [React Hooks](https://reactjs.org/docs/hooks-overview.html)
 - [React Router](https://reactrouter.com/)
-- [React Testing](https://testing-library.com/docs/react-testing-library/intro)
+- [React Component Testing](https://testing-library.com/docs/react-testing-library/intro)
+- [React E2E with Testcafe](https://devexpress.github.io/testcafe/documentation/getting-started/)
 
 Electron:
 
