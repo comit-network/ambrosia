@@ -1,13 +1,11 @@
 import _ from 'lodash';
 import React, { Fragment } from 'react';
 import { render } from 'react-dom';
+import { createHashHistory } from 'history';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
 import Store from 'electron-store';
-import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import readComitScriptsEnv from './utils/readComitScriptsEnv';
-
-const reduxStore = configureStore();
 
 // TEMPORARY: loads environment from ~/.create-comit-app/env
 // In production, we would not use create-comit-app to populate these values
@@ -34,6 +32,7 @@ function initAppSettings(): Store {
 
 // TODO: convert this into a provider
 const settings = initAppSettings();
+const history = createHashHistory();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -41,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const App = require('./App').default;
   render(
     <AppContainer>
-      <App store={reduxStore} history={history} settings={settings} />
+      <App history={history} settings={settings} />
     </AppContainer>,
     document.getElementById('root')
   );
