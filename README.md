@@ -30,6 +30,10 @@ yarn
 yarn dev
 ```
 
+> You don't need to restart the app to see changes. The react app has hot-reloading built-in, so you can refresh with Cmd + R to reload the app.
+>
+> In some cases, such as changes to package.json, you need to restart `yarn dev` to see changes.
+
 ## Running production build
 
 ```bash
@@ -50,7 +54,7 @@ The project includes a Github Actions pipeline for generating cross-platform exe
 
 ## Publishing new releases
 
-Follow [these steps](https://www.electron.build/configuration/publish#recommended-github-releases-workflow)when creating a new [release](https://github.com/comit-network/taker-ui/releases), so that you always have the latest artifacts, and the release can be published once it is ready.
+Follow [these steps](https://www.electron.build/configuration/publish#recommended-github-releases-workflow) when creating a new [release](https://github.com/comit-network/taker-ui/releases), so that you always have the latest artifacts, and the release can be published once it is ready.
 
 ## Learning Resources
 
@@ -58,6 +62,8 @@ React:
 
 - [Intro to React](https://reactjs.org/tutorial/tutorial.html)
 - [React Hooks](https://reactjs.org/docs/hooks-overview.html)
+- [React Router](https://reactrouter.com/)
+- [React Testing](https://testing-library.com/docs/react-testing-library/intro)
 
 Electron:
 
