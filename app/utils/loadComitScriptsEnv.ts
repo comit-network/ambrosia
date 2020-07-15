@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 const ENV_PATH = `${os.homedir()}/.create-comit-app/env`;
 
 // Loads the contents of the `~/.create-comit-app/env` file for the app to use
-export default function readComitScriptsEnv() {
+export default function loadComitScriptsEnv() {
   if (!fs.existsSync(ENV_PATH)) {
     return {};
   }

@@ -1,6 +1,9 @@
 module.exports = {
   extends: 'erb/typescript',
   rules: {
+    "no-console": "off",
+    "global-require": "off",
+    "import/no-dynamic-require": "off",
     // A temporary hack related to IDE not resolving correct package.json
     'import/no-extraneous-dependencies': 'off',
     'react/jsx-one-expression-per-line': 'off',

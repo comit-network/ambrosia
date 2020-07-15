@@ -5,12 +5,12 @@ import { createHashHistory } from 'history';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
 import Store from 'electron-store';
 import './app.global.css';
-import readComitScriptsEnv from './utils/readComitScriptsEnv';
+import loadComitScriptsEnv from './utils/loadComitScriptsEnv';
 
 // TEMPORARY: loads environment from ~/.create-comit-app/env
 // In production, we would not use create-comit-app to populate these values
-function initAppSettings(): Store {
-  const comitEnv = readComitScriptsEnv();
+function loadAppSettings(): Store {
+  const comitEnv = loadComitScriptsEnv();
   const settings = new Store();
   if (!_.isEmpty(comitEnv)) {
     settings.set('BITCOIN_HD_KEY', comitEnv.BITCOIN_HD_KEY_1);
@@ -25,13 +25,12 @@ function initAppSettings(): Store {
     settings.set('MAKER_BITCOIN_HD_KEY', comitEnv.BITCOIN_HD_KEY_0);
     settings.set('MAKER_HTTP_URL_CND', comitEnv.HTTP_URL_CND_0);
   } else {
-    console.log('No comit env found');
+    console.error('No comit env found');
   }
   return settings;
 }
 
-// TODO: convert this into a provider
-const settings = initAppSettings();
+const settings = loadAppSettings();
 const history = createHashHistory();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
