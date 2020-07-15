@@ -5,8 +5,7 @@ import {
   StatLabel,
   StatNumber,
   StatGroup,
-  Text,
-  Icon
+  Text
 } from '@chakra-ui/core';
 import useSWR from 'swr';
 
@@ -17,18 +16,18 @@ export default function MarketData() {
     fetcher
   );
 
-  const [ETHPrice, setETHPrice] = useState(null);
+  const [ETHPrice, setETHPrice] = useState('Loading');
 
   useEffect(() => {
     async function loadETHPrice() {
-      if (ETHPriceData) {
-        const rate = ETHPriceData.data.rateUsd;
-        const price = parseFloat(rate).toFixed(2);
-        setETHPrice(price);
-      }
+      console.log('loadETHPrice');
+      console.log(ETHPriceData);
+      const rate = ETHPriceData.data.rateUsd;
+      const price = parseFloat(rate).toFixed(2);
+      setETHPrice(price);
     }
-    loadETHPrice();
-  }, []);
+    if (ETHPriceData) loadETHPrice();
+  }, [ETHPriceData]);
 
   return (
     <div>
@@ -57,8 +56,8 @@ export default function MarketData() {
         </Flex>
       </StatGroup>
       <Text mt={2} fontSize="0.7em" float="left" color="gray.600">
-        <Icon name="info" mt="-2px" color="gray.300" mr={1} /> Last 24h market
-        data from CoinMarketCap &bull; Last updated 4 minutes ago.
+        Last 24h market data from CoinMarketCap &bull; Last updated 4 minutes
+        ago.
       </Text>
     </div>
   );

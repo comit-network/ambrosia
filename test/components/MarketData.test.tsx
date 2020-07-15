@@ -1,12 +1,15 @@
 import React from 'react';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
-import { render, fireEvent, waitFor, screen } from '@testing-library/react';
+import { render, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
+import { ThemeProvider } from '@chakra-ui/core';
 import MarketData from '../../app/components/MarketData';
 
 const server = setupServer(
-  rest.get('https://api.coincap.io/v2/rates/ethereum', (req, res, ctx) => {
+  rest.get('/test', (req, res, ctx) => {
+    // TOFIX: this is not being called
+    console.log('!!!CALLED!!!');
     return res(
       ctx.json({
         data: {
@@ -26,29 +29,27 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
+// TODO: define providers in custom helper https://testing-library.com/docs/react-testing-library/setup
 test('loads and displays market data', async () => {
-  render(<MarketData />);
+  const { getByText, container } = render(
+    <ThemeProvider>
+      <MarketData />
+    </ThemeProvider>
+  );
 
-  // fireEvent.click(screen.getByText('Load Greeting'))
-  // await waitFor(() => screen.getByRole('heading'))
+  const heading = getByText('ETH Price');
+  expect(heading).toBeInTheDocument();
 
-  const items = await screen.findByText('$239.67');
-  expect(items).not.toBeEmpty();
+  // Value before data is loaded
+  expect(getByText('$Loading')).toBeInTheDocument();
+
+  // Value after data is loaded
+  // TODO: not working because of async loading?
+  // https://github.com/vercel/swr/blob/master/test/use-swr.test.tsx#L41-L53
+  await waitFor(
+    () => {
+      expect(getByText('$239.67')).toBeInTheDocument();
+    },
+    { container }
+  );
 });
-
-// test('handlers server error', async () => {
-//   server.use(
-//     rest.get('/greeting', (req, res, ctx) => {
-//       return res(ctx.status(500))
-//     })
-//   )
-
-//   render(<Fetch url="/greeting" />)
-
-//   fireEvent.click(screen.getByText('Load Greeting'))
-
-//   await waitFor(() => screen.getByRole('alert'))
-
-//   expect(screen.getByRole('alert')).toHaveTextContent('Oops, failed to fetch!')
-//   expect(screen.getByRole('button')).not.toHaveAttribute('disabled')
-// })
