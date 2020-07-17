@@ -1,5 +1,12 @@
 # taker-ui
 
+## Screenshots
+
+<img width="1020" alt="Screenshot 2020-07-17 at 5 07 48 PM" src="https://user-images.githubusercontent.com/1084226/87769499-52c80300-c850-11ea-8791-4a4397e98455.png">
+<img width="1019" alt="Screenshot 2020-07-17 at 5 07 55 PM" src="https://user-images.githubusercontent.com/1084226/87769496-522f6c80-c850-11ea-8af5-0c7d5ae05a0c.png">
+<img width="1020" alt="Screenshot 2020-07-17 at 5 08 26 PM" src="https://user-images.githubusercontent.com/1084226/87769479-4e034f00-c850-11ea-9346-cc347d9a01d2.png">
+<img width="1021" alt="Screenshot 2020-07-17 at 5 08 03 PM" src="https://user-images.githubusercontent.com/1084226/87769492-5196d600-c850-11ea-841f-a5482a77a516.png">
+
 ## Prerequisites
 
 First, you'll need to set up the following:
