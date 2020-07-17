@@ -30,18 +30,19 @@ type Props = {
   history: History;
 };
 
-export default function OrderConfirmationPage(props: Props) {
+export default function OrderConfirmationPage(_: Props) {
   const { id: orderId } = useParams();
   const history = useHistory();
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
   const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
 
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+  const fetcher = (input: RequestInfo, init?: RequestInit) =>
+    fetch(input, init).then(res => res.json());
   const { data: takerOrdersResponse } = useSWR(
     `${settings.get('HTTP_URL_CND')}/orders`,
     fetcher
   );
-  const [order, setOrder] = useState({});
+  const [order, setOrder] = useState(null);
 
   async function takeOrder() {
     if (BTCLoaded && ETHLoaded) {

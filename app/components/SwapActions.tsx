@@ -43,7 +43,7 @@ export default function SwapActions() {
               Back
             </Button>
           </Link>
-          <Button disabled variantColor="blue" shadow="sm" width="100%">
+          <Button variantColor="blue" shadow="sm" width="100%">
             Fund
           </Button>
         </Stack>

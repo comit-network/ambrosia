@@ -5,6 +5,7 @@ import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
 import { ThemeProvider, CSSReset } from '@chakra-ui/core';
 import Store from 'electron-store';
+import { Store as ReduxStore } from 'redux';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
 import Layout from './pages/Layout';
