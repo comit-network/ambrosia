@@ -202,7 +202,7 @@
     "eslint-plugin-react-hooks": "^2.3.0",
     "eslint-plugin-testcafe": "^0.2.1",
     "fbjs-scripts": "^1.2.0",
-    "file-loader": "^5.0.2",
+    "file-loader": "^6.0.0",
     "husky": "^4.2.0",
     "identity-obj-proxy": "^3.0.0",
     "jest": "^25.1.0",
