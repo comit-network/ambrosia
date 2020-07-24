@@ -1,13 +1,5 @@
 import React from 'react';
-import {
-  Flex,
-  Box,
-  Heading,
-  Text,
-  Tooltip,
-  Icon,
-  Link as HTMLLink
-} from '@chakra-ui/core';
+import { Flex, Box, Heading, Text, Tooltip, Icon } from '@chakra-ui/core';
 
 type MakerProps = {
   id: string;

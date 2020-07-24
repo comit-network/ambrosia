@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import {
   Flex,
-  Button,
   Stack,
   Heading,
   Text,
@@ -27,8 +26,8 @@ import { useCnd } from '../hooks/useCnd';
 const settings = new Store();
 
 export default function SettingsPage() {
-  const BITCOIN_HD_KEY = settings.get('BITCOIN_HD_KEY');
-  const BITCOIN_P2P_URI = settings.get('BITCOIN_P2P_URI');
+  const BITCOIN_WALLET = settings.get('BITCOIN_WALLET');
+  const BITCOIN_HTTP_URI = settings.get('BITCOIN_HTTP_URI');
   const ETHEREUM_KEY = settings.get('ETHEREUM_KEY');
   const ETHEREUM_NODE_HTTP_URL = settings.get('ETHEREUM_NODE_HTTP_URL');
   const ERC20_CONTRACT_ADDRESS = settings.get('ERC20_CONTRACT_ADDRESS');
@@ -78,9 +77,11 @@ export default function SettingsPage() {
 
   // Maker settings
   const MAKER_ETHEREUM_KEY = settings.get('MAKER_ETHEREUM_KEY');
-  const MAKER_BITCOIN_HD_KEY = settings.get('MAKER_BITCOIN_HD_KEY');
+  const MAKER_BITCOIN_WALLET = settings.get('MAKER_BITCOIN_WALLET');
   const MAKER_HTTP_URL_CND = settings.get('MAKER_HTTP_URL_CND');
-  const fetcher = (...args) => fetch(...args).then(res => res.json());
+
+  const fetcher = (input: RequestInfo, init?: RequestInit) =>
+    fetch(input, init).then(res => res.json());
   const { data: makerCndDetails } = useSWR(
     settings.get('MAKER_HTTP_URL_CND'),
     fetcher
@@ -158,13 +159,13 @@ export default function SettingsPage() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>BITCOIN_HD_KEY</FormLabel>
-                  <Input value={BITCOIN_HD_KEY} />
+                  <FormLabel>BITCOIN_WALLET</FormLabel>
+                  <Input value={BITCOIN_WALLET} />
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>BITCOIN_P2P_URI</FormLabel>
-                  <Input value={BITCOIN_P2P_URI} isReadOnly />
+                  <FormLabel>BITCOIN_HTTP_URI</FormLabel>
+                  <Input value={BITCOIN_HTTP_URI} isReadOnly />
                 </FormControl>
 
                 <FormControl>
@@ -212,8 +213,8 @@ export default function SettingsPage() {
                 </FormControl>
 
                 <FormControl>
-                  <FormLabel>MAKER_BITCOIN_HD_KEY</FormLabel>
-                  <Input value={MAKER_BITCOIN_HD_KEY} />
+                  <FormLabel>MAKER_BITCOIN_WALLET</FormLabel>
+                  <Input value={MAKER_BITCOIN_WALLET} />
                 </FormControl>
 
                 <FormControl>

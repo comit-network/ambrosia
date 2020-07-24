@@ -6,19 +6,17 @@ type SwapDetailsProps = {
 };
 
 // TODO: Hack, GET /swaps response should format decimals like GET /orders ?
-function insertDecimals(num, dec) {
-  return (num / 10 ** dec).toFixed(dec);
-}
+// function insertDecimals(num, dec) {
+//   return (num / 10 ** dec).toFixed(dec);
+// }
 
 // TODO: Hack, asset name should be returned by GET /swaps ?
-function getAssetName(n) {
-  if (n === 'hbit') return 'BTC';
-  return 'DAI';
-}
+// function getAssetName(n) {
+//   if (n === 'hbit') return 'BTC';
+//   return 'DAI';
+// }
 
-export default function SwapDetails(props: SwapDetailsProps) {
-  const { properties } = props;
-
+export default function SwapDetails(_: SwapDetailsProps) {
   return (
     <div>
       <Text mb={2} fontSize="0.8em" color="gray.600">
@@ -29,14 +27,14 @@ export default function SwapDetails(props: SwapDetailsProps) {
           <Tag p={3} variantColor="cyan" width="45%">
             <TagLabel>
               {/* TODO: hack to remove trailing zeros */}
-              {parseFloat(insertDecimals(properties.buy_quantity, 8))}{' '}
-              {getAssetName(properties.buy_asset)}
+              {/* {parseFloat(insertDecimals(properties.buy_quantity, 8))}{' '} */}
+              {/* {getAssetName(properties.buy_asset)} */}
             </TagLabel>
           </Tag>
           <Icon name="arrow-forward" width="10%" />
           <Tag p={3} variantColor="orange" width="45%">
             <TagLabel>
-              {properties.sell_quantity} {getAssetName(properties.sell_asset)}
+              {/* {properties.sell_quantity} {getAssetName(properties.sell_asset)} */}
             </TagLabel>
           </Tag>
         </Box>
@@ -45,12 +43,12 @@ export default function SwapDetails(props: SwapDetailsProps) {
           <Icon mt="-4px" fontSize="0.8em" name="repeat" mr={2} />
           you are sending{' '}
           <strong>
-            {properties.sell_quantity} {getAssetName(properties.sell_asset)}
+            {/* {properties.sell_quantity} {getAssetName(properties.sell_asset)} */}
           </strong>{' '}
           to receive{' '}
           <strong>
-            {insertDecimals(properties.buy_quantity, 8)}{' '}
-            {getAssetName(properties.buy_asset)}
+            {/* {insertDecimals(properties.buy_quantity, 8)}{' '} */}
+            {/* {getAssetName(properties.buy_asset)} */}
           </strong>
         </Text>
         <Text color="teal.800">
