@@ -93,14 +93,14 @@
   integrity sha512-5tXH6Bx/kNGd3MgffdmP4dy2Z+G4eaXw0SE81Tq3BNadtnMR5/ySMzX4SLEzHJzSmPNn4HIdpQsBvXMUykr58w==
 
 "@types/node@*":
-  version "14.0.14"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.14.tgz#24a0b5959f16ac141aeb0c5b3cd7a15b7c64cbce"
-  integrity sha512-syUgf67ZQpaJj01/tRTknkMNoBBLWJOBODF0Zm4NrXmiSuxjymFrxnTu1QVYRubhVkRcZLYZG8STTwJRdVm/WQ==
+  version "14.0.25"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.25.tgz#7ad8b00a1206d6c9e94810e49f3115f0bcc30456"
+  integrity sha512-okMqUHqrMlGOxfDZliX1yFX5MV6qcd5PpRz96XYtjkM0Ws/hwg23FMUqt6pETrVRZS+EKUB5HY19mmo54EuQbA==
 
 "@types/node@^13.7.0":
-  version "13.13.12"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.12.tgz#9c72e865380a7dc99999ea0ef20fc9635b503d20"
-  integrity sha512-zWz/8NEPxoXNT9YyF2osqyA9WjssZukYpgI4UYZpOjcyqwIUqWGkcCionaEb9Ki+FULyPyvNFpg/329Kd2/pbw==
+  version "13.13.15"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-13.13.15.tgz#fe1cc3aa465a3ea6858b793fd380b66c39919766"
+  integrity sha512-kwbcs0jySLxzLsa2nWUAGOd/s21WU1jebrEdtzhsj1D4Yps1EOuyI1Qcu+FD56dL7NRNIJtDDjcqIG22NwkgLw==
 
 "@uphold/request-logger@^2.0.0":
   version "2.0.0"
@@ -128,9 +128,9 @@ aes-js@3.0.0:
   integrity sha1-4h3xCtbCBTKVvLuNq0Cwnb6ofk0=
 
 ajv@^6.5.5:
-  version "6.12.2"
-  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.2.tgz#c629c5eced17baf314437918d2da88c99d5958cd"
-  integrity sha512-k+V+hzjm5q/Mr8ef/1Y9goCmlsK4I6Sm74teeyGvFk1XrOsbsKLjEdrvny42CZ+a8sXbk8KWpY/bDwS+FLL2UQ==
+  version "6.12.3"
+  resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.3.tgz#18c5af38a111ddeb4f2697bd78d68abc1cabd706"
+  integrity sha512-4K0cK3L1hsqk9xIb2z9vs/XU+PGJZ9PNpJRDS9YLzmNdX6jmVPfamLvTJr0aDAusnHyCHO6MjzlkAsgtqp9teA==
   dependencies:
     fast-deep-equal "^3.1.1"
     fast-json-stable-stringify "^2.0.0"
@@ -350,10 +350,8 @@ combined-stream@^1.0.6, combined-stream@~1.0.6:
   dependencies:
     delayed-stream "~1.0.0"
 
-comit-sdk@^0.17.0:
-  version "0.17.0"
-  resolved "https://registry.yarnpkg.com/comit-sdk/-/comit-sdk-0.17.0.tgz#1e770bece91d9bcacaf7ed6b997765f45e143e33"
-  integrity sha512-vxzMjLOYSqmOYeBdykzFoYc8VTKL84Lu/EWHcbL1BGAlUmMiLzq0PkhBc/NvciQwCtkBX+ph/E4XL9jGiNsYuQ==
+"comit-sdk@file:../comit-sdk":
+  version "1.0.0"
   dependencies:
     "@radar/lnrpc" "^0.9.1-beta"
     axios "^0.19.2"
@@ -940,9 +938,9 @@ lodash.clone@^4.5.0:
   integrity sha1-GVhwRQ9aExkkeN9Lw9I9LeoZB7Y=
 
 lodash@^4.0.0:
-  version "4.17.15"
-  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.15.tgz#b447f6670a0455bbfeedd11392eff330ea097548"
-  integrity sha512-8xOcRHvCjnocdS5cpwXQXVzmmh5e5+saE2QGoeQmbKmRS6J3VQppPOIt0MnmE+4xlZoumy0GPG0D0MVIQbNA1A==
+  version "4.17.19"
+  resolved "https://registry.yarnpkg.com/lodash/-/lodash-4.17.19.tgz#e48ddedbe30b3321783c5b4301fbd353bc1e4a4b"
+  integrity sha512-JNvd8XER9GQX0v2qJgsaN/mzFCNA5BRe/j8JN9d+tWyGLSodKQHKFicdwNYzWwI3wjRnaKPsGj1XkBjx/F96DQ==
 
 long@^4.0.0:
   version "4.0.0"
@@ -1283,9 +1281,9 @@ protobufjs@^5.0.3:
     yargs "^3.10.0"
 
 protobufjs@^6.8.6:
-  version "6.9.0"
-  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.9.0.tgz#c08b2bf636682598e6fabbf0edb0b1256ff090bd"
-  integrity sha512-LlGVfEWDXoI/STstRDdZZKb/qusoAWUnmLg9R8OLSO473mBLWHowx8clbX5/+mKDEI+v7GzjoK9tRPZMMcoTrg==
+  version "6.10.1"
+  resolved "https://registry.yarnpkg.com/protobufjs/-/protobufjs-6.10.1.tgz#e6a484dd8f04b29629e9053344e3970cccf13cd2"
+  integrity sha512-pb8kTchL+1Ceg4lFd5XUpK8PdWacbvV5SK2ULH2ebrYtl4GjJmS24m6CKME67jzV53tbJxHlnNOSqQHbTsR9JQ==
   dependencies:
     "@protobufjs/aspromise" "^1.1.2"
     "@protobufjs/base64" "^1.1.2"
