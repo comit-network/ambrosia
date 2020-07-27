@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import Store from 'electron-store';
-import { BitcoindWallet } from 'comit-sdk';
+import { BitcoindWallet } from '../comit-sdk';
 
 interface BitcoinWalletContextProps {
   wallet: BitcoindWallet;

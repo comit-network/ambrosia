@@ -9,7 +9,7 @@ import {
   Text,
   Icon
 } from '@chakra-ui/core';
-import { ethers } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import Store from 'electron-store';
 import useSWR from 'swr';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
@@ -46,7 +46,8 @@ export default function Balances() {
   useEffect(() => {
     async function loadETHBalance() {
       const eth = await ETHWallet.getBalance();
-      setETHBalance(ethers.utils.formatEther(eth));
+      // TODO: constructing BigNumber again should be unnecessary, but tsc complains
+      setETHBalance(ethers.utils.formatEther(BigNumber.from(eth)));
     }
 
     if (ETHWallet) loadETHBalance();
