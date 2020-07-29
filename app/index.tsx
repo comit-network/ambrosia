@@ -19,7 +19,8 @@ function initAppSettings(): Store {
     settings.set('BITCOIN_USERNAME', comitEnv.BITCOIN_USERNAME);
     settings.set('BITCOIN_PASSWORD', comitEnv.BITCOIN_PASSWORD);
     settings.set('BITCOIN_HTTP_URI', comitEnv.BITCOIN_HTTP_URI);
-    settings.set('ETHEREUM_KEY', comitEnv.ETHEREUM_KEY_1);
+    // TODO: better handling of 0x prefix
+    settings.set('ETHEREUM_KEY', `0x${comitEnv.ETHEREUM_KEY_1}`);
     settings.set('ETHEREUM_NODE_HTTP_URL', comitEnv.ETHEREUM_NODE_HTTP_URL);
     settings.set('ERC20_CONTRACT_ADDRESS', comitEnv.ERC20_CONTRACT_ADDRESS);
     settings.set('HTTP_URL_CND', comitEnv.HTTP_URL_CND_1);

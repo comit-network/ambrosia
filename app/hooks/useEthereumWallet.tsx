@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { EthereumWallet } from 'comit-sdk';
 import Store from 'electron-store';
+import { EthereumWallet } from '../comit-sdk';
 
 interface EthereumWalletContextProps {
   wallet: EthereumWallet;

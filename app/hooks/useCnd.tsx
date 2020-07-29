@@ -1,6 +1,6 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
-import { Cnd } from 'comit-sdk';
 import Store from 'electron-store';
+import { Cnd } from '../comit-sdk';
 
 interface CndContextProps {
   cnd: Cnd;

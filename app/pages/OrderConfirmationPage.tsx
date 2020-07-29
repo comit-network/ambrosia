@@ -61,6 +61,9 @@ export default function OrderConfirmationPage(_: Props) {
 
       // get headers from response after taking
       const swapHref = res.headers.location; // e.g. /swaps/f5739e5b-0a9a-41b7-9512-60aeceb15624
+
+      // TODO: Fetch swap by ID through the SDK and then call next()
+
       history.push(swapHref);
     }
   }
