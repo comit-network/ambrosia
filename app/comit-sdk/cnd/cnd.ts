@@ -3,15 +3,7 @@ import actionToHttpRequest, {
   FieldValueResolverFn
 } from "./action_to_http_request";
 import { problemResponseInterceptor } from "./axios_rfc7807_middleware";
-import { SwapSubEntity } from "./rfc003_payload";
-import { Action, Entity } from "./siren";
-import {
-  HalightHerc20RequestBody,
-  HbitHerc20RequestBody,
-  Herc20HalightRequestBody,
-  Herc20HbitRequestBody,
-  SwapRequest
-} from "./swaps_payload";
+import { Action } from "./siren";
 
 interface GetInfo {
   id: string;
@@ -22,10 +14,6 @@ export interface Ledger {
   name: string;
   chain_id?: number;
   network?: string;
-}
-
-export function ledgerIsEthereum(ledger: Ledger): boolean {
-  return ledger.name === "ethereum";
 }
 
 export interface Asset {
@@ -86,32 +74,6 @@ export class Cnd {
   }
 
   /**
-   * Sends a swap request to cnd.
-   *
-   * @param swap The details of the swap to initiate.
-   * @returns The URL of the swap request on the cnd REST API.
-   * @throws A {@link Problem} from the cnd REST API or an {@link Error}.
-   */
-  public async postSwap(swap: SwapRequest): Promise<string> {
-    const response = await this.client.post("swaps/rfc003", swap);
-
-    return response.headers.location;
-  }
-
-  /**
-   * List the swaps handled by this cnd instance.
-   *
-   * @returns An Array of {@link SwapSubEntity}, which contains details of the swaps.
-   * @throws A {@link Problem} from the cnd REST API or an {@link Error}.
-   */
-  public async getSwaps(): Promise<SwapSubEntity[]> {
-    const response = await this.fetch("swaps");
-    const entity = response.data as Entity;
-
-    return entity.entities as SwapSubEntity[];
-  }
-
-  /**
    * Fetch data from the REST API.
    *
    * @param path The URL to GET.
@@ -137,54 +99,6 @@ export class Cnd {
     const request = await actionToHttpRequest(action, resolver);
 
     return this.client.request(request);
-  }
-
-  /**
-   * Post a swap request on the REST API route of cnd `/swaps/herc20/halight`
-   * @param body The body to set in the request. The design being not yet finalised it is optional and of type `any`
-   * @return The location of the swap (href) as returned by the REST API in the location header.
-   */
-  public async createHerc20Halight(
-    body: Herc20HalightRequestBody
-  ): Promise<string> {
-    const response = await this.client.post("swaps/herc20/halight", body);
-
-    return response.headers.location;
-  }
-
-  /**
-   * Post a swap request on the REST API route of cnd `/swaps/halight/herc20`
-   * @param body The body to set in the request. The design being not yet finalised it is optional and of type `any`
-   * @return The location of the swap (href) as returned by the REST API in the location header.
-   */
-  public async createHalightHerc20(
-    body: HalightHerc20RequestBody
-  ): Promise<string> {
-    const response = await this.client.post("swaps/halight/herc20", body);
-
-    return response.headers.location;
-  }
-
-  /**
-   * Post a swap request on the REST API route of cnd `/swaps/herc20/hbit`
-   * @param body The body to set in the request. The design being not yet finalised it is optional and of type `any`
-   * @return The location of the swap (href) as returned by the REST API in the location header.
-   */
-  public async createHerc20Hbit(body: Herc20HbitRequestBody): Promise<string> {
-    const response = await this.client.post("swaps/herc20/hbit", body);
-
-    return response.headers.location;
-  }
-
-  /**
-   * Post a swap request on the REST API route of cnd `/swaps/hbit/herc20`
-   * @param body The body to set in the request. The design being not yet finalised it is optional and of type `any`
-   * @return The location of the swap (href) as returned by the REST API in the location header.
-   */
-  public async createHbitHerc20(body: HbitHerc20RequestBody): Promise<string> {
-    const response = await this.client.post("swaps/hbit/herc20", body);
-
-    return response.headers.location;
   }
 
   private async getInfo(): Promise<GetInfo> {

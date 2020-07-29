@@ -13,7 +13,7 @@ it.each([
 ])(
   "should return a Problem if the response is application/problem+json",
   (status, title, type, detail) =>
-    setup(async (interceptor, postSwap) => {
+    setup(async (interceptor, arbitraryEndpoint) => {
       const statusCode = parseInt(status!, 10);
 
       const scope = interceptor.reply(
@@ -24,7 +24,7 @@ it.each([
         }
       );
 
-      const promise = postSwap();
+      const promise = arbitraryEndpoint();
 
       await expect(promise).rejects.toMatchSnapshot();
 
@@ -33,12 +33,12 @@ it.each([
 );
 
 it("should return a generic axios error if the status code is fauly and the content type is not application/problem+json", () =>
-  setup(async (interceptor, postSwap) => {
+  setup(async (interceptor, arbitraryEndpoint) => {
     const scope = interceptor.reply(400, JSON.stringify({}), {
       "content-type": "application/json"
     });
 
-    const promise = postSwap();
+    const promise = arbitraryEndpoint();
 
     await expect(promise).rejects.toMatchInlineSnapshot(
       `[Error: Request failed with status code 400]`
@@ -48,13 +48,13 @@ it("should return a generic axios error if the status code is fauly and the cont
   }));
 
 it("cnd should not throw an error if the response is application/vnd.siren+json", () =>
-  setup(async (interceptor, postSwap) => {
+  setup(async (interceptor, arbitraryEndpoint) => {
     const scope = interceptor.reply(201, JSON.stringify({}), {
       "content-type": "application/vnd.siren+json",
       location: "http://example.com/foo/bar"
     });
 
-    const location = await postSwap();
+    const location = await arbitraryEndpoint();
 
     expect(location).toBe("http://example.com/foo/bar");
 
@@ -62,11 +62,11 @@ it("cnd should not throw an error if the response is application/vnd.siren+json"
   }));
 
 /**
- * Sets up a test environment around the `postSwap` call.
+ * Sets up a test environment around an arbitrary test endpoint call.
  *
  * For this we setup nock and a Cnd instance that is pointing to the same endpoint.
  * The actual test function is passed this interceptor to customize, what the return value should be.
- * We also pass a function or triggering the `postSwap` call to it.
+ * We also pass a function or triggering the `arbitraryEndpoint` call to it.
  *
  * This allows the testFn to focus on the bare minimum required to understand the test:
  *
@@ -79,16 +79,16 @@ it("cnd should not throw an error if the response is application/vnd.siren+json"
 async function setup(
   testFn: (
     interceptor: nock.Interceptor,
-    postSwap: () => Promise<string>
+    arbitraryEndpoint: () => Promise<string>
   ) => Promise<nock.Scope>
 ): Promise<void> {
   const basePath = "http://example.com";
   const cnd = new Cnd(basePath);
 
-  const interceptor = nock(basePath).post("/swaps/rfc003");
-  const postSwap = () => cnd.postSwap({} as any);
+  const interceptor = nock(basePath).get("/something/arbitrary");
+  const arbitraryEndpoint = () => cnd.fetch<string>("/something/arbitrary").then( (response) => response.data);
 
-  const scope = await testFn(interceptor, postSwap);
+  const scope = await testFn(interceptor, arbitraryEndpoint);
 
   scope.done();
 }

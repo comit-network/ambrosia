@@ -3,84 +3,8 @@
  * the `/swaps/rfc003` endpoint once all other swaps pair are supported.
  */
 
-import { Asset, Ledger, Peer } from "./cnd";
 import { Action, EmbeddedRepresentationSubEntity, Entity, Link } from "./siren";
 
-/**
- * The parameters that the two parties have agreed on for swap execution.
- *
- * The swap request is sent by the party in the role of Alice to initiate a swap with Bob.
- */
-export interface SwapRequest {
-  alpha_ledger: Ledger;
-  alpha_asset: Asset;
-  beta_ledger: Ledger;
-  beta_asset: Asset;
-  alpha_expiry?: number;
-  beta_expiry?: number;
-  alpha_ledger_refund_identity?: string;
-  beta_ledger_redeem_identity?: string;
-  peer: Peer;
-}
-
-interface CoreRequestBody<A, B> {
-  alpha: A;
-  beta: B;
-  role: "Alice" | "Bob";
-  peer: Peer;
-}
-
-interface RequestParams {
-  amount: string;
-  identity: string;
-}
-
-interface Herc20Request {
-  contract_address: string;
-  absolute_expiry: number;
-}
-
-interface HalightRequest {
-  cltv_expiry: number;
-  network: string;
-}
-
-interface BitcoinRequest {
-  absolute_expiry: number;
-  network: string;
-}
-
-interface EthereumRequest {
-  chain_id: number;
-}
-
-export type HbitRequestParams = RequestParams & BitcoinRequest;
-
-export type HalightRequestParams = RequestParams & HalightRequest;
-
-export type Herc20RequestParams = RequestParams &
-  Herc20Request &
-  EthereumRequest;
-
-export type Herc20HalightRequestBody = CoreRequestBody<
-  Herc20RequestParams,
-  HalightRequestParams
->;
-
-export type HalightHerc20RequestBody = CoreRequestBody<
-  HalightRequestParams,
-  Herc20RequestParams
->;
-
-export type Herc20HbitRequestBody = CoreRequestBody<
-  Herc20RequestParams,
-  HbitRequestParams
->;
-
-export type HbitHerc20RequestBody = CoreRequestBody<
-  HbitRequestParams,
-  Herc20RequestParams
->;
 
 /**
  * The payload returned when fetching one swap on the `/swaps/:id` endpoint

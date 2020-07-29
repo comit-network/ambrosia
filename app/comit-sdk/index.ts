@@ -1,5 +1,4 @@
 export { Ledger, Asset, Cnd, Peer } from "./cnd/cnd";
-export { SwapDetails, SwapProperties } from "./cnd/rfc003_payload";
 export {
   LedgerAction,
   BitcoinBroadcastSignedTransactionPayload,
@@ -8,13 +7,6 @@ export {
   EthereumDeployContractPayload
 } from "./cnd/action_payload";
 export {
-  SwapRequest,
-  HbitHerc20RequestBody,
-  Herc20HbitRequestBody,
-  HalightHerc20RequestBody,
-  Herc20HalightRequestBody,
-  HalightRequestParams,
-  Herc20RequestParams,
   SwapResponse,
   SwapElementResponse,
   SwapStatus,
@@ -36,7 +28,6 @@ export { AllWallets, Wallets } from "./wallet";
 export {
   BitcoinWallet,
   BitcoindWallet,
-  Network as BitcoinNetwork,
   BitcoindWalletArgs
 } from "./wallet/bitcoin";
 export { EthereumWallet } from "./wallet/ethereum";
@@ -44,9 +35,7 @@ export { LightningWallet, Outpoint } from "./wallet/lightning";
 
 export { BigNumber } from "bignumber.js";
 
-export { ComitClient } from "./comit_client";
-
-export { Swap, TryParams } from "./swap";
+export { Swap } from "./swap";
 
 export { Action } from "./action";
 
