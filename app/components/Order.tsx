@@ -9,26 +9,24 @@ import {
   Box,
   Tag
 } from '@chakra-ui/core';
-import { toBitcoin } from 'satoshi-bitcoin-ts';
-import { formatUnits } from 'ethers/lib/utils';
+import BitcoinAmount from './BitcoinAmount';
+import DaiAmount from './DaiAmount';
 
-const HoverFlex = ({ children }) => {
-  return (
-    <PseudoBox
-      as={Flex}
-      justifyContent="space-between"
-      bg="white"
-      p={3}
-      mb={3}
-      shadow="md"
-      borderWidth="1px"
-      borderRadius="8px"
-      _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
-    >
-      {children}
-    </PseudoBox>
-  );
-};
+const HoverFlex = ({ children }) => (
+  <PseudoBox
+    as={Flex}
+    justifyContent="space-between"
+    bg="white"
+    p={3}
+    mb={3}
+    shadow="md"
+    borderWidth="1px"
+    borderRadius="8px"
+    _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
+  >
+    {children}
+  </PseudoBox>
+);
 
 const VARIANT_MAP = {
   new: 'cyan',
@@ -92,25 +90,9 @@ function Order(props: OrderProps) {
         <Tag variantColor="gray" minWidth="3rem" margin="1rem">
           <TagLabel>{properties.position.toString()}</TagLabel>
         </Tag>
-        <Tag variantColor="cyan" minWidth="9rem" marginRight="0.5rem">
-          <TagLabel>{toBitcoin(properties.bitcoin_amount)}</TagLabel>
-        </Tag>
-        <Tag variantColor="cyan" minWidth="1rem">
-          <TagLabel>BTC</TagLabel>
-        </Tag>
+        <BitcoinAmount amount={properties.bitcoin_amount} />
         <Icon name="arrow-forward" mx={2} />
-        <Tag variantColor="orange" minWidth="9rem" marginRight="0.5rem">
-          <TagLabel>
-            {// TODO: Proper display for DAI amount
-            formatUnits(properties.ethereum_amount).substring(
-              0,
-              formatUnits(properties.ethereum_amount).indexOf('.') + 8
-            )}
-          </TagLabel>
-        </Tag>
-        <Tag variantColor="orange" minWidth="1rem">
-          <TagLabel>DAI</TagLabel>
-        </Tag>
+        <DaiAmount amount={properties.ethereum_amount} />
       </Box>
     </HoverFlex>
   );
