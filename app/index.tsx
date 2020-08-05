@@ -23,7 +23,7 @@ function initAppSettings(): Store {
     settings.set('ETHEREUM_KEY', `0x${comitEnv.ETHEREUM_KEY_1}`);
     settings.set('ETHEREUM_NODE_HTTP_URL', comitEnv.ETHEREUM_NODE_HTTP_URL);
     settings.set('ERC20_CONTRACT_ADDRESS', comitEnv.ERC20_CONTRACT_ADDRESS);
-    settings.set('HTTP_URL_CND', comitEnv.HTTP_URL_CND_1);
+    settings.set('HTTP_URL_CND', 'http://127.0.0.1:8000');
 
     // TEMP: load Maker settings for testing purposes
     settings.set('MAKER_ETHEREUM_KEY', comitEnv.ETHEREUM_KEY_0);
