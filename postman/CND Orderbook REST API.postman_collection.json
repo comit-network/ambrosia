@@ -6,79 +6,6 @@
 	},
 	"item": [
 		{
-			"name": "ARCHIVED",
-			"item": [
-				{
-					"name": "GET / (Taker)",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "{{TAKER_CND_URL}}",
-							"host": [
-								"{{TAKER_CND_URL}}"
-							]
-						},
-						"description": "GET /\n"
-					},
-					"response": []
-				},
-				{
-					"name": "POST /dial (Maker2Taker)",
-					"request": {
-						"method": "POST",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"body": {
-							"mode": "raw",
-							"raw": "{\n\t\"addresses\": [\"/ip4/124.19.31.4/tcp/9939\"]\n}"
-						},
-						"url": {
-							"raw": "{{MAKER_CND_URL}}/dial",
-							"host": [
-								"{{MAKER_CND_URL}}"
-							],
-							"path": [
-								"dial"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "GET /orders (Maker)",
-					"request": {
-						"method": "GET",
-						"header": [
-							{
-								"key": "Content-Type",
-								"name": "Content-Type",
-								"value": "application/json",
-								"type": "text"
-							}
-						],
-						"url": {
-							"raw": "{{MAKER_CND_URL}}/orders",
-							"host": [
-								"{{MAKER_CND_URL}}"
-							],
-							"path": [
-								"orders"
-							]
-						}
-					},
-					"response": []
-				}
-			],
-			"protocolProfileBehavior": {}
-		},
-		{
 			"name": "GET / (Maker) >> MAKER_MULTI_ADR",
 			"event": [
 				{
@@ -204,6 +131,19 @@
 		},
 		{
 			"name": "POST /orders/:id/take (Taker) >> SWAP_LOCATION",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "6aadef6a-3b31-4a23-b8e4-b55eb0f37ffa",
+						"exec": [
+							"var swapLocation = pm.response.headers.get(\"location\");",
+							"postman.setEnvironmentVariable(\"SWAP_LOCATION\", swapLocation); // save as string because it will be part of the URL for posting order-take"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
 			"request": {
 				"method": "POST",
 				"header": [
