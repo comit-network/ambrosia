@@ -56,3 +56,6 @@ package.json
 
 # comit-sdk
 app/comit-sdk/*
+
+# postman
+postman/*
