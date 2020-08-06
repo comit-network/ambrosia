@@ -32,6 +32,7 @@ const settings = new Store();
 export default function OrderConfirmationPage() {
   const [order, setOrder] = useState(null);
   const [swapHref, setSwap] = useState(null);
+  const [executedActions, setExecutedActions] = useState([]);
 
   const { id: orderId } = useParams();
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
@@ -84,17 +85,22 @@ export default function OrderConfirmationPage() {
   }, [takerOrdersResponse]);
 
   useEffect(() => {
-    if (swap && swap.data.actions && swap.data.actions.length === 1) {
-      const action = swap.data.actions[0];
-
-      // TODO remember which action was already executed
-      executeLedgerAction(action, cnd, {
-        bitcoin: BTCWallet,
-        ethereum: ETHWallet
-      })
-        .then(console.log)
-        .catch(console.error);
+    const swapHasExactlyOneAction =
+      swap && swap.data.actions && swap.data.actions.length === 1;
+    if (!swapHasExactlyOneAction) {
+      return;
     }
+    const action = swap.data.actions[0];
+    if (executedActions.includes(action.href)) {
+      return;
+    }
+    executeLedgerAction(action, cnd, {
+      bitcoin: BTCWallet,
+      ethereum: ETHWallet
+    })
+      .then(console.log)
+      .catch(console.error);
+    setExecutedActions([...executedActions, action.href]);
   }, [swap]);
 
   return (
