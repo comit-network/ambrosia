@@ -54,8 +54,8 @@ export default function OrderConfirmationPage(_: Props) {
       const res = await axios.post(
         `${settings.get('HTTP_URL_CND')}/orders/${orderId}/take`,
         {
-          refund_identity: btcAddress, // BTC wallet address
-          redeem_identity: ethAddress // ETH wallet address
+          bitcoin_identity: btcAddress, // BTC wallet address
+          ethereum_identity: ethAddress // ETH wallet address
         }
       );
 
@@ -99,12 +99,13 @@ export default function OrderConfirmationPage(_: Props) {
         Confirm your order
       </Heading>
 
-      <Maker id={order.maker} />
-
-      <br />
-
-      <OrderDetails details={order} />
-
+      {order && (
+        <>
+          <Maker id={order.maker} />
+          <br />
+          <OrderDetails details={order} />
+        </>
+      )}
       <br />
 
       <Text mb={2} fontSize="0.8em" color="gray.600">
@@ -114,8 +115,8 @@ export default function OrderConfirmationPage(_: Props) {
         <Alert status="info" mb={6}>
           <AlertIcon />
           <Text>
-            <strong>Next steps:</strong> After you submit your order, you and
-            the maker will start a swap.{' '}
+            <strong>Next steps:</strong> After you take the order, you and the
+            maker will start a swap.{' '}
             <HTMLLink textDecoration="underline" color="cyan.800" href="#">
               Learn more.
             </HTMLLink>
@@ -142,7 +143,7 @@ export default function OrderConfirmationPage(_: Props) {
             width="100%"
             onClick={takeOrder}
           >
-            Submit Order
+            Take Order
           </Button>
         </Stack>
       </Box>

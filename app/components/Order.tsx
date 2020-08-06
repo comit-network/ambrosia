@@ -9,24 +9,24 @@ import {
   Box,
   Tag
 } from '@chakra-ui/core';
+import BitcoinAmount from './BitcoinAmount';
+import DaiAmount from './DaiAmount';
 
-const HoverFlex = ({ children }) => {
-  return (
-    <PseudoBox
-      as={Flex}
-      justifyContent="space-between"
-      bg="white"
-      p={3}
-      mb={3}
-      shadow="md"
-      borderWidth="1px"
-      borderRadius="8px"
-      _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
-    >
-      {children}
-    </PseudoBox>
-  );
-};
+const HoverFlex = ({ children }) => (
+  <PseudoBox
+    as={Flex}
+    justifyContent="space-between"
+    bg="white"
+    p={3}
+    mb={3}
+    shadow="md"
+    borderWidth="1px"
+    borderRadius="8px"
+    _hover={{ borderColor: 'blue.500', cursor: 'pointer' }}
+  >
+    {children}
+  </PseudoBox>
+);
 
 const VARIANT_MAP = {
   new: 'cyan',
@@ -39,11 +39,16 @@ function getVariant(status: string) {
 }
 
 type OrderProperties = {
-  absolute_expiry: number;
-  buy_quantity: string;
+  bitcoin_absolute_expiry: number;
+  bitcoin_amount: string;
+  bitcoin_ledger: string;
+  ethereum_absolute_expiry: number;
+  ethereum_amount: string;
+  ethereum_ledger: string;
   id: string;
   maker: string;
-  sell_quantity: string;
+  position: string;
+  token_contract: string;
 };
 
 type OrderProps = {
@@ -63,11 +68,11 @@ function Order(props: OrderProps) {
           letterSpacing="wide"
           fontSize="xs"
           textTransform="uppercase"
-          mr={2}
+          mr={1}
           mt={2}
           width="10rem"
         >
-          DAI &bull; BTC
+          BTC &bull; DAI
           {status ? (
             <Badge
               ml={3}
@@ -82,20 +87,12 @@ function Order(props: OrderProps) {
       </Box>
 
       <Box fontWeight="semibold">
-        <Tag variantColor="cyan" minWidth="8rem">
-          {/* TEMP: hack for trailing zeros */}
-          <TagLabel>
-            {parseFloat(properties.buy_quantity).toString()} BTC
-          </TagLabel>
+        <Tag variantColor="gray" minWidth="3rem" margin="1rem">
+          <TagLabel>{properties.position.toString()}</TagLabel>
         </Tag>
+        <BitcoinAmount amount={properties.bitcoin_amount} />
         <Icon name="arrow-forward" mx={2} />
-        <Tag variantColor="orange" minWidth="8rem">
-          {/* TODO: get token symbol for properties.sell_token_contract */}
-          <TagLabel>{properties.sell_quantity} DAI</TagLabel>
-        </Tag>
-      </Box>
-      <Box mt={1} as="span" color="gray.600" fontSize="sm">
-        Expires in {properties.absolute_expiry / 60} mins
+        <DaiAmount amount={properties.ethereum_amount} />
       </Box>
     </HoverFlex>
   );
