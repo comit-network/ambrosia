@@ -35,8 +35,4 @@ export { LightningWallet, Outpoint } from "./wallet/lightning";
 
 export { BigNumber } from "bignumber.js";
 
-export { Swap } from "./swap";
-
-export { Action } from "./action";
-
 export { Lnd } from "./lnd";

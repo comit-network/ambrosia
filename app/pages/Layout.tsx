@@ -8,7 +8,6 @@ import DashboardPage from './DashboardPage';
 import HistoryPage from './HistoryPage';
 import ExchangePage from './ExchangePage';
 import OrderConfirmationPage from './OrderConfirmationPage';
-import SwapDetailsPage from './SwapDetailsPage';
 import SettingsPage from './SettingsPage';
 import AboutPage from './AboutPage';
 
@@ -87,7 +86,6 @@ export default function Layout() {
           <Route path={routes.HISTORY} component={HistoryPage} />
           <Route path={routes.SETTINGS} component={SettingsPage} />
           <Route path={routes.ORDERS} component={OrderConfirmationPage} />
-          <Route path={routes.SWAPS} component={SwapDetailsPage} />
           <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>

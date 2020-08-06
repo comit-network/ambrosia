@@ -1,20 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, Link, useHistory } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, useParams } from 'react-router-dom';
 import {
+  Alert,
+  AlertIcon,
   Box,
-  Heading,
-  Text,
   Breadcrumb,
   BreadcrumbItem,
   BreadcrumbLink,
-  Link as HTMLLink,
-  Alert,
-  AlertIcon,
+  Button,
   Divider,
+  Heading,
+  Link as HTMLLink,
   Stack,
-  Button
+  Text
 } from '@chakra-ui/core';
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 import useSWR from 'swr';
 import Store from 'electron-store';
 import routes from '../constants/routes.json';
@@ -23,26 +23,30 @@ import OrderDetails from '../components/OrderDetails';
 import SwapProgress from '../components/SwapProgress';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import executeLedgerAction from '../comit-sdk/action';
+import { useCnd } from '../hooks/useCnd';
+import { Entity } from '../comit-sdk/cnd/siren';
 
 const settings = new Store();
 
-type Props = {
-  history: History;
-};
+export default function OrderConfirmationPage() {
+  const [order, setOrder] = useState(null);
+  const [swapHref, setSwap] = useState(null);
 
-export default function OrderConfirmationPage(_: Props) {
   const { id: orderId } = useParams();
-  const history = useHistory();
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
   const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
 
-  const fetcher = (input: RequestInfo, init?: RequestInit) =>
-    fetch(input, init).then(res => res.json());
-  const { data: takerOrdersResponse } = useSWR(
-    `${settings.get('HTTP_URL_CND')}/orders`,
-    fetcher
+  const { cnd } = useCnd();
+
+  const { data: takerOrdersResponse } = useSWR<AxiosResponse<Entity>>(
+    '/orders',
+    cnd.fetch
   );
-  const [order, setOrder] = useState(null);
+
+  const { data: swap } = useSWR<AxiosResponse<Entity>>(swapHref, cnd.fetch, {
+    refreshInterval: 1000
+  });
 
   async function takeOrder() {
     if (BTCLoaded && ETHLoaded) {
@@ -60,18 +64,14 @@ export default function OrderConfirmationPage(_: Props) {
       );
 
       // get headers from response after taking
-      const swapHref = res.headers.location; // e.g. /swaps/f5739e5b-0a9a-41b7-9512-60aeceb15624
-
-      // TODO: Fetch swap by ID through the SDK and then call next()
-
-      history.push(swapHref);
+      setSwap(res.headers.location); // e.g. /swaps/f5739e5b-0a9a-41b7-9512-60aeceb15624
     }
   }
 
   useEffect(() => {
     async function parseOrders() {
       if (takerOrdersResponse) {
-        const parsedOrders = takerOrdersResponse.entities.map(r => {
+        const parsedOrders = takerOrdersResponse.data.entities.map(r => {
           return r.properties;
         });
         const parsedOrder = parsedOrders.filter(o => o.id === orderId);
@@ -82,6 +82,20 @@ export default function OrderConfirmationPage(_: Props) {
     // We need to GET /orders because GET /orders/:id returns nothing
     parseOrders();
   }, [takerOrdersResponse]);
+
+  useEffect(() => {
+    if (swap && swap.data.actions && swap.data.actions.length === 1) {
+      const action = swap.data.actions[0];
+
+      // TODO remember which action was already executed
+      executeLedgerAction(action, cnd, {
+        bitcoin: BTCWallet,
+        ethereum: ETHWallet
+      })
+        .then(console.log)
+        .catch(console.error);
+    }
+  }, [swap]);
 
   return (
     <Box width="100%">
