@@ -42,12 +42,18 @@ export default function OrderConfirmationPage() {
 
   const { data: takerOrdersResponse } = useSWR<AxiosResponse<Entity>>(
     '/orders',
-    cnd.fetch
+    path => cnd.fetch(path)
   );
 
-  const { data: swap } = useSWR<AxiosResponse<Entity>>(swapHref, cnd.fetch, {
-    refreshInterval: 1000
-  });
+  const { data: swap } = useSWR<AxiosResponse<Entity>>(
+    () => swapHref,
+    path => cnd.fetch(path),
+    {
+      refreshInterval: 1000,
+      dedupingInterval: 0,
+      compare: () => false
+    }
+  );
 
   async function takeOrder() {
     if (BTCLoaded && ETHLoaded) {
@@ -63,6 +69,8 @@ export default function OrderConfirmationPage() {
           ethereum_identity: ethAddress // ETH wallet address
         }
       );
+
+      console.log(res);
 
       // get headers from response after taking
       setSwap(res.headers.location); // e.g. /swaps/f5739e5b-0a9a-41b7-9512-60aeceb15624
@@ -85,6 +93,7 @@ export default function OrderConfirmationPage() {
   }, [takerOrdersResponse]);
 
   useEffect(() => {
+    console.log(swap);
     const swapHasExactlyOneAction =
       swap && swap.data.actions && swap.data.actions.length === 1;
     if (!swapHasExactlyOneAction) {

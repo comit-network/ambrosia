@@ -2,7 +2,6 @@ import {Transaction} from "./transaction";
 import {LedgerAction} from "./cnd/action_payload";
 import {Cnd} from "./cnd/cnd";
 import {AllWallets} from "./wallet";
-import BigNumber from "bignumber.js";
 import {ethers} from "ethers";
 import {Action} from "./cnd/siren";
 
@@ -93,13 +92,12 @@ export default async function executeLedgerAction(
         }
         case "ethereum-deploy-contract": {
             const {amount, data, gas_limit, chain_id} = ledgerAction.payload;
-            const value = new BigNumber(amount);
+            console.log(amount);
 
             try {
                 const transactionId = await wallets.ethereum.deployContract(
                     data,
-                    // TODO: This conversion should not be necessary
-                    ethers.BigNumber.from(value),
+                    ethers.BigNumber.from(amount),
                     gas_limit,
                     chain_id
                 );
@@ -110,7 +108,7 @@ export default async function executeLedgerAction(
             } catch (error) {
                 throw new WalletError(ledgerAction.type, error, {
                     data,
-                    value,
+                    amount,
                     gas_limit
                 });
             }

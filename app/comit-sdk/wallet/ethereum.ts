@@ -49,12 +49,11 @@ export class EthereumWallet {
 
   public async deployContract(
     data: string,
-    amount: BigNumber,
+    value: BigNumber,
     gasLimit: string,
     chainId: number
   ): Promise<string> {
     await this.assertNetwork(chainId);
-    const value = ethers.BigNumber.from(amount.toString());
     const transaction: ethers.providers.TransactionRequest = {
       data,
       value,
