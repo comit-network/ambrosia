@@ -5,5 +5,6 @@
   "EXCHANGE": "/exchange",
   "SETTINGS": "/settings",
   "SWAPS": "/swaps/:id",
-  "ORDERS": "/orders/:id"
+  "ORDERS": "/orders/:id",
+  "WALLET": "/wallet"
 }

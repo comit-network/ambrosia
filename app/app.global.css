@@ -4,19 +4,21 @@
  */
 
 #sidebar {
-  width: 225px;
-  min-height: 100vh;
+  width: 80px;
+  height: calc(100% - 40px);
   padding: 1.5rem;
   position: fixed;
+  top: 20px;
 }
 
 #content {
-  min-height: 100vh;
-  width: 100%;
+  height: calc(100% - 80px);
+  width: calc(100% - 160px);
   padding: 2rem;
   padding-bottom: 3rem;
   position: absolute;
-  left: 225px;
+  left: 80px;
+  top: 30px;
 }
 
 /* Swap Progress */
