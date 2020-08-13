@@ -9,9 +9,10 @@
   padding: 1.5rem;
   position: fixed;
 }
+
 #content {
   min-height: 100vh;
-  width: calc(100% - 225px);
+  width: 100%;
   padding: 2rem;
   padding-bottom: 3rem;
   position: absolute;

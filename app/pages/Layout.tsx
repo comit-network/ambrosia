@@ -1,13 +1,14 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { Switch, Route, Link } from 'react-router-dom';
-import { Box, Flex, PseudoBox, Icon, Stack, Text } from '@chakra-ui/core';
+import {Box, Flex, PseudoBox, Icon, Stack, Text, Collapse, Button} from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
 import DashboardPage from './DashboardPage';
 import HistoryPage from './HistoryPage';
 import ExchangePage from './ExchangePage';
 import OrderConfirmationPage from './OrderConfirmationPage';
+import SwapDetailsPage from './SwapDetailsPage';
 import SettingsPage from './SettingsPage';
 import AboutPage from './AboutPage';
 
@@ -38,55 +39,41 @@ const NavBox = ({ children }) => {
 };
 
 export default function Layout() {
-  return (
-    <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
-      <Flex backgroundColor="white" id="sidebar">
-        <Stack spacing="20px">
-          <Text fontSize="0.7em" mt={6} fontWeight="600">
-            MENU
-          </Text>
+  const [show, setShow] = React.useState(false);
+  const [sidebarWidth, setSidebarWidth] = React.useState(10);
+  const handleToggle = () => {
+    setShow(!show);
+    if (show === false) {
+      setSidebarWidth(200)
+    }
+  };
 
-          <Stack w="175px">
-            <Link to={routes.HOME}>
-              <NavBox>
-                <NavIcon name="calendar" />
-                <NavText>Dashboard</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.EXCHANGE}>
-              <NavBox>
-                <NavIcon name="repeat" />
-                <NavText>Exchange</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.HISTORY}>
-              <NavBox>
-                <NavIcon name="repeat-clock" />
-                <NavText>History</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.SETTINGS}>
-              <NavBox>
-                <NavIcon name="settings" />
-                <NavText>Settings</NavText>
-              </NavBox>
-            </Link>
-            <Link to={routes.ABOUT}>
-              <NavBox>
-                <NavIcon name="info" />
-                <NavText>About</NavText>
-              </NavBox>
-            </Link>
-          </Stack>
+  return (
+    <Flex flexDirection="row" minHeight="100%" alignItems="stretch" marginTop={10}>
+      <Flex backgroundColor="white" id="sidebar">
+        <Stack>
+          <Button mt={4} w={10} variantColor="blue" onClick={handleToggle}>
+            M
+          </Button>
+          <Collapse mt={2} isOpen={show} w={sidebarWidth}>
+            <Stack spacing="20px">
+              {/*<Text fontSize="0.7em" mt={6} fontWeight="600">*/}
+              {/*  MENU*/}
+              {/*</Text>*/}
+              <Stack>
+                <Link to={routes.HOME}>
+                  <NavBox>
+                    <NavIcon name="calendar" />
+                    <NavText>Dashboard</NavText>
+                  </NavBox>
+                </Link>
+              </Stack>
+            </Stack>
+          </Collapse>
         </Stack>
       </Flex>
       <Flex backgroundColor="gray.100" id="content">
         <Switch>
-          <Route path={routes.EXCHANGE} component={ExchangePage} />
-          <Route path={routes.HISTORY} component={HistoryPage} />
-          <Route path={routes.SETTINGS} component={SettingsPage} />
-          <Route path={routes.ORDERS} component={OrderConfirmationPage} />
-          <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>
