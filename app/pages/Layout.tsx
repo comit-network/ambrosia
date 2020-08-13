@@ -62,13 +62,7 @@ export default function Layout() {
   };
 
   return (
-    <Flex
-      flexDirection="row"
-      minHeight="100%"
-      alignItems="stretch"
-      marginTop={10}
-      marginBottom={10}
-    >
+    <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
       <Flex backgroundColor="white" id="sidebar">
         <Stack>
           <IconButton

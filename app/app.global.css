@@ -5,20 +5,17 @@
 
 #sidebar {
   width: 80px;
-  height: calc(100% - 40px);
+  height: 100vh;
   padding: 1.5rem;
   position: fixed;
-  top: 20px;
 }
 
 #content {
-  height: calc(100% - 80px);
+  height: 100vh;
   width: calc(100% - 160px);
   padding: 2rem;
-  padding-bottom: 3rem;
   position: absolute;
   left: 80px;
-  top: 30px;
 }
 
 /* Swap Progress */
