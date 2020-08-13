@@ -1,45 +1,69 @@
 import React from 'react';
-import { Box, Image, Flex, Heading, Button, Text } from '@chakra-ui/core';
-import { Link } from 'react-router-dom';
-import Balances from '../components/Balances';
-import browseImage from '../assets/browse.svg';
-import routes from '../constants/routes.json';
+import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/core';
 
 export default function DashboardPage() {
   return (
-    <Box width="100%">
-      <Heading fontSize="1.8em" mb={8}>
-        Dashboard
-      </Heading>
+    <Box width="100%" height="100%">
+      <Flex direction="column" height="100%">
+        <Flex flexDirection="row" width="100%" minHeight="300px">
+          <Flex background="gray" minWidth="200px" maxWidth="200px">
+            <Text> Wallet with available balances </Text>
+          </Flex>
 
-      <Heading fontSize="1.4em" mt={8} mb={4}>
-        My Wallet
-      </Heading>
-      <Balances />
+          <Divider orientation="vertical" />
 
-      <Box mt={58}>
-        <Heading fontSize="1.4em" mt={8} mb={4}>
-          Active Orders
-        </Heading>
-        <Flex justifyContent="center" alignItems="center">
-          <Image src={browseImage} size="12rem" />
+          <Flex background="white" minWidth="400px">
+            <Text> Trading screen, depict Buy / Sell, Market / Limit</Text>
+          </Flex>
+
+          <Divider orientation="vertical" />
+
+          <Flex background="white" minWidth="300px" width="100%">
+            <Text>
+              {' '}
+              Current COMIT market, showing orders and current ask and bid
+            </Text>
+          </Flex>
         </Flex>
-        <Text textAlign="center" fontWeight="600">
-          Choose an order to get started
-        </Text>
-        <Text textAlign="center">
-          Choose an order to start trading across chains. You must have
-          sufficient balance in your wallets to trade.
-        </Text>
 
-        <Flex mt={8} justifyContent="center" alignItems="center">
-          <Link to={routes.EXCHANGE}>
-            <Button leftIcon="search" variantColor="blue" alignSelf="center">
-              Browse Orders
-            </Button>
-          </Link>
+        <Divider />
+
+        <Flex flexDirection="row" width="100%" height="100%">
+          <Flex background="gray" minWidth="200px" maxWidth="200px">
+            <Text> Status of ledger and blockchain nodes</Text>
+          </Flex>
+
+          <Divider orientation="vertical" />
+
+          <Flex
+            background="white"
+            width="100%"
+            maxHeight="100%"
+            overflow="scroll"
+          >
+            <Stack>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+              <Text> My current Orders AND Execution </Text>
+            </Stack>
+          </Flex>
         </Flex>
-      </Box>
+      </Flex>
     </Box>
   );
 }
