@@ -15,7 +15,8 @@ import {
   DrawerHeader,
   DrawerBody,
   IconButton,
-  Divider
+  Divider,
+  Button
 } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
@@ -26,6 +27,7 @@ import DashboardPageMock1 from './DashboardPageMock1';
 import DashboardPageMock2 from './DashboardPageMock2';
 import DashboardPageMock3 from './DashboardPageMock3';
 import DashboardPageMock4 from './DashboardPageMock4';
+import DashboardPageMock5 from './DashboardPageMock5';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -87,40 +89,49 @@ export default function Layout() {
               />
             </Link>
             <Link to={routes.HOME_mock1}>
-              <IconButton
-                aria-label="Dashboard"
+              <Button
                 variantColor={activeContent === 'HOME_mock1' ? 'red' : 'orange'}
-                icon="calendar"
                 onClick={() => setActiveContent('HOME_mock1')}
                 marginBottom="10px"
-              />
+              >
+                1
+              </Button>
             </Link>
             <Link to={routes.HOME_mock2}>
-              <IconButton
-                aria-label="Dashboard"
+              <Button
                 variantColor={activeContent === 'HOME_mock2' ? 'red' : 'orange'}
-                icon="calendar"
                 onClick={() => setActiveContent('HOME_mock2')}
                 marginBottom="10px"
-              />
+              >
+                2
+              </Button>
             </Link>
             <Link to={routes.HOME_mock3}>
-              <IconButton
-                aria-label="Dashboard"
+              <Button
                 variantColor={activeContent === 'HOME_mock3' ? 'red' : 'orange'}
-                icon="calendar"
                 onClick={() => setActiveContent('HOME_mock3')}
                 marginBottom="10px"
-              />
+              >
+                3
+              </Button>
             </Link>
             <Link to={routes.HOME_mock4}>
-              <IconButton
-                aria-label="Dashboard"
+              <Button
                 variantColor={activeContent === 'HOME_mock4' ? 'red' : 'orange'}
-                icon="calendar"
                 onClick={() => setActiveContent('HOME_mock4')}
                 marginBottom="10px"
-              />
+              >
+                4
+              </Button>
+            </Link>
+            <Link to={routes.HOME_mock5}>
+              <Button
+                variantColor={activeContent === 'HOME_mock5' ? 'red' : 'orange'}
+                onClick={() => setActiveContent('HOME_mock5')}
+                marginBottom="10px"
+              >
+                5
+              </Button>
             </Link>
             <Link to={routes.WALLET}>
               <IconButton
@@ -188,6 +199,7 @@ export default function Layout() {
           <Route path={routes.HOME_mock2} component={DashboardPageMock2} />
           <Route path={routes.HOME_mock3} component={DashboardPageMock3} />
           <Route path={routes.HOME_mock4} component={DashboardPageMock4} />
+          <Route path={routes.HOME_mock5} component={DashboardPageMock5} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>

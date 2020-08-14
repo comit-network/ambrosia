@@ -10,15 +10,9 @@ const mockOrders = (mockLabel: string, amount: number) => {
   return <Stack>{orders}</Stack>;
 };
 
-export default function DashboardPageMock4() {
+export default function DashboardPageMock5() {
   return (
     <Flex direction="column" width="100%" minHeight="100%">
-      <Flex background="white" minWidth="300px" width="100%" overflow="scroll">
-        {mockOrders('Current commit market', 20)}
-      </Flex>
-
-      <Divider />
-
       <Flex flexDirection="row" width="100%" maxHeight="300px">
         <Flex background="gray" minWidth="200px" maxWidth="200px">
           <Text> Status of ledger and blockchain nodes</Text>
@@ -34,6 +28,12 @@ export default function DashboardPageMock4() {
             )}
           </Stack>
         </Flex>
+      </Flex>
+
+      <Divider />
+
+      <Flex background="white" minWidth="300px" width="100%" overflow="scroll">
+        {mockOrders('Current commit market', 20)}
       </Flex>
 
       <Divider />
