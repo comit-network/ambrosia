@@ -1,6 +1,15 @@
 import React from 'react';
 import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/core';
 
+const mockOrders = (mockLabel: string, amount: number) => {
+  const orders = [];
+  for (let i = 0; i < amount; i += 1) {
+    orders.push(<Text>{mockLabel}</Text>);
+  }
+
+  return <Stack>{orders}</Stack>;
+};
+
 export default function DashboardPageMock1() {
   return (
     <Box width="100%" height="100%">
@@ -13,19 +22,18 @@ export default function DashboardPageMock1() {
           <Divider orientation="vertical" />
 
           <Flex background="white" minWidth="400px">
-            <Text>
-              {' '}
-              Mock1 - Trading screen, depict Buy / Sell, Market / Limit
-            </Text>
+            <Text> Trading screen, depict Buy / Sell, Market / Limit</Text>
           </Flex>
 
           <Divider orientation="vertical" />
 
-          <Flex background="white" minWidth="300px" width="100%">
-            <Text>
-              {' '}
-              Current COMIT market, showing orders and current ask and bid
-            </Text>
+          <Flex
+            background="white"
+            minWidth="300px"
+            width="100%"
+            overflow="scroll"
+          >
+            {mockOrders('Current commit market', 10)}
           </Flex>
         </Flex>
 
@@ -45,24 +53,14 @@ export default function DashboardPageMock1() {
             overflow="scroll"
           >
             <Stack>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
+              {mockOrders(
+                'An Order that is already in execution, cannot be cancelled, shows Swap exec details',
+                3
+              )}
+              {mockOrders(
+                'An Order that is not matched yet, can be cancelled with X in',
+                20
+              )}
             </Stack>
           </Flex>
         </Flex>
