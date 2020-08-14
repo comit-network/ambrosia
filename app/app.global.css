@@ -6,7 +6,8 @@
 #sidebar {
   width: 80px;
   height: 100vh;
-  padding: 1.5rem;
+  padding-left: 20px;
+  padding-top: 20px;
   position: fixed;
 }
 
