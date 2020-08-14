@@ -1,14 +1,36 @@
 import React from 'react';
-import { Heading, Box } from '@chakra-ui/core';
+import { Divider, Flex, Heading } from '@chakra-ui/core';
 
 export default function WalletPage() {
   return (
-    <Box width="100%">
-      <Heading fontSize="1.8em" mb={8}>
-        Detailed wallet page; should show the balance as in total, available and
-        locked inorders, as well as a total balance in e.g. BTC or USD, can also
-        show how the assets changed over time
-      </Heading>
-    </Box>
+    <Flex direction="column" width="100%">
+      <Flex
+        background="white"
+        direction="row"
+        width="100%"
+        minHeight="100px"
+        maxHeight="400px"
+      >
+        <Heading fontSize="1.0em" mb={8}>
+          Currency details; total, locked in orders. Also show price in USD /
+          (...)
+        </Heading>
+      </Flex>
+
+      <Divider />
+
+      <Flex
+        background="white"
+        direction="row"
+        width="100%"
+        maxHeight="100%"
+        height="100%"
+      >
+        <Heading fontSize="1.0em" mb={8}>
+          List of Transactions, the transactions are related to orders - you see
+          when you had (-) because of funding and (+) because of redeeming.
+        </Heading>
+      </Flex>
+    </Flex>
   );
 }

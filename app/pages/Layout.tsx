@@ -102,21 +102,21 @@ export default function Layout() {
                 marginBottom="10px"
               />
             </Link>
-            <Link to={routes.ABOUT}>
-              <IconButton
-                aria-label="About"
-                variantColor={activeContent === ABOUT ? 'blue' : 'gray'}
-                icon="info"
-                onClick={() => setActiveContent(ABOUT)}
-                marginBottom="10px"
-              />
-            </Link>
             <Link to={routes.WALLET}>
               <IconButton
                 aria-label="Wallet"
                 variantColor={activeContent === WALLET ? 'blue' : 'gray'}
                 icon="star"
                 onClick={() => setActiveContent(WALLET)}
+                marginBottom="10px"
+              />
+            </Link>
+            <Link to={routes.ABOUT}>
+              <IconButton
+                aria-label="About"
+                variantColor={activeContent === ABOUT ? 'blue' : 'gray'}
+                icon="info"
+                onClick={() => setActiveContent(ABOUT)}
                 marginBottom="10px"
               />
             </Link>

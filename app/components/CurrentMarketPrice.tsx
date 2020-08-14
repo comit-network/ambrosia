@@ -18,7 +18,10 @@ export default function CurrentMarketPrice() {
 
   const { data: krakenBitcoinDaiTickerData } = useSWR(
     'https://api.kraken.com/0/public/Ticker?pair=XBTDAI',
-    fetcher
+    fetcher,
+    {
+      refreshInterval: 2
+    }
   );
 
   useEffect(() => {
@@ -31,7 +34,7 @@ export default function CurrentMarketPrice() {
       }
     }
     bidAndAsk();
-  }, [btcDaiAsk, btcDaiBid]);
+  }, [krakenBitcoinDaiTickerData]);
 
   return (
     <div>

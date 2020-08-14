@@ -1,28 +1,21 @@
 import React from 'react';
 import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/core';
+import TradingBalanceHorizontal from '../components/TradingBalanceHorizontal';
+import CurrentMarketPrice from '../components/CurrentMarketPrice';
 
 export default function DashboardPage() {
   return (
     <Box width="100%" height="100%">
       <Flex direction="column" height="100%">
         <Flex flexDirection="row" width="100%" minHeight="300px">
-          <Flex background="gray" minWidth="200px" maxWidth="200px">
-            <Text> Wallet with available balances </Text>
+          <Flex minWidth="600px" maxWidth="600px">
+            <TradingBalanceHorizontal />
           </Flex>
 
           <Divider orientation="vertical" />
 
-          <Flex background="white" minWidth="400px">
-            <Text> Trading screen, depict Buy / Sell, Market / Limit</Text>
-          </Flex>
-
-          <Divider orientation="vertical" />
-
-          <Flex background="white" minWidth="300px" width="100%">
-            <Text>
-              {' '}
-              Current COMIT market, showing orders and current ask and bid
-            </Text>
+          <Flex width="100%">
+            <CurrentMarketPrice />
           </Flex>
         </Flex>
 
@@ -42,23 +35,6 @@ export default function DashboardPage() {
             overflow="scroll"
           >
             <Stack>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
-              <Text> My current Orders AND Execution </Text>
               <Text> My current Orders AND Execution </Text>
             </Stack>
           </Flex>
