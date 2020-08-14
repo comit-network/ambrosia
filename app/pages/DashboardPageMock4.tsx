@@ -10,7 +10,7 @@ const mockOrders = (mockLabel: string, amount: number) => {
   return <Stack>{orders}</Stack>;
 };
 
-export default function DashboardPageMock3() {
+export default function DashboardPageMock4() {
   return (
     <Flex direction="column" width="100%" minHeight="100%">
       <Flex background="white" minWidth="300px" width="100%" overflow="scroll">
@@ -32,10 +32,6 @@ export default function DashboardPageMock3() {
               'An Order that is already in execution, cannot be cancelled, shows Swap exec details',
               3
             )}
-            {mockOrders(
-              'An Order that is not matched yet, can be cancelled with X in',
-              20
-            )}
           </Stack>
         </Flex>
       </Flex>
@@ -54,8 +50,17 @@ export default function DashboardPageMock3() {
 
         <Divider orientation="vertical" />
 
-        <Flex background="white" minWidth="400px" width="100%">
+        <Flex background="white" minWidth="400px">
           <Text> Trading screen, depict Buy / Sell, Market / Limit</Text>
+        </Flex>
+
+        <Divider orientation="vertical" />
+
+        <Flex background="white" width="100%" overflow="scroll">
+          {mockOrders(
+            'An Order that is not matched yet, can be cancelled with X in',
+            20
+          )}
         </Flex>
       </Flex>
     </Flex>

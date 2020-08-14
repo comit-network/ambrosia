@@ -25,6 +25,7 @@ import WalletPage from './WalletPage';
 import DashboardPageMock1 from './DashboardPageMock1';
 import DashboardPageMock2 from './DashboardPageMock2';
 import DashboardPageMock3 from './DashboardPageMock3';
+import DashboardPageMock4 from './DashboardPageMock4';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -112,6 +113,15 @@ export default function Layout() {
                 marginBottom="10px"
               />
             </Link>
+            <Link to={routes.HOME_mock4}>
+              <IconButton
+                aria-label="Dashboard"
+                variantColor={activeContent === 'HOME_mock4' ? 'red' : 'orange'}
+                icon="calendar"
+                onClick={() => setActiveContent('HOME_mock4')}
+                marginBottom="10px"
+              />
+            </Link>
             <Link to={routes.WALLET}>
               <IconButton
                 aria-label="Wallet"
@@ -177,6 +187,7 @@ export default function Layout() {
           <Route path={routes.HOME_mock1} component={DashboardPageMock1} />
           <Route path={routes.HOME_mock2} component={DashboardPageMock2} />
           <Route path={routes.HOME_mock3} component={DashboardPageMock3} />
+          <Route path={routes.HOME_mock4} component={DashboardPageMock4} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>
