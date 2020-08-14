@@ -27,7 +27,7 @@ export default function WalletPage() {
         height="100%"
       >
         <Heading fontSize="1.0em" mb={8}>
-          List of Transactions, the transactions are related to orders - you see
+          List of Transactions, the transactions are related to SWAPS - you see
           when you had (-) because of funding and (+) because of redeeming.
         </Heading>
       </Flex>
