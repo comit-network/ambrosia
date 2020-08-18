@@ -1,5 +1,6 @@
 import React from 'react';
 import { Divider, Flex, Heading } from '@chakra-ui/core';
+import TradingBalanceHorizontal from "../components/TradingBalanceHorizontal";
 
 export default function WalletPage() {
   return (
@@ -15,6 +16,9 @@ export default function WalletPage() {
           Currency details; total, locked in orders. Also show price in USD /
           (...)
         </Heading>
+
+          <TradingBalanceHorizontal />
+
       </Flex>
 
       <Divider />

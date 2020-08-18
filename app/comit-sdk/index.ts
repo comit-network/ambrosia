@@ -12,7 +12,7 @@ export {
   SwapStatus,
   LedgerParameters,
   LedgerState,
-  StepTransaction,
+  LedgerEvent,
   EscrowStatus,
   SwapAction,
   Step

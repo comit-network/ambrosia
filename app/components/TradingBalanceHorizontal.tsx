@@ -1,20 +1,10 @@
-import React, { useEffect, useState } from 'react';
-import {
-  Flex,
-  Image,
-  Stat,
-  StatGroup,
-  StatHelpText,
-  StatLabel,
-  StatNumber
-} from '@chakra-ui/core';
-import { BigNumber, ethers } from 'ethers';
+import React, {useEffect, useState} from 'react';
+import {Flex, StatGroup} from '@chakra-ui/core';
+import {BigNumber, ethers} from 'ethers';
 import Store from 'electron-store';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
-import BitcoinIcon from '../assets/Bitcoin.svg';
-import DaiIcon from '../assets/Dai.svg';
-import EthereumIcon from '../assets/Ethereum.svg';
+import {useEthereumWallet} from '../hooks/useEthereumWallet';
+import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
+import CurrencyAmount, {amountToUnitString, Currency, CurrencyUnit, shortenAmountString} from "./CurrencyAmount";
 
 export default function TradingBalanceHorizontal() {
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
@@ -65,54 +55,50 @@ export default function TradingBalanceHorizontal() {
     <div>
       <StatGroup>
         <Flex
-          width="600px"
           bg="white"
           p={2}
-          paddingLeft={5}
           shadow="md"
           justifyContent="space-evenly"
+          minWidth="600px"
         >
-          <Stat>
-            <StatLabel>Available BTC</StatLabel>
-            <Flex direction="row" alignContent="center">
-              <Image
-                src={BitcoinIcon}
-                height="1.5rem"
-                marginRight="0.5rem"
-                alignSelf="center"
-              />
-              <StatNumber>{btcBalance - btcReserved}</StatNumber>
-            </Flex>
-            <StatHelpText>Locked in orders: {btcReserved}</StatHelpText>
-          </Stat>
 
-          <Stat>
-            <StatLabel>Available DAI</StatLabel>
-            <Flex direction="row" alignContent="center">
-              <Image
-                src={DaiIcon}
-                height="1.5rem"
-                marginRight="0.5rem"
-                alignSelf="center"
-              />
-              <StatNumber>{daiBalance - daiReserved}</StatNumber>
-            </Flex>
-            <StatHelpText>Locked in orders {daiReserved}</StatHelpText>
-          </Stat>
+          <CurrencyAmount
+              amount={btcBalance}
+              currency={Currency.BTC}
+              unit={CurrencyUnit.BTC}
+              topText={"BTC"}
+              subText1={"Available: " +
+                shortenAmountString(
+                    amountToUnitString(btcBalance - btcReserved, CurrencyUnit.BTC),
+                    10)}
+              subText2={"Locked in orders: " +
+                shortenAmountString(
+                    amountToUnitString(btcReserved, CurrencyUnit.BTC),
+                    6)}
+              amountShortenPosition={8}
+              amountFontSize={"14pt"}
+          />
+          <CurrencyAmount
+              amount={daiBalance}
+              currency={Currency.DAI}
+              unit={CurrencyUnit.DAI}
+              topText={"DAI"}
+              subText1={"Available: " + shortenAmountString(amountToUnitString(daiBalance - daiReserved, CurrencyUnit.DAI), 10)}
+              subText2={"Locked in orders: " + shortenAmountString(amountToUnitString(daiReserved, CurrencyUnit.DAI), 6)}
+              amountShortenPosition={8}
+              amountFontSize={"14pt"}
+          />
+          <CurrencyAmount
+              amount={ethBalance}
+              currency={Currency.ETH}
+              unit={CurrencyUnit.ETHER}
+              topText={"ETH"}
+              subText1={"Available: " + shortenAmountString(amountToUnitString(ethBalance - ethReserved, CurrencyUnit.ETHER), 10)}
+              subText2={"Locked in orders: " + shortenAmountString(amountToUnitString(ethReserved, CurrencyUnit.ETHER), 6)}
+              amountShortenPosition={8}
+              amountFontSize={"14pt"}
+          />
 
-          <Stat>
-            <StatLabel>Available ETH</StatLabel>
-            <Flex direction="row" alignContent="center">
-              <Image
-                src={EthereumIcon}
-                height="1.5rem"
-                marginRight="0.5rem"
-                alignSelf="center"
-              />
-              <StatNumber>{ethBalance - ethReserved}</StatNumber>
-            </Flex>
-            <StatHelpText>Locked in orders: {ethReserved} </StatHelpText>
-          </Stat>
         </Flex>
       </StatGroup>
     </div>

@@ -4,7 +4,7 @@ import { Box, Divider, Flex, Stack, Text } from '@chakra-ui/core';
 const mockOrders = (mockLabel: string, amount: number) => {
   const orders = [];
   for (let i = 0; i < amount; i += 1) {
-    orders.push(<Text>{mockLabel}</Text>);
+    orders.push(<Text key={i}>{mockLabel}</Text>);
   }
 
   return <Stack>{orders}</Stack>;

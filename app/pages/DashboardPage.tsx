@@ -1,10 +1,11 @@
 import React from 'react';
 import { Divider, Flex, Stack, Text } from '@chakra-ui/core';
+import SwapList from "../components/SwapList";
 
 const mockOrders = (mockLabel: string, amount: number) => {
   const orders = [];
   for (let i = 0; i < amount; i += 1) {
-    orders.push(<Text>{mockLabel}</Text>);
+    orders.push(<Text key={i}>{mockLabel}</Text>);
   }
 
   return <Stack>{orders}</Stack>;
@@ -27,12 +28,7 @@ export default function DashboardPage() {
         <Divider orientation="vertical" />
 
         <Flex background="white" width="100%" overflow="scroll">
-          <Stack>
-            {mockOrders(
-              'An Order that is already in execution, cannot be cancelled, shows Swap exec details',
-              3
-            )}
-          </Stack>
+          <SwapList />
         </Flex>
       </Flex>
 
