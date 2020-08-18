@@ -1,6 +1,8 @@
 import React from 'react';
 import { Divider, Flex, Stack, Text } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
+import OrderCreator from "../components/OrderCreator";
+import AvailableBalance from "../components/AvailableBalance";
 
 const mockOrders = (mockLabel: string, amount: number) => {
   const orders = [];
@@ -37,17 +39,17 @@ export default function DashboardPage() {
       <Flex
         flexDirection="row"
         width="100%"
-        minHeight="200px"
-        maxHeight="200px"
+        minHeight="300px"
+        maxHeight="300px"
       >
-        <Flex background="gray" minWidth="200px" maxWidth="200px">
-          <Text> Wallet with available balances </Text>
+        <Flex background="white" minWidth="200px" maxWidth="200px" padding="1rem">
+            <AvailableBalance />
         </Flex>
 
         <Divider orientation="vertical" />
 
         <Flex background="white" minWidth="400px">
-          <Text> Trading screen, depict Buy / Sell, Market / Limit</Text>
+          <OrderCreator />
         </Flex>
 
         <Divider orientation="vertical" />
