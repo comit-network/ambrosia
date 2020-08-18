@@ -1,5 +1,64 @@
 import { AxiosResponse } from 'axios';
 import { Entity } from '../comit-sdk/cnd/siren';
+import {Stack} from "@chakra-ui/core";
+
+// TODO: Change this to whatever we agree on for API change
+// Consider: https://www.kraken.com/features/api#public-market-data
+// We might not need the siren based model here
+export function mockComitMarketData() {
+  // @ts-ignore
+  return {
+    data: {
+      entities: [
+        {
+          class: ['bid-ask'],
+          properties: {
+            // Do we want to consider volume as well?
+            currencyPair: "BTC/DAI",
+            bid: "9000",
+            ask: "9100"
+          },
+          entities: [],
+          links: [],
+          actions: [],
+          rel: ['current']
+        },
+        {
+          // accumulated bid-ask over time in intervals
+          class: ['bid-ask'],
+          properties: {
+            interval: "5",
+            interval_unit: "min",
+            start_time: "2020-08-18-16:30:20",
+            end_time: "2020-08-18-18:30:00",
+            values: [
+              {
+                timestamp: "2020-08-18-16:30:20",
+                bid: "9000",
+                ask: "9100"
+              },
+              {
+                timestamp: "2020-08-18-16:35:20",
+                bid: "9000",
+                ask: "9050"
+              },
+              {
+                timestamp: "2020-08-18-16:40:20",
+                bid: "9050",
+                ask: "9100"
+              },
+              // ...
+            ]
+          },
+          entities: [],
+          links: [],
+          actions: [],
+          rel: ['historical']
+        }
+      ]
+    }
+  };
+}
 
 // TODO: Change this to whatever we agree on for API change
 export function mockSwaps(): AxiosResponse<Entity> {
@@ -19,7 +78,7 @@ export function mockSwaps(): AxiosResponse<Entity> {
 }
 
 // TODO: Change this to whatever we agree on for API change
-export function buyMockSwap(
+export function mockSwap(
   href: string,
   mockAction: string
 ): AxiosResponse<Entity> {
@@ -94,4 +153,26 @@ export function buyMockSwap(
 }
 
 // TODO: Change this to whatever we agree on for API change -> Include Amounts
-export function mockOrder() {}
+export function mockOrder() {
+  // @ts-ignore
+  return {
+    data: {
+      class: ['order'],
+      properties: {
+        trading_pair: "BTC/DAI",
+        position: "sell",
+        price: "9000",
+        quantity: "50000000", // in sats, 0.5 btc
+
+        // make sub-entity? But is not entity itself...?
+        role: "Alice", // is not needed, set by cnd automatically?
+        refund_identity: "bitcoin-address", // will not be displayed, automatically created
+        redeem_identity: "ethereum-address",  // will not be displayed, automatically created
+      },
+      entities: [
+      ],
+      actions: [
+      ]
+    }
+  };
+}

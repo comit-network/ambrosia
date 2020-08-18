@@ -5,7 +5,7 @@ import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 import { useCnd } from '../hooks/useCnd';
 import CurrencyAmount, { Currency, CurrencyUnit } from './CurrencyAmount';
-import { buyMockSwap } from './MockData';
+import { mockSwap } from './MockData';
 
 const swapStatus = (alphaStatus: string, betaStatus: string) => {
   // TODO: Work on more elaborate status
@@ -22,7 +22,7 @@ export default function Swap({ href }: SwapProperties) {
   const { wallet: btcWallet, loaded: btcLoaded } = useBitcoinWallet();
   const { cnd } = useCnd();
 
-  const swap = buyMockSwap(href, 'fund');
+  const swap = mockSwap(href, 'fund');
   // TODO: Production code
   // const { data: swap } = useSWR<AxiosResponse<SwapResponse>>(
   //     () => href,
