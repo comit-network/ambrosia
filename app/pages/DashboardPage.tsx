@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Flex, Stack, Text } from '@chakra-ui/core';
-import SwapList from "../components/SwapList";
+import SwapList from '../components/SwapList';
 
 const mockOrders = (mockLabel: string, amount: number) => {
   const orders = [];
