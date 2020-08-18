@@ -6,7 +6,7 @@ import {useEthereumWallet} from '../hooks/useEthereumWallet';
 import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import CurrencyAmount, {amountToUnitString, Currency, CurrencyUnit, shortenAmountString} from "./CurrencyAmount";
 
-export default function TradingBalanceHorizontal() {
+export default function BalanceHorizontal() {
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
   const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
   const [ethBalance, setEthBalance] = useState(null);

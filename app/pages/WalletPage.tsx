@@ -1,6 +1,6 @@
 import React from 'react';
 import { Divider, Flex, Heading } from '@chakra-ui/core';
-import TradingBalanceHorizontal from "../components/TradingBalanceHorizontal";
+import BalanceHorizontal from "../components/BalanceHorizontal";
 
 export default function WalletPage() {
   return (
@@ -17,7 +17,7 @@ export default function WalletPage() {
           (...)
         </Heading>
 
-          <TradingBalanceHorizontal />
+          <BalanceHorizontal />
 
       </Flex>
 
