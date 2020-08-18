@@ -161,20 +161,15 @@ export default function Swap({ href }: SwapProperties) {
   return (
     <Box maxWidth="100%" padding="5px">
       <Flex direction="column" shadow="md">
-        <Flex
-          direction="row"
-          width="100%"
-          alignItems="center"
-          padding="5px"
-          justifyContent="space-between"
-        >
+        <Flex direction="row" alignItems="center" padding="5px">
           <Box as={RiExchangeLine} size="32px" />
           {/* <Spinner size="sm" marginLeft="10px" marginRight="20px"/> */}
           <Text fontSize="md" marginRight="20px" fontWeight="bold">
             Swap
           </Text>
-          {sendAmountDisplay}
-          {receiveAmountDisplay}
+          <Flex marginRight="20px">{sendAmountDisplay}</Flex>
+          <Flex>{receiveAmountDisplay}</Flex>
+          <Flex width="100%" />
           <IconButton
             aria-label="Swap Details"
             icon={show ? 'chevron-up' : 'chevron-down'}
@@ -184,7 +179,11 @@ export default function Swap({ href }: SwapProperties) {
             Show details
           </IconButton>
           {/* @ts-ignore */}
-          <Button leftIcon="ledger" onClick={handleDetailsToggle}>
+          <Button
+            leftIcon="ledger"
+            onClick={handleDetailsToggle}
+            minWidth="100px"
+          >
             Fund
           </Button>
         </Flex>

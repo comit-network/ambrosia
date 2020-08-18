@@ -28,5 +28,5 @@ export default function SwapList() {
     <Swap key={swap.href} href={swap.href} />
   ));
 
-  return <Stack>{listItems}</Stack>;
+  return <Stack width="100%">{listItems}</Stack>;
 }
