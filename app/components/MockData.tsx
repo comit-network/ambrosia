@@ -1,83 +1,87 @@
 import { AxiosResponse } from 'axios';
 import { Entity } from '../comit-sdk/cnd/siren';
-import {Stack} from "@chakra-ui/core";
 
-// TODO: Change this to whatever we agree on for API change
-// Consider: https://www.kraken.com/features/api#public-market-data
-// We might not need the siren based model here
-export function mockComitMarketData() {
+// TODO: Figure this out
+export function mockSwapHistory(): AxiosResponse<Entity> {
   // @ts-ignore
   return {
     data: {
+      class: ["trades"],
+      properties: {
+      },
       entities: [
         {
-          class: ['bid-ask'],
+          class: ["trade"],
           properties: {
-            // Do we want to consider volume as well?
-            currencyPair: "BTC/DAI",
-            bid: "9000",
-            ask: "9100"
+            open_date: "", // order creation timestamp
+            close_date: "", // swap finished timestamp
+            quantity: {
+              // like in order
+            },
+            price: {
+              // like in order
+            },
+            percent_of_order_filled: "75%",
+            position: "buy",
+            order_type: "limit",
+            maker: "some-peer-id",
+            transactions: {
+              send: {
+                ledger: 'bitcoin',
+                tx: '...'
+              },
+              receive: {
+                ledger: 'ethereum',
+                tx: '...'
+              }
+            }
           },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['current']
-        },
-        {
-          // accumulated bid-ask over time in intervals
-          class: ['bid-ask'],
-          properties: {
-            interval: "5",
-            interval_unit: "min",
-            start_time: "2020-08-18-16:30:20",
-            end_time: "2020-08-18-18:30:00",
-            values: [
-              {
-                timestamp: "2020-08-18-16:30:20",
-                bid: "9000",
-                ask: "9100"
-              },
-              {
-                timestamp: "2020-08-18-16:35:20",
-                bid: "9000",
-                ask: "9050"
-              },
-              {
-                timestamp: "2020-08-18-16:40:20",
-                bid: "9050",
-                ask: "9100"
-              },
-              // ...
-            ]
-          },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['historical']
+          rel: ["item"],
+          links: [
+            {
+              "rel": [
+                "swap"
+              ],
+              "class": [],
+              "href": "/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cab"
+            },
+            {
+              "rel": [
+                "order"
+              ],
+              "class": [],
+              "href": "/order/some-id"
+            }
+          ]
         }
-      ]
+      ],
+      actions: [],
+      links: [],
     }
-  };
+  }
 }
 
-// TODO: Change this to whatever we agree on for API change
-export function mockSwaps(): AxiosResponse<Entity> {
+// GET /swaps
+export function mockOngoingSwaps(): AxiosResponse<Entity> {
   // @ts-ignore
   return {
     data: {
-      properties: [
+      properties: {},
+      entities: [
         {
-          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cab/'
+          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cab/',
+          rel: ["item"]
         },
         {
-          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cac/'
+          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cac/',
+          rel: ["item"]
         }
       ]
     }
   };
 }
 
-// TODO: Change this to whatever we agree on for API change
+// GET /swaps/:id
 export function mockSwap(
   href: string,
   mockAction: string
@@ -87,58 +91,41 @@ export function mockSwap(
     data: {
       class: ['swap'],
       properties: {
-        role: 'Alice'
+        role: 'Alice',
+        alpha: {
+          protocol: 'herc20',
+          asset: {
+            currency: "DAI",
+            value: "9000000000000000000000",
+            decimals: 18,
+          },
+        },
+        beta: {
+          protocol: 'hbit',
+          asset: {
+            currency: "BTC",
+            value: "100000000",
+            decimals: 8,
+          },
+        },
+        events: [
+          {
+            name: 'herc20_deployed',
+            seen_at: '',
+            tx: ''
+          },
+          {
+            name: 'herc20_funded',
+            seen_at: '',
+            tx: ''
+          },
+          {
+            name: 'hbit_funded',
+            seen_at: '',
+            tx: ''
+          }
+        ]
       },
-      entities: [
-        {
-          class: ['parameters'],
-          properties: {
-            protocol: 'herc20',
-            quantity: '1225986342026250000000',
-            token_contract: '0xddbee336d0ac3fd4668a6f767878f9a08933765e'
-          },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['alpha']
-        },
-        {
-          class: ['parameters'],
-          properties: {
-            protocol: 'hbit',
-            quantity: '9990725'
-          },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['beta']
-        },
-        {
-          class: ['state'],
-          properties: {
-            events: {
-              deploy:
-                '0x45b5f566f74e0a08f043f42a59ca36d02b7b321cc8560b8f1464d081d3d0d89b'
-            },
-            status: 'DEPLOYED'
-          },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['alpha']
-        },
-        {
-          class: ['state'],
-          properties: {
-            events: {},
-            status: 'NONE'
-          },
-          entities: [],
-          links: [],
-          actions: [],
-          rel: ['beta']
-        }
-      ],
       actions: [
         {
           name: mockAction,
@@ -152,27 +139,59 @@ export function mockSwap(
   };
 }
 
-// TODO: Change this to whatever we agree on for API change -> Include Amounts
+// GET /orders
 export function mockOrder() {
   // @ts-ignore
   return {
     data: {
-      class: ['order'],
-      properties: {
-        trading_pair: "BTC/DAI",
-        position: "sell",
-        price: "9000",
-        quantity: "50000000", // in sats, 0.5 btc
-
-        // make sub-entity? But is not entity itself...?
-        role: "Alice", // is not needed, set by cnd automatically?
-        refund_identity: "bitcoin-address", // will not be displayed, automatically created
-        redeem_identity: "ethereum-address",  // will not be displayed, automatically created
-      },
+      class: ['orders'],
+      properties: {},
       entities: [
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value: "90000000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            ours: true,
+            maker: "some_peer_id",
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/orderId",
+              fields: []
+            }
+          ]
+        }
+
       ],
       actions: [
       ]
     }
   };
+}
+
+// POST /orders
+interface PostOrderBody {
+  position: "buy" | "sell",
+  quantity: string, // in sats
+  price: string, // in wei (atto)
 }

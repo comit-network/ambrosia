@@ -1,10 +1,10 @@
 import React from 'react';
 import { Stack } from '@chakra-ui/core';
 import Swap from './Swap';
-import { mockSwaps } from './MockData';
+import { mockOngoingSwaps } from './MockData';
 
 export default function SwapList() {
-  const swapsResponse = mockSwaps();
+  const swapsResponse = mockOngoingSwaps();
 
   // TODO: Production code
   // let swapsEndpoint = "/swaps";
@@ -23,7 +23,7 @@ export default function SwapList() {
     return <Stack />;
   }
 
-  const swaps = swapsResponse.data.properties;
+  const swaps = swapsResponse.data.entities;
   const listItems = swaps.map(swap => (
     <Swap key={swap.href} href={swap.href} />
   ));

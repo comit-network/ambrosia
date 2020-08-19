@@ -1,10 +1,15 @@
-import React, {useEffect, useState} from 'react';
-import {StatGroup} from '@chakra-ui/core';
-import {BigNumber, ethers} from 'ethers';
+import React, { useEffect, useState } from 'react';
+import { StatGroup } from '@chakra-ui/core';
+import { BigNumber, ethers } from 'ethers';
 import Store from 'electron-store';
-import {useEthereumWallet} from '../hooks/useEthereumWallet';
-import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
-import CurrencyAmount, {amountToUnitString, Currency, CurrencyUnit, shortenAmountString} from './CurrencyAmount';
+import { useEthereumWallet } from '../hooks/useEthereumWallet';
+import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import CurrencyAmount, {
+  amountToUnitString,
+  Currency,
+  CurrencyUnit,
+  shortenAmountString
+} from './CurrencyAmount';
 
 export default function AvailableBalance() {
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
@@ -52,43 +57,43 @@ export default function AvailableBalance() {
   }, [btcWalletLoaded]);
 
   return (
-      <StatGroup>
-          <CurrencyAmount
-            amount={btcBalance - btcReserved}
-            currency={Currency.BTC}
-            unit={CurrencyUnit.BTC}
-            topText="Available BTC"
-            subText1={`In orders: ${shortenAmountString(
-              amountToUnitString(btcReserved, CurrencyUnit.BTC),
-              6
-            )}`}
-            amountShortenPosition={8}
-            amountFontSize="14pt"
-          />
-          <CurrencyAmount
-            amount={daiBalance - daiReserved}
-            currency={Currency.DAI}
-            unit={CurrencyUnit.DAI}
-            topText="Available DAI"
-            subText1={`In orders: ${shortenAmountString(
-              amountToUnitString(daiReserved, CurrencyUnit.DAI),
-              6
-            )}`}
-            amountShortenPosition={8}
-            amountFontSize="14pt"
-          />
-          <CurrencyAmount
-            amount={ethBalance - ethReserved}
-            currency={Currency.ETH}
-            unit={CurrencyUnit.ETHER}
-            topText="Available ETH"
-            subText1={`In orders: ${shortenAmountString(
-              amountToUnitString(ethReserved, CurrencyUnit.ETHER),
-              6
-            )}`}
-            amountShortenPosition={8}
-            amountFontSize="14pt"
-          />
-      </StatGroup>
+    <StatGroup>
+      <CurrencyAmount
+        amount={btcBalance - btcReserved}
+        currency={Currency.BTC}
+        unit={CurrencyUnit.BTC}
+        topText="Available BTC"
+        subText1={`In orders: ${shortenAmountString(
+          amountToUnitString(btcReserved, CurrencyUnit.BTC),
+          6
+        )}`}
+        amountShortenPosition={8}
+        amountFontSize="14pt"
+      />
+      <CurrencyAmount
+        amount={daiBalance - daiReserved}
+        currency={Currency.DAI}
+        unit={CurrencyUnit.DAI}
+        topText="Available DAI"
+        subText1={`In orders: ${shortenAmountString(
+          amountToUnitString(daiReserved, CurrencyUnit.DAI),
+          6
+        )}`}
+        amountShortenPosition={8}
+        amountFontSize="14pt"
+      />
+      <CurrencyAmount
+        amount={ethBalance - ethReserved}
+        currency={Currency.ETH}
+        unit={CurrencyUnit.ETHER}
+        topText="Available ETH"
+        subText1={`In orders: ${shortenAmountString(
+          amountToUnitString(ethReserved, CurrencyUnit.ETHER),
+          6
+        )}`}
+        amountShortenPosition={8}
+        amountFontSize="14pt"
+      />
+    </StatGroup>
   );
 }

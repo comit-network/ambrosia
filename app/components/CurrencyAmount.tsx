@@ -179,7 +179,7 @@ export default function CurrencyAmount({
   let renderSubText2;
 
   if (topText) {
-    renderTopText = <StatLabel>{topText}</StatLabel>;
+    renderTopText = <StatLabel minWidth="80px">{topText}</StatLabel>;
   }
 
   if (subText1) {

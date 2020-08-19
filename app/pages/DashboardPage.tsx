@@ -1,8 +1,8 @@
 import React from 'react';
 import { Divider, Flex, Stack, Text } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
-import OrderCreator from "../components/OrderCreator";
-import AvailableBalance from "../components/AvailableBalance";
+import OrderCreator from '../components/OrderCreator';
+import AvailableBalance from '../components/AvailableBalance';
 
 const mockOrders = (mockLabel: string, amount: number) => {
   const orders = [];
@@ -12,6 +12,16 @@ const mockOrders = (mockLabel: string, amount: number) => {
 
   return <Stack>{orders}</Stack>;
 };
+
+// TODO: Build fetching orders (global for dashboard page)
+//      1. periodically fetch
+//      2. Calculate what is needed (reserved, split out my own orders, best bid and ask ...)
+//      3. Pass the information needed to components of the page
+
+// Learnings:
+// 1. Swaps have individual state, thus the Swap component has to handle it's own state.
+// 2. Orders don't change (they don't have state), the only action one can do on them is "cancel" - orders are handled globally
+// 3. Balances don't have state, and we need them for calculation with orders, so I suppose we have to handle the on the page as well.
 
 export default function DashboardPage() {
   return (
@@ -42,8 +52,13 @@ export default function DashboardPage() {
         minHeight="300px"
         maxHeight="300px"
       >
-        <Flex background="white" minWidth="200px" maxWidth="200px" padding="1rem">
-            <AvailableBalance />
+        <Flex
+          background="white"
+          minWidth="200px"
+          maxWidth="200px"
+          padding="1rem"
+        >
+          <AvailableBalance />
         </Flex>
 
         <Divider orientation="vertical" />
@@ -55,10 +70,9 @@ export default function DashboardPage() {
         <Divider orientation="vertical" />
 
         <Flex background="white" width="100%" overflow="scroll">
-          {mockOrders(
-            'An Order that is not matched yet, can be cancelled with X in',
-            20
-          )}
+          <Stack>
+            <Text>Bla</Text>
+          </Stack>
         </Flex>
       </Flex>
     </Flex>

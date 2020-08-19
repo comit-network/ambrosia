@@ -78,10 +78,8 @@ export default function Swap({ href }: SwapProperties) {
 
   const { role } = swap.data.properties;
 
-  const alphaParams = swap.data.entities.find(
-    entity => entity.class[0] === 'parameters' && entity.rel[0] === 'alpha'
-  );
-  if (!alphaParams) {
+  const { alpha } = swap.data.properties;
+  if (!alpha) {
     // TODO proper error handling
     return (
       <Text color="red">
@@ -90,10 +88,8 @@ export default function Swap({ href }: SwapProperties) {
     );
   }
 
-  const betaParams = swap.data.entities.find(
-    entity => entity.class[0] === 'parameters' && entity.rel[0] === 'beta'
-  );
-  if (!betaParams) {
+  const { beta } = swap.data.properties;
+  if (!beta) {
     return (
       <Text color="red">Error: could not properly deserialize beta params</Text>
     );
@@ -101,19 +97,15 @@ export default function Swap({ href }: SwapProperties) {
 
   // TODO: Properly use types (not just Siren Entity) once we agree on API changes
   if (role === 'Alice') {
-    sendAmount = alphaParams.properties.quantity;
-    sendCurrency =
-      alphaParams.properties.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
-    receiveAmount = betaParams.properties.quantity;
-    receiveCurrency =
-      betaParams.properties.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    sendAmount = alpha.asset.value;
+    sendCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    receiveAmount = beta.asset.value;
+    receiveCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
   } else {
-    receiveAmount = alphaParams.properties.quantity;
-    receiveCurrency =
-      alphaParams.properties.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
-    sendAmount = betaParams.properties.quantity;
-    sendCurrency =
-      betaParams.properties.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    receiveAmount = alpha.asset.value;
+    receiveCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    sendAmount = beta.asset.value;
+    sendCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
   }
 
   const sendAmountLabel = 'You send';
