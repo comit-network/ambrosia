@@ -50,7 +50,7 @@ export function mockSwapHistory(): AxiosResponse<Entity> {
                 "order"
               ],
               "class": [],
-              "href": "/order/some-id"
+              "href": "/orders/some-id"
             }
           ]
         }
@@ -82,10 +82,7 @@ export function mockOngoingSwaps(): AxiosResponse<Entity> {
 }
 
 // GET /swaps/:id
-export function mockSwap(
-  href: string,
-  mockAction: string
-): AxiosResponse<Entity> {
+export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity> {
   // @ts-ignore
   return {
     data: {
@@ -139,8 +136,54 @@ export function mockSwap(
   };
 }
 
+// POST /orders
+interface PostOrderBody {
+  position: "buy" | "sell",
+  quantity: string, // in sats
+  price: string, // in wei (atto)
+}
+
+// GET /orders/:id
+export function mockOrder(): AxiosResponse<Entity> {
+  // @ts-ignore
+  return {
+    data: {
+      class: ["order"],
+      properties: {
+        id: "some-order-uuid-0",
+        position: "sell",
+        price: {
+          currency: "DAI",
+          value:  "9100000000000000000000",
+          decimals: 18,
+        },
+        quantity: {
+          currency: "BTC",
+          value: "10000000",
+          decimals: 8,
+        },
+        state: {
+          open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+          closed: "0.1",
+          settling: "0.0",
+          failed: "0.6"
+        }
+      },
+      actions: [
+        {
+          name: "cancel",
+          class: [],
+          method: 'DELETE',
+          href: "cnd/orders/orderId",
+          fields: []
+        }
+      ]
+    }
+  }
+}
+
 // GET /orders
-export function mockOrder() {
+export function mockOrders(): AxiosResponse<Entity> {
   // @ts-ignore
   return {
     data: {
@@ -150,11 +193,11 @@ export function mockOrder() {
         {
           class: ["order"],
           properties: {
-            id: "some-order-uuid",
+            id: "some-order-uuid-0",
             position: "sell",
             price: {
               currency: "DAI",
-              value: "90000000000000000000000",
+              value:  "9100000000000000000000",
               decimals: 18,
             },
             quantity: {
@@ -162,8 +205,6 @@ export function mockOrder() {
               value: "10000000",
               decimals: 8,
             },
-            ours: true,
-            maker: "some_peer_id",
             state: {
               open: "0.3", //percentage, 0.3=30%, rounded to precision 2
               closed: "0.1",
@@ -176,22 +217,112 @@ export function mockOrder() {
               name: "cancel",
               class: [],
               method: 'DELETE',
-              href: "cnd/orders/orderId",
+              href: "cnd/orders/some-order-uuid-0",
               fields: []
             }
-          ]
+          ],
+          rel: ["item"]
         }
-
-      ],
-      actions: [
-      ]
+        ],
+      actions: []
     }
-  };
+  }
 }
 
-// POST /orders
-interface PostOrderBody {
-  position: "buy" | "sell",
-  quantity: string, // in sats
-  price: string, // in wei (atto)
+// GET /markets/btc/dai
+export function mockMarketsBtcDai(): AxiosResponse<Entity> {
+  // @ts-ignore
+  return {
+    data: {
+      class: [],
+      properties: {},
+      entities: [
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-0",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9100000000000000001111",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            ours: true,
+            maker: "my_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-1",
+            position: "buy",
+            price: {
+              currency: "DAI",
+              value:  "9000000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            ours: true,
+            maker: "my_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-2",
+            position: "buy",
+            price: {
+              currency: "DAI",
+              value:  "8900000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-3",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+      ],
+      actions: []
+    }
+  };
 }

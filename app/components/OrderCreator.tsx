@@ -77,7 +77,7 @@ export default function OrderCreator() {
   const avaiableBtcBalance = 1.2345;
 
   return (
-    <Flex direction="column" padding="1rem">
+    <Flex direction="column">
       <Flex justify="left" align="center" marginBottom="1rem">
         <RadioButtonGroup
           defaultValue="select-buy"

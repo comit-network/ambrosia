@@ -152,7 +152,7 @@ export default function Swap({ href }: SwapProperties) {
 
   return (
     <Box maxWidth="100%" padding="5px">
-      <Flex direction="column" shadow="md">
+      <Flex direction="column" shadow="md" border="1px" borderColor="gray.200">
         <Flex direction="row" alignItems="center" padding="5px">
           <Box as={RiExchangeLine} size="32px" />
           {/* <Spinner size="sm" marginLeft="10px" marginRight="20px"/> */}
