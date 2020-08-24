@@ -1,7 +1,6 @@
 import { AxiosResponse } from 'axios';
 import { Entity } from '../comit-sdk/cnd/siren';
 
-// TODO: Figure this out
 export function mockSwapHistory(): AxiosResponse<Entity> {
   // @ts-ignore
   return {
@@ -141,6 +140,11 @@ interface PostOrderBody {
   position: "buy" | "sell",
   quantity: string, // in sats
   price: string, // in wei (atto)
+  swap: {
+    bitcoin_address: string;
+    ethereum_address: string;
+    role: string;
+  }
 }
 
 // GET /orders/:id
