@@ -1,123 +1,86 @@
 import React, { useState } from 'react';
 import {
+  Box,
   Button,
   Divider,
-  Flex,
+  Flex, FormControl, FormHelperText,
   FormLabel,
   Input,
   RadioButtonGroup,
-  Stack
+  Stack, Tab, TabList, TabPanel, TabPanels, Tabs, Text
 } from '@chakra-ui/core';
+import {CurrencyValue, MarketOrder} from "./MarketOrderList";
+import {ethers} from "ethers";
 
-// TODO: Consider using InputGroup for better styling, plant in some icons...
-const rowItem = (
-  label: string,
-  value: number,
-  isDisabled: boolean,
-  isPrefilled?: boolean
-) => {
-  // let input = <Text border="1px" borderColor="gray" borderRadius="md">{value.toString()}</Text>;
+interface OrderCreatorProperties {
+  highestPriceBuyOrder: MarketOrder;
+  lowestPriceSellOrder: MarketOrder;
+  daiAvailable: CurrencyValue;
+  btcAvailable: CurrencyValue;
+}
 
-  let input = (
-    <Input
-      key={label + isPrefilled}
-      placeholder={value.toString()}
-      isDisabled={isDisabled}
-    />
-  );
+interface TabStyle {
+  color: string;
+  bg: string;
+  lineColor: string;
+}
 
-  if (isPrefilled) {
-    input = (
-      <Input
-        key={label + isPrefilled}
-        value={value}
-        placeholder={value.toString()}
-        isDisabled={isDisabled}
-      />
-    );
-  }
+export function calculateQuote(price: CurrencyValue, quantity: CurrencyValue): CurrencyValue {
+  const satToAttoZeros = ethers.BigNumber.from("100000000");
 
-  // TODO: Add image at the end
-  return (
-    <Flex direction="row" align="center">
-      <FormLabel fontSize="10pt" minWidth="100px" maxWidth="100px">
-        {label}
-      </FormLabel>
-      {input}
-    </Flex>
-  );
-};
+  // Calc with sat as base
+  let priceWei =  ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
+  let quantitySat = ethers.BigNumber.from(quantity.value); // Quantity in BTC(sat)
+  let priceSat = priceWei.div(satToAttoZeros);
+  let quote = priceSat.mul(quantitySat);
 
-const CustomRadio = React.forwardRef((props, ref) => {
-  const { isChecked, isDisabled, value, ...rest } = props;
-  return (
-    <Button
-      ref={ref}
-      variantColor={isChecked ? 'blue' : 'gray'}
-      aria-checked={isChecked}
-      role="radio"
-      isDisabled={isDisabled}
-      {...rest}
-      fontSize="10pt"
-      height="30px"
-    />
-  );
-});
+  return {
+    currency: "DAI",
+    value: quote.toString(),
+    decimals: 18
+  };
+}
 
-export default function OrderCreator() {
-  const [isMarketOrder, setIsMarketOrder] = useState(true);
-  const [isBuyOrder, setIsBuyOrder] = useState(true);
+export default function OrderCreator({highestPriceBuyOrder, lowestPriceSellOrder, daiAvailable, btcAvailable} : OrderCreatorProperties) {
 
-  // TODO: There is no market data at the moment the current best "order" will be used for bid and ask
-  //      See TODOs in Dashboard
+  const sellColors = {
+    text: "orange.800",
+    bg: "orange.100",
+    variant: "orange.800",
+  };
 
-  const mockBuyPrice = 9100.0;
-  const mockSellPrice = 9000.0;
-  const availableDaiBalance = 12345;
-  const avaiableBtcBalance = 1.2345;
+  const buyColors = {
+    text: "cyan.800",
+    bg: "cyan.100",
+    variant: "cyan.800",
+  };
 
   return (
     <Flex direction="column">
-      <Flex justify="left" align="center" marginBottom="1rem">
-        <RadioButtonGroup
-          defaultValue="select-buy"
-          isInline
-          onChange={() => setIsBuyOrder(!isBuyOrder)}
-        >
-          <CustomRadio value="select-buy">Buy</CustomRadio>
-          <CustomRadio value="select-sell">Sell</CustomRadio>
-        </RadioButtonGroup>
-        <Divider orientation="vertical" />
-        <RadioButtonGroup
-          defaultValue="select-market"
-          isInline
-          onChange={() => setIsMarketOrder(!isMarketOrder)}
-        >
-          <CustomRadio value="select-market">Market</CustomRadio>
-          <CustomRadio value="select-limit">Limit</CustomRadio>
-        </RadioButtonGroup>
-      </Flex>
-      <Stack>
-        {/* TODO: Rethink this, probably better less generic... */}
-        {/* TODO: Subtext for DAI displaying approx ETH tx costs */}
-        {/* TODO: Potentially: Display BTC tx costs? */}
-        {rowItem(
-          isMarketOrder ? 'Best Price' : 'Set Price',
-          isBuyOrder ? mockSellPrice : mockBuyPrice,
-          isMarketOrder,
-          isMarketOrder
-        )}
-        {rowItem(
-          isBuyOrder ? 'Give DAI' : ' Give BTC',
-          isBuyOrder ? availableDaiBalance : avaiableBtcBalance,
-          false,
-          false
-        )}
-        {rowItem(isBuyOrder ? 'Get BTC' : 'Get DAI', 0, true, true)}
-      </Stack>
-      <Flex direction="column" align="right" width="100%" marginTop="1rem">
-        <Button>{isBuyOrder ? 'Buy BTC with DAI' : 'Sell BTC for DAI'}</Button>
-      </Flex>
+
+      <Tabs isFitted >
+        <TabList>
+          <Tab _selected={{ color: buyColors.text, bg: buyColors.bg, borderBottom: "2px", borderBottomColor: buyColors.text }} fontWeight="bold">Buy</Tab>
+          <Tab _selected={{ color: sellColors.text, bg: sellColors.bg, borderBottom: "2px", borderBottomColor: sellColors.text }} fontWeight="bold">Sell</Tab>
+        </TabList>
+        <TabPanels backgroundColor="white">
+          <TabPanel>
+            <Flex direction="column" padding="1rem">
+
+
+                <Input type="number" id="price" aria-describedby="email-helper-text" />
+
+                <Text></Text>
+
+
+
+            </Flex>
+          </TabPanel>
+          <TabPanel>
+            <p>two!</p>
+          </TabPanel>
+        </TabPanels>
+      </Tabs>
     </Flex>
   );
 }

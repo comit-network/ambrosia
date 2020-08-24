@@ -71,15 +71,11 @@ export default function BalanceHorizontal() {
             currency={Currency.BTC}
             unit={CurrencyUnit.BTC}
             topText="BTC"
-            subText1={`Available: ${shortenAmountString(
-              amountToUnitString(btcBalance - btcReserved, CurrencyUnit.BTC),
-              10
-            )}`}
-            subText2={`Locked in orders: ${shortenAmountString(
-              amountToUnitString(btcReserved, CurrencyUnit.BTC),
-              6
-            )}`}
-            amountShortenPosition={8}
+            subText1={`Available: ${
+              amountToUnitString(btcBalance - btcReserved, CurrencyUnit.BTC)
+            }`}
+            subText2={`Locked in orders: ${
+              amountToUnitString(btcReserved, CurrencyUnit.BTC)}`}
             amountFontSize="14pt"
           />
           <CurrencyAmount
@@ -87,15 +83,11 @@ export default function BalanceHorizontal() {
             currency={Currency.DAI}
             unit={CurrencyUnit.DAI}
             topText="DAI"
-            subText1={`Available: ${shortenAmountString(
-              amountToUnitString(daiBalance - daiReserved, CurrencyUnit.DAI),
-              10
-            )}`}
-            subText2={`Locked in orders: ${shortenAmountString(
-              amountToUnitString(daiReserved, CurrencyUnit.DAI),
-              6
-            )}`}
-            amountShortenPosition={8}
+            subText1={`Available: ${
+              amountToUnitString(daiBalance - daiReserved, CurrencyUnit.DAI)
+            }`}
+            subText2={`Locked in orders: ${
+              amountToUnitString(daiReserved, CurrencyUnit.DAI)}`}
             amountFontSize="14pt"
           />
           <CurrencyAmount
@@ -103,15 +95,10 @@ export default function BalanceHorizontal() {
             currency={Currency.ETH}
             unit={CurrencyUnit.ETHER}
             topText="ETH"
-            subText1={`Available: ${shortenAmountString(
-              amountToUnitString(ethBalance - ethReserved, CurrencyUnit.ETHER),
-              10
-            )}`}
-            subText2={`Locked in orders: ${shortenAmountString(
-              amountToUnitString(ethReserved, CurrencyUnit.ETHER),
-              6
-            )}`}
-            amountShortenPosition={8}
+            subText1={`Available: ${
+              amountToUnitString(ethBalance - ethReserved, CurrencyUnit.ETHER)}`}
+            subText2={`Locked in orders: ${
+              amountToUnitString(ethReserved, CurrencyUnit.ETHER)}`}
             amountFontSize="14pt"
           />
         </Flex>

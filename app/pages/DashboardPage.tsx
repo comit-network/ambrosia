@@ -1,127 +1,180 @@
-import React from 'react';
-import {Box, Divider, Flex, Stack, TagLabel, Text} from '@chakra-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Box, Flex, Heading} from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
-import {mockMarketsBtcDai, mockOrders} from "../components/MockData";
-import CurrencyAmount, {Currency, CurrencyUnit} from "../components/CurrencyAmount";
+import {mockMarketsBtcDai, mockOrders} from '../components/MockData';
+import CurrencyAmount, {amountToUnitString, ColorMode, Currency, CurrencyUnit} from '../components/CurrencyAmount';
 import MarketOrderList, {MarketOrder} from "../components/MarketOrderList";
-
-
-// Learnings:
-// 1. Swaps have individual state, thus the Swap component has to handle it's own state.
-// 2. Orders don't change (they don't have state), the only action one can do on them is "cancel" - orders are handled globally
-// 3. Balances don't have state, and we need them for calculation with orders, so I suppose we have to handle the on the page as well.
+import {useEthereumWallet} from "../hooks/useEthereumWallet";
+import {useBitcoinWallet} from "../hooks/useBitcoinWallet";
+import Store from "electron-store";
+import {BigNumber, ethers} from "ethers";
+import MyOrderList, {Order} from "../components/MyOrderList";
 
 export default function DashboardPage() {
+    const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
+    const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
+    const [ethBalance, setEthBalance] = useState(null);
+    const [daiBalance, setDaiBalance] = useState(null);
+    const [btcBalance, setBtcBalance] = useState(null);
+
+    // TODO: Properly handle wallet balances as CurrencyValue and not just strings / numbers...
+    const [ethBalanceInWei, setEthBalanceInWei] = useState(null);
+    const [daiBalanceInWei, setDaiBalanceInWei] = useState(null);
+    const [btcBalanceInSat, setBtcBalanceInSat] = useState(null);
+
+    // TODO: [CndApi] ? - or should we calc that ourselves
+    // FixMe: [MockData]
+    const ethReserved = 111.11111;
+    const daiReserved = 50;
+    const btcReserved = 0.5;
+
+    const btcAvailable = btcBalance - btcReserved;
+    const daiAvailable = daiBalance - daiReserved;
+    const ethAvailable = ethBalance - ethReserved;
+
+    const settings = new Store();
+
+    useEffect(() => {
+        async function loadEthBalance() {
+            const eth = await ethWallet.getBalance();
+            setEthBalance(ethers.utils.formatEther(BigNumber.from(eth)));
+            setEthBalanceInWei(BigNumber.from(eth));
+        }
+
+        if (ethWallet) loadEthBalance();
+    }, [ethWalletLoaded]);
+
+    useEffect(() => {
+        async function loadDaiBalance() {
+            const dai = await ethWallet.getErc20Balance(
+                settings.get('ERC20_CONTRACT_ADDRESS')
+            );
+            setDaiBalance(dai.toString());
+        }
+
+        if (ethWallet) loadDaiBalance();
+    }, [ethWalletLoaded]);
+
+    useEffect(() => {
+        async function loadBtcBalance() {
+            const btc = await btcWallet.getBalance();
+            setBtcBalance(btc);
+        }
+
+        if (btcWallet) loadBtcBalance();
+    }, [btcWalletLoaded]);
 
     // TODO: useSWR to fetch from cnd
-    let orders = mockMarketsBtcDai().data.entities;
+    const myOrders = mockOrders().data.entities.map(
+        (order) => order.properties as Order
+    ).sort((order1, order2) => {
+        const price1 = order1.price.value;
+        const price2 = order2.price.value;
+        if (price1 < price2) {
+            return -1;
+        }
+        if (price1 > price2) {
+            return 1;
+        }
+        return 0;
+    });
 
-    // TODO: pass to market buy orders view
-    let buyOrders = orders.filter((order) => order.properties.position === "buy")
-        .sort((order1, order2) =>
-            order2.properties.price.value - order1.properties.price.value)
-        .map((order) => order.properties as MarketOrder);
-    // TODO: pass to market sell orders view
-    let sellOrders = orders.filter((order) => order.properties.position === "sell")
-        .sort((order1, order2) =>
-            order1.properties.price.value - order2.properties.price.value)
-        .map((order) => order.properties as MarketOrder);
+  // TODO: useSWR to fetch from cnd
+  const orders = mockMarketsBtcDai().data.entities.map(
+    (order) => order.properties as MarketOrder
+  );
 
-    // TODO: This hast STATE, handle inside MyOrder component
-    let myOrders = mockOrders().data;
+  // sorted ascending by price
+  const buyOrders = orders
+    .filter((order) => order.position === 'buy')
+    .sort((order1, order2) => {
+      const price1 = order1.price.value;
+      const price2 = order2.price.value;
+      if (price1 < price2) {
+        return -1;
+      }
+      if (price1 > price2) {
+        return 1;
+      }
+      return 0;
+    });
+  // sorted descending by price
+  const sellOrders = orders
+    .filter((order) => order.position === 'sell')
+    .sort((order1, order2) => {
+      const price1 = order1.price.value;
+      const price2 = order2.price.value;
+      if (price1 < price2) {
+        return 1;
+      }
+      if (price1 > price2) {
+        return -1;
+      }
+      return 0;
+    });
 
+  const theirOrders = orders.filter((order) => !order.ours);
+  const theirBuyOrders = theirOrders.filter((order) => order.position === 'buy');
+  const theirSellOrders = theirOrders.filter(
+    order => order.position === 'sell'
+  );
+  // their highest buying price is my best selling price
+  const highestBuyOrder = theirBuyOrders.reduce((acc, loc) =>
+    acc.quantity.value > loc.quantity.value ? acc : loc
+  );
+  // their lowest selling price is my best buying price
+  const lowestSellOrder = theirSellOrders.reduce((acc, loc) =>
+    acc.quantity.value < loc.quantity.value ? acc : loc
+  );
 
-    let theirOrders = orders.filter((order) => !order.properties.ours);
-    let theirBuyOrders = theirOrders.filter((order) => order.properties.position === "buy");
-    let theirSellOrders = theirOrders.filter((order) => order.properties.position === "sell");
-    // TODO: pass to market best buy
-    // their highest buying price is my best selling price
-    let theirBestBuyOrder = theirBuyOrders.reduce((acc, loc) => acc.properties.quantity.value > loc.properties.quantity.value ? acc : loc);
-    // TODO: pass to market best sell
-    // their lowest selling price is my best buying price
-    let theirBestSellOrder = theirSellOrders.reduce((acc, loc) => acc.properties.quantity.value < loc.properties.quantity.value ? acc : loc);
-    let theirBestBuyPrice = theirBestBuyOrder.properties.price;
-    let theirBestSellPrice = theirBestSellOrder.properties.price;
+  const orderTableOffset = "140px";
 
-    return (
-        <Flex direction="column" width="100%" minHeight="100%">
-            {/* Market Data */}
-            <Flex direction="row" width="100%">
-
-                {/* Best Bid / Ask*/}
-                <Box minWidth="200px" maxHeight="200px" padding="1rem" backgroundColor="white" shadow="md" marginRight="1rem">
-                    <Stack>
-                        <CurrencyAmount amount={theirBestSellPrice.value} currency={Currency.DAI}
-                                        unit={CurrencyUnit.ATTO} topText="Best Sell Price" subText1="for 1 BTC"/>
-                        <CurrencyAmount amount={theirBestBuyPrice.value} currency={Currency.DAI}
-                                        unit={CurrencyUnit.ATTO} topText="Best Buy Price" subText1="for 1 BTC"/>
-                    </Stack>
-                </Box>
-
-                {/* Market orders*/}
-                <Flex direction="row" width="100%" justifyContent="space-between">
-                    <MarketOrderList orders={buyOrders} label={"Buy Orders"} />
-                    <MarketOrderList orders={sellOrders} label={"Sell Orders"} />
-                </Flex>
+  return (
+    <Flex direction="row" width="100%" padding="1rem">
+        <Flex direction="column" width="100%">
+            {/* Graph */}
+            <Flex direction="row" flexGrow={2} alignContent="center" background="white">
+                <Heading>Imagine a chart here</Heading>
             </Flex>
-
-
-            <Flex flexDirection="row" width="100%" maxHeight="300px" marginTop="1rem">
-                {/* Device Status */}
-                <Flex background="white" minWidth="200px" maxWidth="200px" shadow="md" marginRight="1rem">
-                    <Text> Status of ledger and blockchain nodes</Text>
-                </Flex>
-
-                {/* Ongoing Swaps */}
-                <Flex direction="column" background="white" width="100%" overflow="scroll" shadow="md">
-                    <Box width="100%" backgroundColor="gray.600" marginBottom="0.5rem">
-                        <TagLabel paddingLeft="0.5rem" paddingTop="0.5" fontSize="md" color="white" fontWeight="bold">Swaps</TagLabel>
-                    </Box>
-                    <SwapList/>
-                </Flex>
+            {/* Swaps */}
+            <Flex direction="row" marginTop="1rem">
+                <SwapList />
             </Flex>
-
-            <Flex
-                flexDirection="row"
-                width="100%"
-                minHeight="300px"
-                maxHeight="300px"
-                marginTop="1rem"
-            >
-                <Flex
-                    background="white"
-                    minWidth="200px"
-                    maxWidth="200px"
-                    padding="1rem"
-                    shadow="md"
-                    marginRight="1rem"
-                >
-
-                    {/* Balance Overview */}
-                    <AvailableBalance/>
+            <Flex direction="row" marginTop="1rem" width="100%">
+                {/* Balance */}
+                <Flex direction="column" width="200px">
+                    <AvailableBalance
+                        btcAvailable={btcAvailable}
+                        btcReserved={btcReserved}
+                        daiAvailable={daiAvailable}
+                        daiReserved={daiReserved}
+                        ethAvailable={ethAvailable}
+                        ethReserved={ethReserved}
+                    />
                 </Flex>
-
-                {/* Create Orders */}
-                <Flex direction="column" background="white" minWidth="400px" shadow="md">
-                    <Box width="100%" backgroundColor="gray.600">
-                        <TagLabel paddingLeft="0.5rem" paddingTop="0.5" fontSize="md" color="white" fontWeight="bold">Order Creator</TagLabel>
-                    </Box>
-                    <Box padding="1rem">
-                        <OrderCreator/>
-                    </Box>
+                {/* Order Creator*/}
+                <Flex direction="column" minWidth="300px">
+                    <OrderCreator />
                 </Flex>
-
-                <Divider orientation="vertical"/>
-
-                {/* My Order list */}
-                <Flex background="white" width="100%" overflow="scroll">
-                    <Stack>
-                        <Text>Bla</Text>
-                    </Stack>
+                {/* My Orders */}
+                <Flex direction="column" width="100%">
+                    <MyOrderList key="my-orders" orders={myOrders} label={"Your Orders"} tableContentHeightLock="300px" />
                 </Flex>
             </Flex>
         </Flex>
-    );
+
+        {/* Current Market */}
+        <Flex direction="column" marginLeft="1rem">
+            <MarketOrderList key="sell-orders" orders={sellOrders} label={"Sell Orders"} colorMode={ColorMode.RED} tableContentHeightLock={"calc(50vh - " + orderTableOffset + ")"} />
+            <Flex direction="column" marginTop="1rem" marginBottom="1rem" align="center">
+                <CurrencyAmount amount={lowestSellOrder.price.value} currency={Currency.DAI} unit={CurrencyUnit.ATTO} topText={"Bid"} colourMode={ColorMode.RED} />
+                <CurrencyAmount amount={highestBuyOrder.price.value} currency={Currency.DAI} unit={CurrencyUnit.ATTO} topText={"Ask"} colourMode={ColorMode.GREEN}/>
+            </Flex>
+            <MarketOrderList key="buy-orders" orders={buyOrders} label={"Buy Orders"} colorMode={ColorMode.GREEN} tableContentHeightLock={"calc(50vh - " + orderTableOffset + ")"} />
+        </Flex>
+
+    </Flex>
+  );
 }

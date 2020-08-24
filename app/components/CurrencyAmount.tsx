@@ -16,6 +16,12 @@ import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
 import EthereumIcon from '../assets/Ethereum.svg';
 
+export enum ColorMode {
+  RED = "RED",
+  GREEN = "GREEN",
+  WHITE = "WHITE",
+}
+
 export enum Currency {
   BTC = 'BTC',
   DAI = 'DAI',
@@ -41,6 +47,7 @@ interface CurrencyAmountProps {
   amountShortenPosition?: number;
   amountFontSize?: string;
   iconHeight?: string;
+  colourMode?: ColorMode;
 }
 
 const currencyIcon = (currency: Currency, iconHeight?: string) => {
@@ -119,28 +126,6 @@ export function amountToUnitString(
   }
 }
 
-export function shortenAmountString(
-  amountString: string,
-  amountShortenPosition?: number
-) {
-  let displayAmount = amountString;
-  if (amountShortenPosition) {
-    const decimalPointPosition = displayAmount.indexOf('.');
-    if (amountShortenPosition < decimalPointPosition + 3) {
-      displayAmount = `${displayAmount.substring(
-        0,
-        decimalPointPosition + 3
-      )}...`;
-    } else {
-      displayAmount =
-        displayAmount.length > amountShortenPosition + 3
-          ? `${displayAmount.substring(0, amountShortenPosition)}...`
-          : displayAmount;
-    }
-  }
-  return displayAmount;
-}
-
 export default function CurrencyAmount({
   amount,
   currency,
@@ -148,27 +133,43 @@ export default function CurrencyAmount({
   topText,
   subText1,
   subText2,
-  amountShortenPosition,
   amountFontSize,
-  iconHeight
+  iconHeight,
+    colourMode,
+
 }: CurrencyAmountProps) {
-  const unshortenedDisplayAmount = amountToUnitString(amount, unit);
-  const displayAmount = shortenAmountString(
-    unshortenedDisplayAmount,
-    amountShortenPosition
-  );
+  const displayAmount = amountToUnitString(amount, unit);
+
+  let displayNumberColor;
+  let displayTextColor;
+
+  if (colourMode) {
+    switch (colourMode) {
+      case ColorMode.GREEN:
+        displayNumberColor = "cyan.800";
+        displayTextColor = "cyan.600";
+        break;
+      case ColorMode.RED:
+        displayNumberColor = "orange.800";
+        displayTextColor = "orange.600";
+        break;
+      case ColorMode.WHITE:
+        displayNumberColor = "white";
+        displayTextColor = "white";
+    }
+  }
 
   const renderAmount = (
     <Flex direction="row">
       <Tooltip
         hasArrow
-        aria-label={unshortenedDisplayAmount}
-        label={`${unshortenedDisplayAmount} ${currency}`}
+        aria-label={displayAmount}
+        label={`${displayAmount} ${currency}`}
         placement="top"
       >
-        <Flex direction="row" alignContent="center">
+        <Flex direction="row" alignContent="center" minWidth="100px">
           {currencyIcon(currency, iconHeight)}
-          <StatNumber fontSize={amountFontSize}>{displayAmount}</StatNumber>
+          <StatNumber color={displayNumberColor} fontSize={amountFontSize} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{displayAmount}</StatNumber>
         </Flex>
       </Tooltip>
     </Flex>
@@ -179,16 +180,16 @@ export default function CurrencyAmount({
   let renderSubText2;
 
   if (topText) {
-    renderTopText = <StatLabel minWidth="80px">{topText}</StatLabel>;
+    renderTopText = <StatLabel color={displayTextColor} minWidth="80px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{topText}</StatLabel>;
   }
 
   if (subText1) {
-    renderSubText1 = <StatHelpText>{subText1}</StatHelpText>;
+    renderSubText1 = <StatHelpText color={displayTextColor} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{subText1}</StatHelpText>;
   }
 
   if (subText2) {
     // TODO: Fix the hacky minus margin
-    renderSubText2 = <StatHelpText marginTop="-10px">{subText2}</StatHelpText>;
+    renderSubText2 = <StatHelpText color={displayTextColor} marginTop="-10px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{subText2}</StatHelpText>;
   }
 
   return (

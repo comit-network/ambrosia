@@ -226,6 +226,171 @@ export function mockOrders(): AxiosResponse<Entity> {
             }
           ],
           rel: ["item"]
+        },
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid-1",
+            position: "buy",
+            price: {
+              currency: "DAI",
+              value:  "9000000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/some-order-uuid-0",
+              fields: []
+            }
+          ],
+          rel: ["item"]
+        },
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid-2",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9100000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/some-order-uuid-0",
+              fields: []
+            }
+          ],
+          rel: ["item"]
+        },
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid-3",
+            position: "buy",
+            price: {
+              currency: "DAI",
+              value:  "9000000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/some-order-uuid-0",
+              fields: []
+            }
+          ],
+          rel: ["item"]
+        },
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid-4",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9100000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/some-order-uuid-0",
+              fields: []
+            }
+          ],
+          rel: ["item"]
+        },
+        {
+          class: ["order"],
+          properties: {
+            id: "some-order-uuid-5",
+            position: "buy",
+            price: {
+              currency: "DAI",
+              value:  "9000000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "10000000",
+              decimals: 8,
+            },
+            state: {
+              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.1",
+              settling: "0.0",
+              failed: "0.6"
+            }
+          },
+          actions: [
+            {
+              name: "cancel",
+              class: [],
+              method: 'DELETE',
+              href: "cnd/orders/some-order-uuid-0",
+              fields: []
+            }
+          ],
+          rel: ["item"]
         }
         ],
       actions: []
@@ -308,6 +473,258 @@ export function mockMarketsBtcDai(): AxiosResponse<Entity> {
           class: [],
           properties: {
             id: "some-order-uuid-3",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-4",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-5",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-6",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-7",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-8",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-9",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-10",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-11",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-12",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-13",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-14",
+            position: "sell",
+            price: {
+              currency: "DAI",
+              value:  "9200000000000000000000",
+              decimals: 18,
+            },
+            quantity: {
+              currency: "BTC",
+              value: "123456789",
+              decimals: 8,
+            },
+            ours: false,
+            maker: "some_peer_id-some_peer_id",
+          },
+          actions: [],
+          rel: ["item"]
+        },
+        {
+          class: [],
+          properties: {
+            id: "some-order-uuid-15",
             position: "sell",
             price: {
               currency: "DAI",
