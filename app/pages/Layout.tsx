@@ -1,34 +1,27 @@
-import React, { useState } from 'react';
+import React, {useState} from 'react';
 import PropTypes from 'prop-types';
-import { Switch, Route, Link } from 'react-router-dom';
+import {Link, Route, Switch} from 'react-router-dom';
 import {
   Box,
-  Flex,
-  PseudoBox,
-  Icon,
-  Stack,
-  Text,
+  Divider,
   Drawer,
-  useDisclosure,
-  DrawerOverlay,
+  DrawerBody,
   DrawerContent,
   DrawerHeader,
-  DrawerBody,
+  DrawerOverlay,
+  Flex,
+  Icon,
   IconButton,
-  Divider,
-  Button, Image
+  PseudoBox,
+  Stack,
+  Text,
+  useDisclosure
 } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
 import AboutPage from './AboutPage';
 import WalletPage from './WalletPage';
 import DashboardPage from './DashboardPage';
-import DashboardPageMock1 from './DashboardPageMock1';
-import DashboardPageMock2 from './DashboardPageMock2';
-import DashboardPageMock3 from './DashboardPageMock3';
-import DashboardPageMock4 from './DashboardPageMock4';
-import DashboardPageMock5 from './DashboardPageMock5';
-import DashboardPageMock6 from './DashboardPageMock6';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -96,60 +89,6 @@ export default function Layout() {
                 marginBottom="10px"
               />
             </Link>
-            <Link to={routes.HOME_mock1}>
-              <Button
-                variantColor={activeContent === 'HOME_mock1' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock1')}
-                marginBottom="10px"
-              >
-                1
-              </Button>
-            </Link>
-            <Link to={routes.HOME_mock2}>
-              <Button
-                variantColor={activeContent === 'HOME_mock2' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock2')}
-                marginBottom="10px"
-              >
-                2
-              </Button>
-            </Link>
-            <Link to={routes.HOME_mock3}>
-              <Button
-                variantColor={activeContent === 'HOME_mock3' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock3')}
-                marginBottom="10px"
-              >
-                3
-              </Button>
-            </Link>
-            <Link to={routes.HOME_mock4}>
-              <Button
-                variantColor={activeContent === 'HOME_mock4' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock4')}
-                marginBottom="10px"
-              >
-                4
-              </Button>
-            </Link>
-            <Link to={routes.HOME_mock5}>
-              <Button
-                variantColor={activeContent === 'HOME_mock5' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock5')}
-                marginBottom="10px"
-              >
-                5
-              </Button>
-            </Link>
-            <Link to={routes.HOME_mock6}>
-              <Button
-                variantColor={activeContent === 'HOME_mock6' ? 'red' : 'orange'}
-                onClick={() => setActiveContent('HOME_mock6')}
-                marginBottom="10px"
-              >
-                6
-              </Button>
-            </Link>
             <Link to={routes.WALLET}>
               <IconButton
                 aria-label="Wallet"
@@ -212,12 +151,6 @@ export default function Layout() {
         <Switch>
           <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.WALLET} component={WalletPage} />
-          <Route path={routes.HOME_mock1} component={DashboardPageMock1} />
-          <Route path={routes.HOME_mock2} component={DashboardPageMock2} />
-          <Route path={routes.HOME_mock3} component={DashboardPageMock3} />
-          <Route path={routes.HOME_mock4} component={DashboardPageMock4} />
-          <Route path={routes.HOME_mock5} component={DashboardPageMock5} />
-          <Route path={routes.HOME_mock6} component={DashboardPageMock6} />
           <Route path={routes.HOME} component={DashboardPage} />
         </Switch>
       </Flex>
