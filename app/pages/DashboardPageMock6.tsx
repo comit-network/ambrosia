@@ -1,16 +1,13 @@
 import React from 'react';
-import { Box, Flex, Stack, TagLabel, Text } from '@chakra-ui/core';
+import { Box, Flex, Stack, TagLabel } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
-import {mockMarketsBtcDai, mockOrders} from '../components/MockData';
-import CurrencyAmount, {
-    ColorMode,
-    Currency,
-    CurrencyUnit
-} from '../components/CurrencyAmount';
-import MarketOrderList, {MarketOrder} from "../components/MarketOrderList";
-import MyOrderList, {Order} from "../components/MyOrderList";
+import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
+import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
+import { MarketOrder, Order } from '../utils/types';
+import MarketOrderList from '../components/MarketOrderList';
+import MyOrderList from '../components/MyOrderList';
 
 const boxHeader = (header: string) => {
   return (
@@ -34,20 +31,19 @@ const boxHeader = (header: string) => {
 // 3. Balances don't have state, and we need them for calculation with orders, so I suppose we have to handle the on the page as well.
 
 export default function DashboardPageMock6() {
-
-    // TODO: useSWR to fetch from cnd
-    const myOrders = mockOrders().data.entities.map(
-        (order) => order.properties as Order
-    ).sort((order1, order2) => {
-        const price1 = order1.price.value;
-        const price2 = order2.price.value;
-        if (price1 < price2) {
-            return -1;
-        }
-        if (price1 > price2) {
-            return 1;
-        }
-        return 0;
+  // TODO: useSWR to fetch from cnd
+  const myOrders = mockOrders()
+    .data.entities.map(order => order.properties as Order)
+    .sort((order1, order2) => {
+      const price1 = order1.price.value;
+      const price2 = order2.price.value;
+      if (price1 < price2) {
+        return -1;
+      }
+      if (price1 > price2) {
+        return 1;
+      }
+      return 0;
     });
 
   // TODO: useSWR to fetch from cnd
@@ -84,26 +80,26 @@ export default function DashboardPageMock6() {
       return 0;
     });
 
-    const theirOrders = orders.filter(order => !order.ours);
-    const theirBuyOrders = theirOrders.filter(order => order.position === 'buy');
-    const theirSellOrders = theirOrders.filter(
-        order => order.position === 'sell'
-    );
-    // their highest buying price is my best selling price
-    const highestBuyOrder = theirBuyOrders.reduce((acc, loc) =>
-        acc.quantity.value > loc.quantity.value ? acc : loc
-    );
-    // their lowest selling price is my best buying price
-    const lowestSellOrder = theirSellOrders.reduce((acc, loc) =>
-        acc.quantity.value < loc.quantity.value ? acc : loc
-    );
+  const theirOrders = orders.filter(order => !order.ours);
+  const theirBuyOrders = theirOrders.filter(order => order.position === 'buy');
+  const theirSellOrders = theirOrders.filter(
+    order => order.position === 'sell'
+  );
+  // their highest buying price is my best selling price
+  const highestBuyOrder = theirBuyOrders.reduce((a, b) =>
+    a.quantity.value > b.quantity.value ? a : b
+  );
+  // their lowest selling price is my best buying price
+  const lowestSellOrder = theirSellOrders.reduce((a, b) =>
+    a.quantity.value < b.quantity.value ? a : b
+  );
 
-    const orderTableOffset = "50px";
+  const orderTableOffset = '50px';
 
   return (
     <Flex direction="column" width="100%" padding="1rem">
       {/* Market Data */}
-      <Flex direction="row" width="100%" flexBasis="50vh"  minHeight={0}>
+      <Flex direction="row" width="100%" flexBasis="50vh" minHeight={0}>
         {/* Best Bid / Ask */}
         <Box
           minWidth="200px"
@@ -113,19 +109,37 @@ export default function DashboardPageMock6() {
         >
           {boxHeader('Best Buy / Sell Price')}
           <Stack padding="1rem">
-              <CurrencyAmount amount={lowestSellOrder.price.value} currency={Currency.DAI} unit={CurrencyUnit.ATTO} topText={"Bid"} colourMode={ColorMode.RED} />
-              <CurrencyAmount amount={highestBuyOrder.price.value} currency={Currency.DAI} unit={CurrencyUnit.ATTO} topText={"Ask"} colourMode={ColorMode.GREEN}/>
+            <CurrencyAmount
+              currencyValue={lowestSellOrder.price}
+              topText="Bid"
+              colourMode={ColorMode.RED}
+            />
+            <CurrencyAmount
+              currencyValue={highestBuyOrder.price}
+              topText="Ask"
+              colourMode={ColorMode.GREEN}
+            />
           </Stack>
         </Box>
 
         {/* Market orders */}
         <Flex direction="row" width="100%" height="100px">
-            <Box marginRight="1rem" width="100%">
-                <MarketOrderList key="sell-orders" orders={sellOrders} colorMode={ColorMode.RED} tableContentHeightLock={"calc(30vh - " + orderTableOffset + ")"} />
-            </Box>
-            <Box  width="100%">
-                <MarketOrderList key="buy-orders" orders={buyOrders} colorMode={ColorMode.GREEN} tableContentHeightLock={"calc(30vh - " + orderTableOffset + ")"} />
-            </Box>
+          <Box marginRight="1rem" width="100%">
+            <MarketOrderList
+              key="sell-orders"
+              orders={sellOrders}
+              colorMode={ColorMode.RED}
+              tableContentHeightLock={`calc(30vh - ${orderTableOffset})`}
+            />
+          </Box>
+          <Box width="100%">
+            <MarketOrderList
+              key="buy-orders"
+              orders={buyOrders}
+              colorMode={ColorMode.GREEN}
+              tableContentHeightLock={`calc(30vh - ${orderTableOffset})`}
+            />
+          </Box>
         </Flex>
       </Flex>
 
@@ -159,11 +173,7 @@ export default function DashboardPageMock6() {
       </Flex>
 
       {/* Order Creation */}
-      <Flex
-        flexDirection="row"
-        width="100%"
-        marginTop="1rem"
-      >
+      <Flex flexDirection="row" width="100%" marginTop="1rem">
         {/* Balance Overview */}
         <Flex
           direction="column"
@@ -194,15 +204,15 @@ export default function DashboardPageMock6() {
         </Flex>
 
         {/* My Order list */}
-        <Flex
-          direction="column"
-          background="white"
-          width="100%"
-        >
+        <Flex direction="column" background="white" width="100%">
           {boxHeader('Your Orders')}
-              <Flex direction="column" width="100%">
-                  <MyOrderList key="my-orders" orders={myOrders} tableContentHeightLock="300px" />
-              </Flex>
+          <Flex direction="column" width="100%">
+            <MyOrderList
+              key="my-orders"
+              orders={myOrders}
+              tableContentHeightLock="300px"
+            />
+          </Flex>
         </Flex>
       </Flex>
     </Flex>

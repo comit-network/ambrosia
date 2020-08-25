@@ -1,48 +1,45 @@
 import React from 'react';
-import {StatGroup} from '@chakra-ui/core';
-import CurrencyAmount, {amountToUnitString, Currency, CurrencyUnit} from './CurrencyAmount';
+import { StatGroup } from '@chakra-ui/core';
+import CurrencyAmount, { amountToUnitString } from './CurrencyAmount';
+import { CurrencyValue } from '../utils/types';
 
 interface AvailableBalanceProperties {
-  btcAvailable: number;
-  daiAvailable: number;
-  ethAvailable: number;
-  btcReserved: number;
-  daiReserved: number;
-  ethReserved: number;
+  btcAvailable: CurrencyValue;
+  daiAvailable: CurrencyValue;
+  ethAvailable: CurrencyValue;
+  btcReserved: CurrencyValue;
+  daiReserved: CurrencyValue;
+  ethReserved: CurrencyValue;
 }
 
-export default function AvailableBalance({btcAvailable, daiAvailable, ethAvailable, btcReserved, daiReserved, ethReserved}: AvailableBalanceProperties) {
-
+export default function AvailableBalance({
+  btcAvailable,
+  daiAvailable,
+  ethAvailable,
+  btcReserved,
+  daiReserved,
+  ethReserved
+}: AvailableBalanceProperties) {
   return (
     <StatGroup>
       <CurrencyAmount
-        amount={btcAvailable}
-        currency={Currency.BTC}
-        unit={CurrencyUnit.BTC}
+        currencyValue={btcAvailable}
         topText="Available BTC"
-        subText1={`In orders: ${
-          amountToUnitString(btcReserved, CurrencyUnit.BTC)
-        }`}
+        subText1={`In orders: ${amountToUnitString(btcReserved)}`}
         amountShortenPosition={8}
         amountFontSize="14pt"
       />
       <CurrencyAmount
-        amount={daiAvailable}
-        currency={Currency.DAI}
-        unit={CurrencyUnit.DAI}
+        currencyValue={daiAvailable}
         topText="Available DAI"
-        subText1={`In orders: ${
-          amountToUnitString(daiReserved, CurrencyUnit.DAI)}`}
+        subText1={`In orders: ${amountToUnitString(daiReserved)}`}
         amountShortenPosition={8}
         amountFontSize="14pt"
       />
       <CurrencyAmount
-        amount={ethAvailable}
-        currency={Currency.ETH}
-        unit={CurrencyUnit.ETHER}
+        currencyValue={ethAvailable}
         topText="Available ETH"
-        subText1={`In orders: ${
-          amountToUnitString(ethReserved, CurrencyUnit.ETHER)}`}
+        subText1={`In orders: ${amountToUnitString(ethReserved)}`}
         amountShortenPosition={8}
         amountFontSize="14pt"
       />

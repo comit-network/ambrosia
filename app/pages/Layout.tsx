@@ -20,15 +20,15 @@ import {
 } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
-import DashboardPage from './DashboardPage';
 import AboutPage from './AboutPage';
 import WalletPage from './WalletPage';
+import DashboardPage from './DashboardPage';
 import DashboardPageMock1 from './DashboardPageMock1';
 import DashboardPageMock2 from './DashboardPageMock2';
 import DashboardPageMock3 from './DashboardPageMock3';
 import DashboardPageMock4 from './DashboardPageMock4';
 import DashboardPageMock5 from './DashboardPageMock5';
-import DashboardPageMock6 from "./DashboardPageMock6";
+import DashboardPageMock6 from './DashboardPageMock6';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -70,7 +70,12 @@ export default function Layout() {
 
   return (
     <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
-      <Flex backgroundColor="white" id="sidebar">
+      <Flex
+        backgroundColor="white"
+        id="sidebar"
+        borderRight="2px"
+        borderColor="gray.200"
+      >
         <Stack>
           <IconButton
             aria-label="Menu"
@@ -136,9 +141,9 @@ export default function Layout() {
             </Link>
             <Link to={routes.HOME_mock6}>
               <Button
-                  variantColor={activeContent === 'HOME_mock6' ? 'red' : 'orange'}
-                  onClick={() => setActiveContent('HOME_mock6')}
-                  marginBottom="10px"
+                variantColor={activeContent === 'HOME_mock6' ? 'red' : 'orange'}
+                onClick={() => setActiveContent('HOME_mock6')}
+                marginBottom="10px"
               >
                 6
               </Button>
@@ -201,7 +206,7 @@ export default function Layout() {
           </Drawer>
         </Stack>
       </Flex>
-      <Flex backgroundColor="gray.100" id="content">
+      <Flex backgroundColor="gray.50" id="content">
         <Switch>
           <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.WALLET} component={WalletPage} />

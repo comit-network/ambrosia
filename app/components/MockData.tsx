@@ -136,6 +136,7 @@ export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity
 }
 
 // POST /orders
+// @ts-ignore
 interface PostOrderBody {
   position: "buy" | "sell",
   quantity: string, // in sats

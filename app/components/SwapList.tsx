@@ -1,7 +1,7 @@
 import React from 'react';
-import {Stack} from '@chakra-ui/core';
+import { Stack } from '@chakra-ui/core';
 import Swap from './Swap';
-import {mockOngoingSwaps} from './MockData';
+import { mockOngoingSwaps } from './MockData';
 
 export default function SwapList() {
   const swapsResponse = mockOngoingSwaps();
@@ -28,5 +28,9 @@ export default function SwapList() {
     <Swap key={swap.href} href={swap.href} />
   ));
 
-  return <Stack width="100%">{listItems}</Stack>;
+  return (
+    <Stack width="100%" spacing="1rem">
+      {listItems}
+    </Stack>
+  );
 }

@@ -15,32 +15,55 @@ import { RiCoinLine } from 'react-icons/all';
 import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
 import EthereumIcon from '../assets/Ethereum.svg';
+import { Currency, CurrencyUnit, CurrencyValue } from '../utils/types';
+
+interface CurrencyAndUnit {
+  currency: Currency;
+  unit: CurrencyUnit;
+}
+
+// TODO: Refactor to just use CurrencyValue decimals and the currency label
+function getCurrencyAndUnit(currencyValue: CurrencyValue): CurrencyAndUnit {
+  let unit = CurrencyUnit.SATOSHI;
+  let currency = Currency.BTC;
+
+  if (currencyValue.currency === 'BTC') {
+    currency = Currency.BTC;
+    if (currencyValue.decimals === 8) {
+      unit = CurrencyUnit.SATOSHI;
+    } else {
+      unit = CurrencyUnit.BTC;
+    }
+  } else if (currencyValue.currency === 'DAI') {
+    currency = Currency.DAI;
+    if (currencyValue.decimals === 18) {
+      unit = CurrencyUnit.ATTO;
+    } else {
+      unit = CurrencyUnit.DAI;
+    }
+  } else if (currencyValue.currency === 'ETH') {
+    currency = Currency.ETH;
+    if (currencyValue.decimals === 18) {
+      unit = CurrencyUnit.WEI;
+    } else {
+      unit = CurrencyUnit.ETHER;
+    }
+  }
+
+  return {
+    currency,
+    unit
+  };
+}
 
 export enum ColorMode {
-  RED = "RED",
-  GREEN = "GREEN",
-  WHITE = "WHITE",
-}
-
-export enum Currency {
-  BTC = 'BTC',
-  DAI = 'DAI',
-  ETH = 'ETH'
-}
-
-export enum CurrencyUnit {
-  BTC,
-  SATOSHI,
-  DAI,
-  ATTO,
-  ETHER,
-  WEI
+  RED = 'RED',
+  GREEN = 'GREEN',
+  WHITE = 'WHITE'
 }
 
 interface CurrencyAmountProps {
-  amount: string | number;
-  currency: Currency;
-  unit: CurrencyUnit;
+  currencyValue: CurrencyValue;
   topText?: string;
   subText1?: string;
   subText2?: string;
@@ -97,10 +120,10 @@ const currencyIcon = (currency: Currency, iconHeight?: string) => {
   }
 };
 
-export function amountToUnitString(
-  amount: number | string,
-  unit: CurrencyUnit
-) {
+export function amountToUnitString(currencyValue: CurrencyValue) {
+  const amount = currencyValue.value;
+  const { unit } = getCurrencyAndUnit(currencyValue);
+
   if (!amount) {
     return 'loading...';
   }
@@ -127,18 +150,17 @@ export function amountToUnitString(
 }
 
 export default function CurrencyAmount({
-  amount,
-  currency,
-  unit,
+  currencyValue,
   topText,
   subText1,
   subText2,
   amountFontSize,
   iconHeight,
-    colourMode,
-
+  colourMode
 }: CurrencyAmountProps) {
-  const displayAmount = amountToUnitString(amount, unit);
+  // TODO: Properly use the decimals instead of using the internal unit
+  const { currency } = getCurrencyAndUnit(currencyValue);
+  const displayAmount = amountToUnitString(currencyValue);
 
   let displayNumberColor;
   let displayTextColor;
@@ -146,16 +168,19 @@ export default function CurrencyAmount({
   if (colourMode) {
     switch (colourMode) {
       case ColorMode.GREEN:
-        displayNumberColor = "cyan.800";
-        displayTextColor = "cyan.600";
+        displayNumberColor = 'cyan.800';
+        displayTextColor = 'cyan.600';
         break;
       case ColorMode.RED:
-        displayNumberColor = "orange.800";
-        displayTextColor = "orange.600";
+        displayNumberColor = 'orange.800';
+        displayTextColor = 'orange.600';
         break;
       case ColorMode.WHITE:
-        displayNumberColor = "white";
-        displayTextColor = "white";
+        displayNumberColor = 'white';
+        displayTextColor = 'white';
+        break;
+      default:
+        break;
     }
   }
 
@@ -169,7 +194,16 @@ export default function CurrencyAmount({
       >
         <Flex direction="row" alignContent="center" minWidth="100px">
           {currencyIcon(currency, iconHeight)}
-          <StatNumber color={displayNumberColor} fontSize={amountFontSize} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{displayAmount}</StatNumber>
+          {/* @ts-ignore */}
+          <StatNumber
+            color={displayNumberColor}
+            fontSize={amountFontSize}
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="nowrap"
+          >
+            {displayAmount}
+          </StatNumber>
         </Flex>
       </Tooltip>
     </Flex>
@@ -180,16 +214,48 @@ export default function CurrencyAmount({
   let renderSubText2;
 
   if (topText) {
-    renderTopText = <StatLabel color={displayTextColor} minWidth="80px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{topText}</StatLabel>;
+    // @ts-ignore
+    renderTopText = (
+      <StatLabel
+        color={displayTextColor}
+        minWidth="80px"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {topText}
+      </StatLabel>
+    );
   }
 
   if (subText1) {
-    renderSubText1 = <StatHelpText color={displayTextColor} overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{subText1}</StatHelpText>;
+    // @ts-ignore
+    renderSubText1 = (
+      <StatHelpText
+        color={displayTextColor}
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {subText1}
+      </StatHelpText>
+    );
   }
 
   if (subText2) {
     // TODO: Fix the hacky minus margin
-    renderSubText2 = <StatHelpText color={displayTextColor} marginTop="-10px" overflow="hidden" textOverflow="ellipsis" whiteSpace="nowrap">{subText2}</StatHelpText>;
+    // @ts-ignore
+    renderSubText2 = (
+      <StatHelpText
+        color={displayTextColor}
+        marginTop="-10px"
+        overflow="hidden"
+        textOverflow="ellipsis"
+        whiteSpace="nowrap"
+      >
+        {subText2}
+      </StatHelpText>
+    );
   }
 
   return (

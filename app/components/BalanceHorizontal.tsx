@@ -1,60 +1,94 @@
 import React, { useEffect, useState } from 'react';
-import { Flex, StatGroup } from '@chakra-ui/core';
-import { BigNumber, ethers } from 'ethers';
+import { Box, Flex, Heading, StatGroup } from '@chakra-ui/core';
+import { BigNumber } from 'ethers';
 import Store from 'electron-store';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
-import CurrencyAmount, {
-  amountToUnitString,
-  Currency,
-  CurrencyUnit,
-  shortenAmountString
-} from './CurrencyAmount';
+import CurrencyAmount, { amountToUnitString } from './CurrencyAmount';
+import { CurrencyValue, intoBook, intoOrders } from '../utils/types';
+import { mockOrders } from './MockData';
 
+// TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
   const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
-  const [ethBalance, setEthBalance] = useState(null);
-  const [daiBalance, setDaiBalance] = useState(null);
-  const [btcBalance, setBtcBalance] = useState(null);
 
-  // TODO: [CndApi] ? - or should we calc that ourselves
-  // FixMe: [MockData]
-  const ethReserved = 0.0001;
-  const daiReserved = 50;
-  const btcReserved = 0.5;
+  // TODO: To be replaced with using CurrencyValue only, refactor once there is time
+  const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
+    null
+  );
+  const [daiBalanceAsCurrencyValue, setDaiBalanceAsCurrencyValue] = useState(
+    null
+  );
+  const [btcBalanceAsCurrencyValue, setBtcBalanceAsCurrencyValue] = useState(
+    null
+  );
 
+  const [book, setBook] = useState(null);
   const settings = new Store();
 
-  useEffect(() => {
-    async function loadEthBalance() {
-      const eth = await ethWallet.getBalance();
-      // TODO: constructing BigNumber again should be unnecessary, but tsc complains
-      setEthBalance(ethers.utils.formatEther(BigNumber.from(eth)));
-    }
+  // useEffect(() => {
+  //   async function loadEthBalance() {
+  //     const eth = await ethWallet.getBalance();
+  //     const ethBigNumber = BigNumber.from(eth);
+  //     let ethCurrencyValue = {
+  //       currency: "ETH",
+  //       value: ethBigNumber.toString(),
+  //       decimals: 18
+  //     } as CurrencyValue;
+  //
+  //     setEthBalanceAsCurrencyValue(ethCurrencyValue);
+  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
+  //   }
+  //
+  //   if (ethWallet) loadEthBalance();
+  // }, [ethWalletLoaded]);
+  //
+  // useEffect(() => {
+  //   async function loadDaiBalance() {
+  //     const dai = await ethWallet.getErc20Balance(
+  //         settings.get('ERC20_CONTRACT_ADDRESS')
+  //     );
+  //     let daiCurrencyValue = {
+  //       currency: "DAI",
+  //       value: dai.toString(),
+  //       decimals: 18
+  //     } as CurrencyValue;
+  //     setDaiBalanceAsCurrencyValue(daiCurrencyValue);
+  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
+  //
+  //   }
+  //
+  //   if (ethWallet) loadDaiBalance();
+  // }, [ethWalletLoaded]);
+  //
+  // useEffect(() => {
+  //   async function loadBtcBalance() {
+  //     const btc = await btcWallet.getBalance();
+  //     const btcBalanceInSats = btc * 100000000;
+  //     let btcCurrencyValue = {
+  //       currency: "DAI",
+  //       value: btcBalanceInSats.toString(),
+  //       decimals: 8
+  //     } as CurrencyValue;
+  //     setBtcBalanceAsCurrencyValue(btcCurrencyValue);
+  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
+  //   }
+  //
+  //   if (btcWallet) loadBtcBalance();
+  // }, [btcWalletLoaded]);
 
-    if (ethWallet) loadEthBalance();
-  }, [ethWalletLoaded]);
+  // TODO: Replace with actual data
+  const myOrders = intoOrders(mockOrders());
 
-  useEffect(() => {
-    async function loadDaiBalance() {
-      const dai = await ethWallet.getErc20Balance(
-        settings.get('ERC20_CONTRACT_ADDRESS')
-      );
-      setDaiBalance(dai.toString());
-    }
-
-    if (ethWallet) loadDaiBalance();
-  }, [ethWalletLoaded]);
-
-  useEffect(() => {
-    async function loadBtcBalance() {
-      const btc = await btcWallet.getBalance();
-      setBtcBalance(btc);
-    }
-
-    if (btcWallet) loadBtcBalance();
-  }, [btcWalletLoaded]);
+  if (!book) {
+    // TODO: Proper init handling
+    return (
+      <Box>
+        <Heading>Loading...</Heading>
+      </Box>
+    );
+  }
 
   return (
     <div>
@@ -67,38 +101,36 @@ export default function BalanceHorizontal() {
           minWidth="600px"
         >
           <CurrencyAmount
-            amount={btcBalance}
-            currency={Currency.BTC}
-            unit={CurrencyUnit.BTC}
+            currencyValue={book.btcTotal}
             topText="BTC"
-            subText1={`Available: ${
-              amountToUnitString(btcBalance - btcReserved, CurrencyUnit.BTC)
-            }`}
-            subText2={`Locked in orders: ${
-              amountToUnitString(btcReserved, CurrencyUnit.BTC)}`}
+            subText1={`Available: ${amountToUnitString(
+              book.btcAvailableForTrading
+            )}`}
+            subText2={`Locked in orders: ${amountToUnitString(
+              book.btcInOrders
+            )}`}
             amountFontSize="14pt"
           />
           <CurrencyAmount
-            amount={daiBalance}
-            currency={Currency.DAI}
-            unit={CurrencyUnit.DAI}
+            currencyValue={book.daiTotal}
             topText="DAI"
-            subText1={`Available: ${
-              amountToUnitString(daiBalance - daiReserved, CurrencyUnit.DAI)
-            }`}
-            subText2={`Locked in orders: ${
-              amountToUnitString(daiReserved, CurrencyUnit.DAI)}`}
+            subText1={`Available: ${amountToUnitString(
+              book.daiAvailableForTrading
+            )}`}
+            subText2={`Locked in orders: ${amountToUnitString(
+              book.daiInOrders
+            )}`}
             amountFontSize="14pt"
           />
           <CurrencyAmount
-            amount={ethBalance}
-            currency={Currency.ETH}
-            unit={CurrencyUnit.ETHER}
+            currencyValue={book.ethTotal}
             topText="ETH"
-            subText1={`Available: ${
-              amountToUnitString(ethBalance - ethReserved, CurrencyUnit.ETHER)}`}
-            subText2={`Locked in orders: ${
-              amountToUnitString(ethReserved, CurrencyUnit.ETHER)}`}
+            subText1={`Available: ${amountToUnitString(
+              book.ethAvailableForTrading
+            )}`}
+            subText2={`Locked in orders: ${amountToUnitString(
+              book.ethInOrders
+            )}`}
             amountFontSize="14pt"
           />
         </Flex>

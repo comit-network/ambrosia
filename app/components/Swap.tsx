@@ -4,8 +4,9 @@ import { RiExchangeLine } from 'react-icons/ri';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 import { useCnd } from '../hooks/useCnd';
-import CurrencyAmount, { Currency, CurrencyUnit } from './CurrencyAmount';
+import CurrencyAmount from './CurrencyAmount';
 import { mockSwap } from './MockData';
+import { Currency } from '../utils/types';
 
 const swapStatus = (alphaStatus: string, betaStatus: string) => {
   // TODO: Work on more elaborate status
@@ -95,16 +96,16 @@ export default function Swap({ href }: SwapProperties) {
     );
   }
 
-  // TODO: Properly use types (not just Siren Entity) once we agree on API changes
+  // TODO: Properly use types (not just Siren Entity) - might require adding "Asset" to be accepted by <CurrencyAmount />
   if (role === 'Alice') {
-    sendAmount = alpha.asset.value;
+    sendAmount = alpha.asset;
     sendCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
-    receiveAmount = beta.asset.value;
+    receiveAmount = beta.asset;
     receiveCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
   } else {
-    receiveAmount = alpha.asset.value;
+    receiveAmount = alpha.asset;
     receiveCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
-    sendAmount = beta.asset.value;
+    sendAmount = beta.asset;
     sendCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
   }
 
@@ -115,17 +116,13 @@ export default function Swap({ href }: SwapProperties) {
   const sendAmountDisplay =
     sendCurrency === Currency.BTC ? (
       <CurrencyAmount
-        amount={sendAmount}
-        currency={Currency.BTC}
-        unit={CurrencyUnit.SATOSHI}
+        currencyValue={sendAmount}
         topText={sendAmountLabel}
         amountShortenPosition={numberShortenPos}
       />
     ) : (
       <CurrencyAmount
-        amount={sendAmount}
-        currency={Currency.DAI}
-        unit={CurrencyUnit.ATTO}
+        currencyValue={sendAmount}
         topText={sendAmountLabel}
         amountShortenPosition={numberShortenPos}
       />
@@ -134,17 +131,13 @@ export default function Swap({ href }: SwapProperties) {
   const receiveAmountDisplay =
     receiveCurrency === Currency.BTC ? (
       <CurrencyAmount
-        amount={receiveAmount}
-        currency={Currency.BTC}
-        unit={CurrencyUnit.SATOSHI}
+        currencyValue={receiveAmount}
         topText={receiveAmountLabel}
         amountShortenPosition={numberShortenPos}
       />
     ) : (
       <CurrencyAmount
-        amount={receiveAmount}
-        currency={Currency.DAI}
-        unit={CurrencyUnit.ATTO}
+        currencyValue={receiveAmount}
         topText={receiveAmountLabel}
         amountShortenPosition={numberShortenPos}
       />
@@ -153,7 +146,12 @@ export default function Swap({ href }: SwapProperties) {
   return (
     <Box maxWidth="100%">
       <Flex direction="column" shadow="md" border="1px" borderColor="gray.200">
-        <Flex direction="row" alignItems="center" padding="5px" background="white">
+        <Flex
+          direction="row"
+          alignItems="center"
+          padding="5px"
+          background="white"
+        >
           <Box as={RiExchangeLine} size="32px" />
           {/* <Spinner size="sm" marginLeft="10px" marginRight="20px"/> */}
           <Text fontSize="md" marginRight="20px" fontWeight="bold">
