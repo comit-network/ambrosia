@@ -124,7 +124,7 @@ export default function DashboardPage() {
           alignContent="center"
           backgroundColor="gray.400"
         >
-          <Heading>Imagine a chart here</Heading>
+          <Heading>Imagine market data chart here</Heading>
         </Flex>
         {/* Swaps */}
         <Flex direction="row" marginTop="1rem">

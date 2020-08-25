@@ -19,12 +19,13 @@ import {
 import {
   amountToUnitString,
   BTC_SYMBOL,
-  calculateBaseFromAvailableQuote,
+  calculateBaseFromAvailableQuote, calculateQuote,
   CurrencyValue,
   DAI_SYMBOL,
   MarketOrder
 } from '../utils/types';
 import {Field, Formik} from "formik";
+import {ethers} from "ethers";
 
 interface OrderCreatorProperties {
   highestPriceBuyOrder: MarketOrder;
@@ -51,15 +52,52 @@ export default function OrderCreator({
     return error;
   }
 
-  function validateSufficientDai(amount: string) {
+  // TODO: Does not work properly yet, probably better to add this to the usestate
+  function validateQuote(value) {
     let error;
-    if (!amount) {
-      error = "Please specify amount";
-    } else if (amount !== "Naruto") {
-      error = "Insufficient BTC";
+    console.log("validateDai " + JSON.stringify(value))
+    if (value > daiAvailable.value) {
+      error = "Insufficient DAI";
     }
     return error;
   }
+
+  function buyQuantityChange({target: {value}}) {
+    let quantity = ethers.BigNumber.from(0);
+    if (value) {
+      quantity = ethers.utils.parseUnits(value, 8);
+    }
+    // TODO Create some proper conversion functions
+    let quantityAsCurrencyVal = {
+      currency: "BTC",
+      value: quantity.toString(),
+      decimals: 8
+    } as CurrencyValue;
+
+    let quote = calculateQuote(buyPriceCurrencyVal, quantityAsCurrencyVal);
+    setBuyQuantity(quantityAsCurrencyVal);
+    setBuyQuoteStr(amountToUnitString(quote));
+  }
+
+  function buyPriceChange({target: {value}}) {
+    // TODO Create some proper conversion functions
+    let price = ethers.BigNumber.from(0);
+    if (value) {
+      price = ethers.utils.parseUnits(value, 18);
+    }
+
+    let priceAsCurrencyVal = {
+      currency: "DAI",
+      value: price.toString(),
+      decimals: 18
+    } as CurrencyValue;
+
+    let quote = calculateQuote(priceAsCurrencyVal, buyQuantity);
+    setBuyPriceCurrencyVal(priceAsCurrencyVal);
+
+    setBuyQuoteStr(amountToUnitString(quote));
+  }
+
 
   const sellColors = {
     text: 'orange.800',
@@ -77,9 +115,10 @@ export default function OrderCreator({
   const initialBuyQuantity = calculateBaseFromAvailableQuote(lowestPriceSellOrder.price, daiAvailable);
   const initialBuyQuote = daiAvailable;
 
-  const [buyPrice, setBuyPrice] = useState(initialBuyPrice);
+  const [buyPriceCurrencyVal, setBuyPriceCurrencyVal] = useState(initialBuyPrice);
   const [buyQuantity, setBuyQuantity] = useState(initialBuyQuantity);
-  const [buyQuote, setBuyQuote] = useState(initialBuyQuote);
+
+  const [buyQuoteStr, setBuyQuoteStr] = useState("");
 
   return (
     <Flex direction="column">
@@ -113,7 +152,8 @@ export default function OrderCreator({
             <Flex direction="column" padding="1rem">
               <Formik
                   initialValues={{
-                    buyPrice: amountToUnitString(initialBuyPrice),
+                    // TODO: Why does this not work?
+                    // buyPrice: amountToUnitString(buyPriceCurrencyVal),
                   }}
                   onSubmit={(values, actions) => {
                     // TODO  handle create BUY order
@@ -126,33 +166,32 @@ export default function OrderCreator({
                             <FormControl isInvalid={form.errors.buyPrice && form.touched.buyPrice}>
                               <FormLabel htmlFor="buyPrice">Limit Price</FormLabel>
                               <InputGroup>
-                                // ₿
                                 <InputLeftElement color="gray.300" fontSize="1.2em" children={DAI_SYMBOL}/>
-                                <Input type="number" {...field} id="buyPrice" placeholder={amountToUnitString(initialBuyPrice)} />
+                                <Input {...field} type="number" id="buyPrice" placeholder={amountToUnitString(initialBuyPrice)} onChange={buyPriceChange} />
                               </InputGroup>
                               <FormErrorMessage>{form.errors.buyPrice}</FormErrorMessage>
                             </FormControl>
                         )}
                       </Field>
-                      <Field name="quantity" validate={validateSufficientBtc}>
+                      <Field name="quantity">
                         {({ field, form }) => (
                             <FormControl isInvalid={form.errors.quantity && form.touched.quantity}>
                               <FormLabel htmlFor="quantity">Quantity</FormLabel>
                               <InputGroup>
                                 <InputLeftElement color="gray.300" fontSize="1.2em" children={BTC_SYMBOL}/>
-                                <Input type="number" {...field} id="quantity" placeholder={amountToUnitString(initialBuyQuantity)} />
+                                <Input type="number" {...field} id="quantity" placeholder={amountToUnitString(initialBuyQuantity)} onChange={buyQuantityChange} />
                               </InputGroup>
                               <FormErrorMessage>{form.errors.quantity}</FormErrorMessage>
                             </FormControl>
                         )}
                       </Field>
-                      <Field name="quote" validate={validateSufficientBtc}>
+                      <Field name="quote" validate={validateQuote}>
                         {({ field, form }) => (
                             <FormControl isInvalid={form.errors.quote && form.touched.quote}>
                               <FormLabel htmlFor="quote">Quote</FormLabel>
                               <InputGroup>
                                 <InputLeftElement color="gray.300" fontSize="1.2em" children={DAI_SYMBOL}/>
-                                <Input type="number" {...field} id="quote" placeholder={amountToUnitString(initialBuyQuote)} />
+                                <Input type="number" {...field} id="quote" placeholder={amountToUnitString(initialBuyQuote)} value={buyQuoteStr} isDisabled/>
                               </InputGroup>
                               <FormErrorMessage>{form.errors.quote}</FormErrorMessage>
                             </FormControl>
