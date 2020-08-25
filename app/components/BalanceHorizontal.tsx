@@ -10,6 +10,10 @@ import { mockOrders } from './MockData';
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
+
+  // TODO: Replace with actual data
+  const myOrders = intoOrders(mockOrders());
+
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
   const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
 
@@ -27,59 +31,67 @@ export default function BalanceHorizontal() {
   const [book, setBook] = useState(null);
   const settings = new Store();
 
-  // useEffect(() => {
-  //   async function loadEthBalance() {
-  //     const eth = await ethWallet.getBalance();
-  //     const ethBigNumber = BigNumber.from(eth);
-  //     let ethCurrencyValue = {
-  //       currency: "ETH",
-  //       value: ethBigNumber.toString(),
-  //       decimals: 18
-  //     } as CurrencyValue;
-  //
-  //     setEthBalanceAsCurrencyValue(ethCurrencyValue);
-  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
-  //   }
-  //
-  //   if (ethWallet) loadEthBalance();
-  // }, [ethWalletLoaded]);
-  //
-  // useEffect(() => {
-  //   async function loadDaiBalance() {
-  //     const dai = await ethWallet.getErc20Balance(
-  //         settings.get('ERC20_CONTRACT_ADDRESS')
-  //     );
-  //     let daiCurrencyValue = {
-  //       currency: "DAI",
-  //       value: dai.toString(),
-  //       decimals: 18
-  //     } as CurrencyValue;
-  //     setDaiBalanceAsCurrencyValue(daiCurrencyValue);
-  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
-  //
-  //   }
-  //
-  //   if (ethWallet) loadDaiBalance();
-  // }, [ethWalletLoaded]);
-  //
-  // useEffect(() => {
-  //   async function loadBtcBalance() {
-  //     const btc = await btcWallet.getBalance();
-  //     const btcBalanceInSats = btc * 100000000;
-  //     let btcCurrencyValue = {
-  //       currency: "DAI",
-  //       value: btcBalanceInSats.toString(),
-  //       decimals: 8
-  //     } as CurrencyValue;
-  //     setBtcBalanceAsCurrencyValue(btcCurrencyValue);
-  //     setBook(intoBook(btcBalanceAsCurrencyValue, daiBalanceAsCurrencyValue, ethBalanceAsCurrencyValue, myOrders));
-  //   }
-  //
-  //   if (btcWallet) loadBtcBalance();
-  // }, [btcWalletLoaded]);
+  useEffect(() => {
+    async function loadEthBalance() {
+      const eth = await ethWallet.getBalance();
+      const ethBigNumber = BigNumber.from(eth);
+      let ethCurrencyValue = {
+        currency: "ETH",
+        value: ethBigNumber.toString(),
+        decimals: 18
+      } as CurrencyValue;
 
-  // TODO: Replace with actual data
-  const myOrders = intoOrders(mockOrders());
+      setEthBalanceAsCurrencyValue(ethCurrencyValue);
+    }
+
+    if (ethWallet) loadEthBalance();
+  }, [ethWallet]);
+
+  useEffect(() => {
+    async function loadDaiBalance() {
+      const dai = await ethWallet.getErc20Balance(
+          settings.get('ERC20_CONTRACT_ADDRESS')
+      );
+      let daiCurrencyValue = {
+        currency: "DAI",
+        value: dai.toString(),
+        decimals: 18
+      } as CurrencyValue;
+      setDaiBalanceAsCurrencyValue(daiCurrencyValue);
+    }
+
+    if (ethWallet) loadDaiBalance();
+  }, [ethWallet]);
+
+  useEffect(() => {
+    async function loadBtcBalance() {
+      const btc = await btcWallet.getBalance();
+      const btcBalanceInSats = btc * 100000000;
+      let btcCurrencyValue = {
+        currency: "BTC",
+        value: btcBalanceInSats.toString(),
+        decimals: 8
+      } as CurrencyValue;
+      setBtcBalanceAsCurrencyValue(btcCurrencyValue);
+    }
+
+    if (btcWallet) loadBtcBalance();
+  }, [btcWallet]);
+
+  useEffect(() => {
+    setBook(
+        intoBook(
+            btcBalanceAsCurrencyValue,
+            daiBalanceAsCurrencyValue,
+            ethBalanceAsCurrencyValue,
+            myOrders
+        )
+    );
+  }, [
+    ethBalanceAsCurrencyValue,
+    btcBalanceAsCurrencyValue,
+    daiBalanceAsCurrencyValue
+  ]);
 
   if (!book) {
     // TODO: Proper init handling
