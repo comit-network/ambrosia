@@ -1,8 +1,9 @@
 import React from 'react';
-import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
-import CurrencyAmount, { ColorMode } from './CurrencyAmount';
-import { Action } from '../comit-sdk/cnd/siren';
-import { calculateQuote, Order } from '../utils/types';
+import {Box, Flex, IconButton, Text} from '@chakra-ui/core';
+import CurrencyAmount, {ColorMode} from './CurrencyAmount';
+import {Action} from '../comit-sdk/cnd/siren';
+import {calculateQuote, Order} from '../utils/types';
+import {myBuyOrderBackgroundColour, mySellOrderBackgroundColour} from "../constants/colors";
 
 export interface MarketOrderProperties {
   orders: Order[];
@@ -10,13 +11,10 @@ export interface MarketOrderProperties {
   tableContentHeightLock?: string;
 }
 
-const myOrderSellBackgroundColour = 'orange.600';
-const myOrderBuyBackgroundColour = 'cyan.600';
-
 function getColorForOrder(order: Order): string {
   return order.position === 'buy'
-    ? myOrderBuyBackgroundColour
-    : myOrderSellBackgroundColour;
+    ? myBuyOrderBackgroundColour
+    : mySellOrderBackgroundColour;
 }
 
 function cancel(action: Action) {
@@ -41,8 +39,12 @@ export default function MyOrderList({
   const currencyValuePadding = '0.3rem';
   const marginTopBottom = '0.3rem';
 
+
   for (const order of orders) {
-    const displayColorMode = ColorMode.WHITE;
+
+    const displayColorMode = order.position === "buy" ? ColorMode.CYAN : ColorMode.ORANGE;
+    const cancelButtonColor = order.position === "buy" ? "cyan" : "orange";
+    const openAmountFontColor = order.position === "buy" ? "cyan.800" : "orange.800";
     const quote = calculateQuote(order.price, order.quantity);
 
     rows.push(
@@ -54,6 +56,7 @@ export default function MyOrderList({
         marginBottom={marginTopBottom}
         marginTop={marginTopBottom}
         alignItems="center"
+        shadow="md"
       >
         <Box width={cancelButtonWidth}>
           <IconButton
@@ -61,6 +64,7 @@ export default function MyOrderList({
             aria-label="cancel"
             icon="close"
             onClick={() => cancel(order.actions[0])}
+            variantColor={cancelButtonColor}
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -69,6 +73,7 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
+            noImage={true}
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -77,6 +82,7 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
+            noImage={true}
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -85,22 +91,26 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
+            noImage={true}
           />
         </Box>
         <Box width={openAmountWidth}>
-          <Text color={displayColorMode}>{`${+order.state.open * 100}%`}</Text>
+          <Text color={openAmountFontColor}>{`${+order.state.open * 100}%`}</Text>
         </Box>
       </Flex>
     );
   }
 
-  const currencyValHeader = text => {
+  const currencyValHeader = (text, subText) => {
     return (
-      <Box h="25px" paddingTop="0.1rem" width={currencyValueWidth}>
-        <Text fontSize="sd" fontWeight="bold">
+      <Flex direction="row" h="25px" paddingTop="0.1rem" width={currencyValueWidth}>
+        <Text fontSize="sd" fontWeight="bold" marginRight="0.3rem">
           {text}
         </Text>
-      </Box>
+        <Text fontSize="xs" fontWeight="bold" color="gray.600">
+          {subText}
+        </Text>
+      </Flex>
     );
   };
 
@@ -111,16 +121,16 @@ export default function MyOrderList({
           {label}
         </Text>
       </Box>
-      <Box boxShadow="md">
+      <Box>
         <Flex
           direction="row"
           paddingRight={currencyValuePadding}
           paddingLeft={currencyValuePadding}
         >
           <Box width={cancelButtonWidth} />
-          {currencyValHeader('Price')}
-          {currencyValHeader('Quantity')}
-          {currencyValHeader('Quote')}
+          {currencyValHeader('Price', 'DAI')}
+          {currencyValHeader('Quantity', 'BTC')}
+          {currencyValHeader('Quote', 'DAI')}
           <Box h="25px" paddingTop="0.1rem" width={openAmountWidth}>
             <Text fontSize="sd" fontWeight="bold">
               Open
@@ -132,7 +142,6 @@ export default function MyOrderList({
           overflow="scroll"
           maxHeight={tableContentHeightLock}
         >
-          {rows}
           {rows}
         </Flex>
       </Box>

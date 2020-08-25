@@ -16,7 +16,7 @@ import {
   DrawerBody,
   IconButton,
   Divider,
-  Button
+  Button, Image
 } from '@chakra-ui/core';
 import styled from '@emotion/styled';
 import routes from '../constants/routes.json';
@@ -71,6 +71,7 @@ export default function Layout() {
   return (
     <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
       <Flex
+          direction="column"
         backgroundColor="white"
         id="sidebar"
         borderRight="2px"
@@ -82,6 +83,7 @@ export default function Layout() {
             variantColor="gray"
             onClick={handleClick}
             icon="chevron-right"
+            width="20px"
           />
           <Divider />
           <Stack>

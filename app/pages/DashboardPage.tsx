@@ -112,17 +112,17 @@ export default function DashboardPage() {
     );
   }
 
-  const orderTableOffset = '140px';
+  const orderTableOffset = '136px';
 
   return (
     <Flex direction="row" width="100%" padding="1rem">
-      <Flex direction="column" width="100%">
+      <Flex direction="column" width="100%" flexGrow={2}>
         {/* Graph */}
         <Flex
           direction="row"
           flexGrow={2}
           alignContent="center"
-          background="white"
+          backgroundColor="gray.400"
         >
           <Heading>Imagine a chart here</Heading>
         </Flex>
@@ -132,7 +132,7 @@ export default function DashboardPage() {
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">
           {/* Balance */}
-          <Flex direction="column" width="200px">
+          <Flex direction="column" maxWidth="200px" marginTop="40px">
             <AvailableBalance
               btcAvailable={book.btcAvailableForTrading}
               btcReserved={book.btcInOrders}
@@ -143,7 +143,7 @@ export default function DashboardPage() {
             />
           </Flex>
           {/* Order Creator */}
-          <Flex direction="column" minWidth="300px">
+          <Flex direction="column" minWidth="300px" maxWidth="400px" marginRight="1rem">
             <OrderCreator
               highestPriceBuyOrder={market.highestBuyOrder}
               lowestPriceSellOrder={market.lowestSellOrder}
@@ -164,12 +164,11 @@ export default function DashboardPage() {
       </Flex>
 
       {/* Current Market */}
-      <Flex direction="column" marginLeft="1rem">
+      <Flex direction="column" marginLeft="1rem" flexGrow={1}>
         <MarketOrderList
           key="sell-orders"
           orders={market.sellOrders}
           label="Sell Orders"
-          colorMode={ColorMode.RED}
           tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
         />
         <Flex
@@ -193,7 +192,6 @@ export default function DashboardPage() {
           key="buy-orders"
           orders={market.buyOrders}
           label="Buy Orders"
-          colorMode={ColorMode.GREEN}
           tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
         />
       </Flex>

@@ -59,7 +59,9 @@ function getCurrencyAndUnit(currencyValue: CurrencyValue): CurrencyAndUnit {
 export enum ColorMode {
   RED = 'RED',
   GREEN = 'GREEN',
-  WHITE = 'WHITE'
+  WHITE = 'WHITE',
+  ORANGE = 'ORANGE',
+  CYAN = 'CYAN',
 }
 
 interface CurrencyAmountProps {
@@ -71,6 +73,9 @@ interface CurrencyAmountProps {
   amountFontSize?: string;
   iconHeight?: string;
   colourMode?: ColorMode;
+  noImage?: boolean;
+  showCurrencyText?: boolean;
+  minWidth?: string;
 }
 
 const currencyIcon = (currency: Currency, iconHeight?: string) => {
@@ -156,7 +161,10 @@ export default function CurrencyAmount({
   subText2,
   amountFontSize,
   iconHeight,
-  colourMode
+  colourMode,
+    noImage,
+    showCurrencyText,
+    minWidth
 }: CurrencyAmountProps) {
   // TODO: Properly use the decimals instead of using the internal unit
   const { currency } = getCurrencyAndUnit(currencyValue);
@@ -167,13 +175,21 @@ export default function CurrencyAmount({
 
   if (colourMode) {
     switch (colourMode) {
-      case ColorMode.GREEN:
+      case ColorMode.ORANGE:
+        displayNumberColor = 'orange.800';
+        displayTextColor = 'orange.600';
+        break;
+      case ColorMode.CYAN:
         displayNumberColor = 'cyan.800';
         displayTextColor = 'cyan.600';
         break;
+      case ColorMode.GREEN:
+        displayNumberColor = 'green.800';
+        displayTextColor = 'green.600';
+        break;
       case ColorMode.RED:
-        displayNumberColor = 'orange.800';
-        displayTextColor = 'orange.600';
+        displayNumberColor = 'red.800';
+        displayTextColor = 'red.600';
         break;
       case ColorMode.WHITE:
         displayNumberColor = 'white';
@@ -184,6 +200,11 @@ export default function CurrencyAmount({
     }
   }
 
+  let displayMinWidth = "100px";
+  if (minWidth) {
+    displayMinWidth = minWidth;
+  }
+
   const renderAmount = (
     <Flex direction="row">
       <Tooltip
@@ -192,8 +213,8 @@ export default function CurrencyAmount({
         label={`${displayAmount} ${currency}`}
         placement="top"
       >
-        <Flex direction="row" alignContent="center" minWidth="100px">
-          {currencyIcon(currency, iconHeight)}
+        <Flex direction="row" alignContent="center" minWidth={displayMinWidth}>
+          { noImage ? <></> : currencyIcon(currency, iconHeight)}
           {/* @ts-ignore */}
           <StatNumber
             color={displayNumberColor}
@@ -203,6 +224,7 @@ export default function CurrencyAmount({
             whiteSpace="nowrap"
           >
             {displayAmount}
+            {showCurrencyText ? ` ${currency}` : <></>}
           </StatNumber>
         </Flex>
       </Tooltip>
