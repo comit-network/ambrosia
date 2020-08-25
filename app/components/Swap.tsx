@@ -144,7 +144,7 @@ export default function Swap({ href }: SwapProperties) {
     );
 
   return (
-    <Box maxWidth="100%">
+    <Box maxWidth="100%" marginTop="1rem">
       <Flex direction="column" shadow="md" border="1px" borderColor="gray.200">
         <Flex
           direction="row"

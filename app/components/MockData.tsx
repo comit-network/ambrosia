@@ -207,7 +207,7 @@ export function mockOrders(): AxiosResponse<Entity> {
             },
             quantity: {
               currency: "BTC",
-              value: "10000000",
+              value: "112345678",
               decimals: 8,
             },
             state: {

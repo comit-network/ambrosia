@@ -1,6 +1,8 @@
-import { AxiosResponse } from 'axios';
-import { ethers } from 'ethers';
-import { Action, Entity } from '../comit-sdk/cnd/siren';
+import {AxiosResponse} from 'axios';
+import {ethers} from 'ethers';
+import {Action, Entity} from '../comit-sdk/cnd/siren';
+import {toBitcoin} from "satoshi-bitcoin-ts";
+import {formatEther, formatUnits} from "ethers/lib/utils";
 
 // TODO: Remove once we deal with decimals instead
 export enum Currency {
@@ -159,8 +161,10 @@ export function calculateQuote(
   // Calc with sat as base
   const priceWei = ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
   const quantitySat = ethers.BigNumber.from(quantity.value); // Quantity in BTC(sat)
-  const priceSat = priceWei.div(satToAttoZeros);
-  const quote = priceSat.mul(quantitySat);
+
+  // multiply first so the division does not lose precision
+  const quoteUnadjusted = priceWei.mul(quantitySat);
+  const quote = quoteUnadjusted.div(satToAttoZeros);
 
   return {
     currency: 'DAI',
@@ -168,6 +172,28 @@ export function calculateQuote(
     decimals: 18
   };
 }
+
+export function calculateBaseFromAvailableQuote(
+    price: CurrencyValue,
+    quote: CurrencyValue
+): CurrencyValue {
+  const satDecimals = ethers.BigNumber.from('100000000');
+
+  // Calc with sat as base
+  const priceWei = ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
+  const quoteWei = ethers.BigNumber.from(quote.value); // Amount of DAI to calculate the base for
+
+  // multiply first so the division does not lose precision
+  const quoteAdjusted = quoteWei.mul(satDecimals);
+  const quantity = quoteAdjusted.div(priceWei);
+
+  return {
+    currency: 'BTC',
+    value: quantity.toString(),
+    decimals: 8
+  };
+}
+
 
 export function intoBook(
   btcBalance: CurrencyValue,
@@ -178,11 +204,6 @@ export function intoBook(
   console.log('into book...');
 
   if (!btcBalance || !daiBalance || !ethBalance || !orders) {
-    // Not initialised yet...
-    console.log(btcBalance);
-    console.log(daiBalance);
-    console.log(ethBalance);
-    console.log(orders);
     return null;
   }
 
@@ -260,3 +281,75 @@ export function intoBook(
     }
   };
 }
+
+interface CurrencyAndUnit {
+  currency: Currency;
+  unit: CurrencyUnit;
+}
+
+// TODO: Refactor to just use CurrencyValue decimals and the currency label
+export function getCurrencyAndUnit(currencyValue: CurrencyValue): CurrencyAndUnit {
+  let unit = CurrencyUnit.SATOSHI;
+  let currency = Currency.BTC;
+
+  if (currencyValue.currency === 'BTC') {
+    currency = Currency.BTC;
+    if (currencyValue.decimals === 8) {
+      unit = CurrencyUnit.SATOSHI;
+    } else {
+      unit = CurrencyUnit.BTC;
+    }
+  } else if (currencyValue.currency === 'DAI') {
+    currency = Currency.DAI;
+    if (currencyValue.decimals === 18) {
+      unit = CurrencyUnit.ATTO;
+    } else {
+      unit = CurrencyUnit.DAI;
+    }
+  } else if (currencyValue.currency === 'ETH') {
+    currency = Currency.ETH;
+    if (currencyValue.decimals === 18) {
+      unit = CurrencyUnit.WEI;
+    } else {
+      unit = CurrencyUnit.ETHER;
+    }
+  }
+
+  return {
+    currency,
+    unit
+  };
+}
+
+export function amountToUnitString(currencyValue: CurrencyValue) {
+  const amount = currencyValue.value;
+  const { unit } = getCurrencyAndUnit(currencyValue);
+
+  if (!amount) {
+    return 'loading...';
+  }
+
+  switch (unit) {
+    case CurrencyUnit.BTC:
+    case CurrencyUnit.DAI:
+    case CurrencyUnit.ETHER: {
+      return amount.toString();
+    }
+    case CurrencyUnit.SATOSHI: {
+      return toBitcoin(amount).toString();
+    }
+    case CurrencyUnit.WEI: {
+      return formatEther(amount).toString();
+    }
+    case CurrencyUnit.ATTO: {
+      return formatUnits(amount).toString();
+    }
+    default: {
+      return amount.toString();
+    }
+  }
+}
+
+export const BTC_SYMBOL = String.fromCharCode(parseInt("20BF",16));
+export const DAI_SYMBOL = String.fromCharCode(parseInt("25c8",16));
+export const ETH_SYMBOL = String.fromCharCode(parseInt("039E",16));

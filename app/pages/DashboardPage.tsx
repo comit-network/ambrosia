@@ -130,7 +130,7 @@ export default function DashboardPage() {
         <Flex direction="row" marginTop="1rem">
           <SwapList />
         </Flex>
-        <Flex direction="row" marginTop="1rem" width="100%">
+        <Flex direction="row" marginTop="1rem" width="100%" >
           {/* Balance */}
           <Flex direction="column" maxWidth="200px" marginTop="40px">
             <AvailableBalance
@@ -149,6 +149,7 @@ export default function DashboardPage() {
               lowestPriceSellOrder={market.lowestSellOrder}
               btcAvailable={book.btcAvailableForTrading}
               daiAvailable={book.daiAvailableForTrading}
+              ethAvailable={book.ethAvailableForTrading}
             />
           </Flex>
           {/* My Orders */}

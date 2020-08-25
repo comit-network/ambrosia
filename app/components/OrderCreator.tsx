@@ -1,8 +1,14 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
+  Box,
   Button,
-  Flex, FormControl, FormErrorMessage, FormLabel,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
   Input,
+  InputGroup,
+  InputLeftElement,
   Tab,
   TabList,
   TabPanel,
@@ -10,7 +16,14 @@ import {
   Tabs,
   Text
 } from '@chakra-ui/core';
-import { CurrencyValue, MarketOrder } from '../utils/types';
+import {
+  amountToUnitString,
+  BTC_SYMBOL,
+  calculateBaseFromAvailableQuote,
+  CurrencyValue,
+  DAI_SYMBOL,
+  MarketOrder
+} from '../utils/types';
 import {Field, Formik} from "formik";
 
 interface OrderCreatorProperties {
@@ -18,20 +31,30 @@ interface OrderCreatorProperties {
   lowestPriceSellOrder: MarketOrder;
   daiAvailable: CurrencyValue;
   btcAvailable: CurrencyValue;
+  ethAvailable: CurrencyValue;
 }
 
 export default function OrderCreator({
   highestPriceBuyOrder,
   lowestPriceSellOrder,
   daiAvailable,
-  btcAvailable
+  btcAvailable,
+    ethAvailable
 }: OrderCreatorProperties) {
 
 
-  function validateSufficientBtc(amount: string) {
+  function validateSufficientBtc(quantity: string) {
+    let error;
+    if (!quantity) {
+      error = "Please specify amount";
+    }
+    return error;
+  }
+
+  function validateSufficientDai(amount: string) {
     let error;
     if (!amount) {
-      error = "Please specify an";
+      error = "Please specify amount";
     } else if (amount !== "Naruto") {
       error = "Insufficient BTC";
     }
@@ -49,6 +72,14 @@ export default function OrderCreator({
     bg: 'cyan.100',
     variant: 'cyan.800'
   };
+
+  const initialBuyPrice = lowestPriceSellOrder.price;
+  const initialBuyQuantity = calculateBaseFromAvailableQuote(lowestPriceSellOrder.price, daiAvailable);
+  const initialBuyQuote = daiAvailable;
+
+  const [buyPrice, setBuyPrice] = useState(initialBuyPrice);
+  const [buyQuantity, setBuyQuantity] = useState(initialBuyQuantity);
+  const [buyQuote, setBuyQuote] = useState(initialBuyQuote);
 
   return (
     <Flex direction="column">
@@ -81,42 +112,72 @@ export default function OrderCreator({
           <TabPanel>
             <Flex direction="column" padding="1rem">
               <Formik
-                  initialValues={{ name: "Sasuke" }}
+                  initialValues={{
+                    buyPrice: amountToUnitString(initialBuyPrice),
+                  }}
                   onSubmit={(values, actions) => {
-                    setTimeout(() => {
-                      alert(JSON.stringify(values, null, 2));
-                      actions.setSubmitting(false);
-                    }, 1000);
+                    // TODO  handle create BUY order
                   }}
               >
                 {props => (
                     <form onSubmit={props.handleSubmit}>
-                      <Field name="name" validate={validateSufficientBtc}>
+                      <Field name="buyPrice">
                         {({ field, form }) => (
-                            <FormControl isInvalid={form.errors.name && form.touched.name}>
-                              <FormLabel htmlFor="name">Buy Quantity (BTC)</FormLabel>
-                              <Input {...field} id="name" placeholder="quantity" />
-                              <FormErrorMessage>{form.errors.name}</FormErrorMessage>
+                            <FormControl isInvalid={form.errors.buyPrice && form.touched.buyPrice}>
+                              <FormLabel htmlFor="buyPrice">Limit Price</FormLabel>
+                              <InputGroup>
+                                // ₿
+                                <InputLeftElement color="gray.300" fontSize="1.2em" children={DAI_SYMBOL}/>
+                                <Input type="number" {...field} id="buyPrice" placeholder={amountToUnitString(initialBuyPrice)} />
+                              </InputGroup>
+                              <FormErrorMessage>{form.errors.buyPrice}</FormErrorMessage>
                             </FormControl>
                         )}
                       </Field>
-                      <Button
-                          mt={4}
-                          variantColor="cyan"
-                          isLoading={props.isSubmitting}
-                          type="submit"
-                      >
-                        Submit
-                      </Button>
+                      <Field name="quantity" validate={validateSufficientBtc}>
+                        {({ field, form }) => (
+                            <FormControl isInvalid={form.errors.quantity && form.touched.quantity}>
+                              <FormLabel htmlFor="quantity">Quantity</FormLabel>
+                              <InputGroup>
+                                <InputLeftElement color="gray.300" fontSize="1.2em" children={BTC_SYMBOL}/>
+                                <Input type="number" {...field} id="quantity" placeholder={amountToUnitString(initialBuyQuantity)} />
+                              </InputGroup>
+                              <FormErrorMessage>{form.errors.quantity}</FormErrorMessage>
+                            </FormControl>
+                        )}
+                      </Field>
+                      <Field name="quote" validate={validateSufficientBtc}>
+                        {({ field, form }) => (
+                            <FormControl isInvalid={form.errors.quote && form.touched.quote}>
+                              <FormLabel htmlFor="quote">Quote</FormLabel>
+                              <InputGroup>
+                                <InputLeftElement color="gray.300" fontSize="1.2em" children={DAI_SYMBOL}/>
+                                <Input type="number" {...field} id="quote" placeholder={amountToUnitString(initialBuyQuote)} />
+                              </InputGroup>
+                              <FormErrorMessage>{form.errors.quote}</FormErrorMessage>
+                            </FormControl>
+                        )}
+                      </Field>
+                      <Flex direction="row" width="100%" justifyContent="flex-end">
+                        <Button
+                            mt={4}
+                            variantColor="cyan"
+                            isLoading={props.isSubmitting}
+                            type="submit"
+                            justifySelf="flex-end"
+                        >
+                          Buy
+                        </Button>
+                      </Flex>
+
                     </form>
                 )}
               </Formik>
 
-              <Text />
             </Flex>
           </TabPanel>
           <TabPanel>
-            <p>two!</p>
+            <Text>bla</Text>
           </TabPanel>
         </TabPanels>
       </Tabs>

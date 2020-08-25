@@ -29,7 +29,7 @@ export default function SwapList() {
   ));
 
   return (
-    <Stack isReversed width="100%" spacing={2}>
+    <Stack isReversed width="100%" spacing={4}>
       {listItems}
     </Stack>
   );

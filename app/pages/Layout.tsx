@@ -63,8 +63,7 @@ export default function Layout() {
 
   return (
     <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
-      <Flex
-          direction="column"
+      <Box
         backgroundColor="white"
         id="sidebar"
         borderRight="2px"
@@ -78,7 +77,7 @@ export default function Layout() {
             icon="chevron-right"
             width="20px"
           />
-          <Divider />
+          <Divider width="40px" />
           <Stack>
             <Link to={routes.HOME}>
               <IconButton
@@ -146,7 +145,7 @@ export default function Layout() {
             </DrawerContent>
           </Drawer>
         </Stack>
-      </Flex>
+      </Box>
       <Flex backgroundColor="gray.50" id="content">
         <Switch>
           <Route path={routes.ABOUT} component={AboutPage} />

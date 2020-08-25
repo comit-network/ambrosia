@@ -4,8 +4,8 @@ import { BigNumber } from 'ethers';
 import Store from 'electron-store';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
-import CurrencyAmount, { amountToUnitString } from './CurrencyAmount';
-import { CurrencyValue, intoBook, intoOrders } from '../utils/types';
+import CurrencyAmount from './CurrencyAmount';
+import {amountToUnitString, CurrencyValue, intoBook, intoOrders} from '../utils/types';
 import { mockOrders } from './MockData';
 
 // TODO: Rethink if this should keep its own state.

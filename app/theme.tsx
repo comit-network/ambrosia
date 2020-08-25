@@ -2,9 +2,10 @@ import React from 'react';
 import { theme } from '@chakra-ui/core';
 
 const customIcons = {
+    // #142533
   ledger: {
     path: (
-      <g fill="#142533" fillRule="nonzero">
+      <g fill="currentColor" fillRule="nonzero">
         <path d="m16.7 0h-9.11v12.29h12.3v-9.11c0-1.745-1.436-3.18-3.18-3.18h-0.01z" />
         <path d="m4.75 0h-1.57c-1.744 0-3.18 1.436-3.18 3.18v1.57h4.75z" />
         <path d="m0 7.59h4.75v4.75h-4.75z" />

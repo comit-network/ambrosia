@@ -1,60 +1,10 @@
-import {
-  Box,
-  Flex,
-  Image,
-  Stat,
-  StatHelpText,
-  StatLabel,
-  StatNumber,
-  Tooltip
-} from '@chakra-ui/core';
+import {Box, Flex, Image, Stat, StatHelpText, StatLabel, StatNumber, Tooltip} from '@chakra-ui/core';
 import React from 'react';
-import { toBitcoin } from 'satoshi-bitcoin-ts';
-import { formatEther, formatUnits } from 'ethers/lib/utils';
-import { RiCoinLine } from 'react-icons/all';
+import {RiCoinLine} from 'react-icons/all';
 import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
 import EthereumIcon from '../assets/Ethereum.svg';
-import { Currency, CurrencyUnit, CurrencyValue } from '../utils/types';
-
-interface CurrencyAndUnit {
-  currency: Currency;
-  unit: CurrencyUnit;
-}
-
-// TODO: Refactor to just use CurrencyValue decimals and the currency label
-function getCurrencyAndUnit(currencyValue: CurrencyValue): CurrencyAndUnit {
-  let unit = CurrencyUnit.SATOSHI;
-  let currency = Currency.BTC;
-
-  if (currencyValue.currency === 'BTC') {
-    currency = Currency.BTC;
-    if (currencyValue.decimals === 8) {
-      unit = CurrencyUnit.SATOSHI;
-    } else {
-      unit = CurrencyUnit.BTC;
-    }
-  } else if (currencyValue.currency === 'DAI') {
-    currency = Currency.DAI;
-    if (currencyValue.decimals === 18) {
-      unit = CurrencyUnit.ATTO;
-    } else {
-      unit = CurrencyUnit.DAI;
-    }
-  } else if (currencyValue.currency === 'ETH') {
-    currency = Currency.ETH;
-    if (currencyValue.decimals === 18) {
-      unit = CurrencyUnit.WEI;
-    } else {
-      unit = CurrencyUnit.ETHER;
-    }
-  }
-
-  return {
-    currency,
-    unit
-  };
-}
+import {amountToUnitString, Currency, CurrencyValue, getCurrencyAndUnit} from '../utils/types';
 
 export enum ColorMode {
   RED = 'RED',
@@ -124,35 +74,6 @@ const currencyIcon = (currency: Currency, iconHeight?: string) => {
       );
   }
 };
-
-export function amountToUnitString(currencyValue: CurrencyValue) {
-  const amount = currencyValue.value;
-  const { unit } = getCurrencyAndUnit(currencyValue);
-
-  if (!amount) {
-    return 'loading...';
-  }
-
-  switch (unit) {
-    case CurrencyUnit.BTC:
-    case CurrencyUnit.DAI:
-    case CurrencyUnit.ETHER: {
-      return amount.toString();
-    }
-    case CurrencyUnit.SATOSHI: {
-      return toBitcoin(amount).toString();
-    }
-    case CurrencyUnit.WEI: {
-      return formatEther(amount).toString();
-    }
-    case CurrencyUnit.ATTO: {
-      return formatUnits(amount).toString();
-    }
-    default: {
-      return amount.toString();
-    }
-  }
-}
 
 export default function CurrencyAmount({
   currencyValue,
