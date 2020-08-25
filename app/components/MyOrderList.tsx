@@ -46,25 +46,23 @@ export default function MyOrderList({
     const quote = calculateQuote(order.price, order.quantity);
 
     rows.push(
-      <Flex>
-        <Flex
-          direction="row"
-          key={`price-${order.id}`}
-          padding={currencyValuePadding}
-          backgroundColor={getColorForOrder(order)}
-          marginBottom={marginTopBottom}
-          marginTop={marginTopBottom}
-          alignItems="center"
-        >
-          <Box width={cancelButtonWidth}>
-            <IconButton
-              size="xs"
-              aria-label="cancel"
-              icon="close"
-              onClick={() => cancel(order.actions[0])}
-            />
-          </Box>
-        </Flex>
+      <Flex
+        direction="row"
+        key={`price-${order.id}`}
+        padding={currencyValuePadding}
+        backgroundColor={getColorForOrder(order)}
+        marginBottom={marginTopBottom}
+        marginTop={marginTopBottom}
+        alignItems="center"
+      >
+        <Box width={cancelButtonWidth}>
+          <IconButton
+            size="xs"
+            aria-label="cancel"
+            icon="close"
+            onClick={() => cancel(order.actions[0])}
+          />
+        </Box>
         <Box width={currencyValueWidth}>
           <CurrencyAmount
             currencyValue={order.price}
