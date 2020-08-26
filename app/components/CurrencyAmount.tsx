@@ -1,17 +1,31 @@
-import {Box, Flex, Image, Stat, StatHelpText, StatLabel, StatNumber, Tooltip} from '@chakra-ui/core';
+import {
+  Box,
+  Flex,
+  Image,
+  Stat,
+  StatHelpText,
+  StatLabel,
+  StatNumber,
+  Tooltip
+} from '@chakra-ui/core';
 import React from 'react';
-import {RiCoinLine} from 'react-icons/all';
+import { RiCoinLine } from 'react-icons/all';
 import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
 import EthereumIcon from '../assets/Ethereum.svg';
-import {amountToUnitString, Currency, CurrencyValue, getCurrencyAndUnit} from '../utils/types';
+import {
+  amountToUnitString,
+  Currency,
+  CurrencyValue,
+  getCurrencyAndUnit
+} from '../utils/types';
 
 export enum ColorMode {
   RED = 'RED',
   GREEN = 'GREEN',
   WHITE = 'WHITE',
   ORANGE = 'ORANGE',
-  CYAN = 'CYAN',
+  CYAN = 'CYAN'
 }
 
 interface CurrencyAmountProps {
@@ -83,9 +97,9 @@ export default function CurrencyAmount({
   amountFontSize,
   iconHeight,
   colourMode,
-    noImage,
-    showCurrencyText,
-    minWidth
+  noImage,
+  showCurrencyText,
+  minWidth
 }: CurrencyAmountProps) {
   // TODO: Properly use the decimals instead of using the internal unit
   const { currency } = getCurrencyAndUnit(currencyValue);
@@ -121,7 +135,7 @@ export default function CurrencyAmount({
     }
   }
 
-  let displayMinWidth = "100px";
+  let displayMinWidth = '100px';
   if (minWidth) {
     displayMinWidth = minWidth;
   }
@@ -135,7 +149,7 @@ export default function CurrencyAmount({
         placement="top"
       >
         <Flex direction="row" alignContent="center" minWidth={displayMinWidth}>
-          { noImage ? <></> : currencyIcon(currency, iconHeight)}
+          {noImage ? <></> : currencyIcon(currency, iconHeight)}
           {/* @ts-ignore */}
           <StatNumber
             color={displayNumberColor}

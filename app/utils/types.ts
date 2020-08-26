@@ -1,8 +1,26 @@
-import {AxiosResponse} from 'axios';
-import {ethers} from 'ethers';
-import {Action, Entity} from '../comit-sdk/cnd/siren';
-import {toBitcoin} from "satoshi-bitcoin-ts";
-import {formatEther, formatUnits} from "ethers/lib/utils";
+import { AxiosResponse } from 'axios';
+import { ethers } from 'ethers';
+import { toBitcoin } from 'satoshi-bitcoin-ts';
+import { formatEther, formatUnits } from 'ethers/lib/utils';
+import { Action, Entity } from '../comit-sdk/cnd/siren';
+
+// TODO Deal with this in a more elaborate way, potentially use the COMIT sdk
+export const ETH_FEE = ethers.BigNumber.from(420000000000000); // 21000 units of gas in wei (rough)
+// TODO: Taken from Nectar, check again later
+// ~265 vbytes (2 inputs 2 outputs segwit transaction)
+// * 35 sat/vbytes (Looking at https://bitcoinfees.github.io/#1m)
+export const BTC_FEE = ethers.BigNumber.from(8960);
+export const MIN_BTC = ethers.BigNumber.from(0);
+export const MIN_DAI = ethers.BigNumber.from(0);
+
+export const BTC_SYMBOL = String.fromCharCode(0x20bf);
+export const DAI_SYMBOL = String.fromCharCode(0x25c8);
+export const ETH_SYMBOL = String.fromCharCode(0x039e);
+
+export const BTC_DEC = 8;
+export const DAI_DEC = 18;
+export const ETH_DEC = 18;
+export const SAT_DEC_ADJUST = 100000000;
 
 // TODO: Remove once we deal with decimals instead
 export enum Currency {
@@ -10,6 +28,18 @@ export enum Currency {
   DAI = 'DAI',
   ETH = 'ETH'
 }
+
+export const ZERO_DAI: CurrencyValue = {
+  currency: Currency.DAI,
+  value: '0',
+  decimals: DAI_DEC
+};
+
+export const ZERO_BTC: CurrencyValue = {
+  currency: Currency.BTC,
+  value: '0',
+  decimals: BTC_DEC
+};
 
 // TODO: Remove once we deal with decimals instead
 export enum CurrencyUnit {
@@ -156,7 +186,7 @@ export function calculateQuote(
   price: CurrencyValue,
   quantity: CurrencyValue
 ): CurrencyValue {
-  const satToAttoZeros = ethers.BigNumber.from('100000000');
+  const satToAttoZeros = ethers.BigNumber.from(SAT_DEC_ADJUST);
 
   // Calc with sat as base
   const priceWei = ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
@@ -167,17 +197,17 @@ export function calculateQuote(
   const quote = quoteUnadjusted.div(satToAttoZeros);
 
   return {
-    currency: 'DAI',
+    currency: Currency.DAI,
     value: quote.toString(),
     decimals: 18
   };
 }
 
 export function calculateBaseFromAvailableQuote(
-    price: CurrencyValue,
-    quote: CurrencyValue
+  price: CurrencyValue,
+  quote: CurrencyValue
 ): CurrencyValue {
-  const satDecimals = ethers.BigNumber.from('100000000');
+  const satDecimals = ethers.BigNumber.from(SAT_DEC_ADJUST);
 
   // Calc with sat as base
   const priceWei = ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
@@ -188,12 +218,11 @@ export function calculateBaseFromAvailableQuote(
   const quantity = quoteAdjusted.div(priceWei);
 
   return {
-    currency: 'BTC',
+    currency: Currency.BTC,
     value: quantity.toString(),
     decimals: 8
   };
 }
-
 
 export function intoBook(
   btcBalance: CurrencyValue,
@@ -201,14 +230,9 @@ export function intoBook(
   ethBalance: CurrencyValue,
   orders: Order[]
 ): Book {
-  console.log('into book...');
-
   if (!btcBalance || !daiBalance || !ethBalance || !orders) {
     return null;
   }
-
-  // TODO Deal with this in a more elaborate way, potentially use the COMIT sdk
-  const ethFeeBigNumber = ethers.BigNumber.from(420000000000000); // 21000 units of gas in wei (rough)
 
   const sumOfBtcInOrdersBigNumber = orders
     .filter(order => order.position === 'sell')
@@ -227,7 +251,7 @@ export function intoBook(
   }, ethers.BigNumber.from(0));
 
   const numberOfbuyOrders = ethers.BigNumber.from(myBuyOrders.length);
-  const sumOfEthInOrderFeesBigNumber = ethFeeBigNumber.mul(numberOfbuyOrders);
+  const sumOfEthInOrderFeesBigNumber = ETH_FEE.mul(numberOfbuyOrders);
 
   const btcBalanceBigNumber = ethers.BigNumber.from(btcBalance.value);
   const daiBalanceBigNumber = ethers.BigNumber.from(daiBalance.value);
@@ -288,7 +312,9 @@ interface CurrencyAndUnit {
 }
 
 // TODO: Refactor to just use CurrencyValue decimals and the currency label
-export function getCurrencyAndUnit(currencyValue: CurrencyValue): CurrencyAndUnit {
+export function getCurrencyAndUnit(
+  currencyValue: CurrencyValue
+): CurrencyAndUnit {
   let unit = CurrencyUnit.SATOSHI;
   let currency = Currency.BTC;
 
@@ -350,6 +376,53 @@ export function amountToUnitString(currencyValue: CurrencyValue) {
   }
 }
 
-export const BTC_SYMBOL = String.fromCharCode(parseInt("20BF",16));
-export const DAI_SYMBOL = String.fromCharCode(parseInt("25c8",16));
-export const ETH_SYMBOL = String.fromCharCode(parseInt("039E",16));
+export function daiIntoCurVal(
+  dai: string | number | ethers.BigNumber
+): CurrencyValue {
+  let bigNr = dai;
+  if (!(bigNr instanceof ethers.BigNumber)) {
+    bigNr = ethers.utils.parseUnits(dai.toString(), DAI_DEC);
+  }
+
+  const curVal: CurrencyValue = {
+    currency: Currency.DAI,
+    value: bigNr.toString(),
+    decimals: DAI_DEC
+  };
+
+  return curVal;
+}
+
+export function btcIntoCurVal(
+  btc: string | number | ethers.BigNumber
+): CurrencyValue {
+  let bigNr = btc;
+  if (!(bigNr instanceof ethers.BigNumber)) {
+    bigNr = ethers.utils.parseUnits(btc.toString(), BTC_DEC);
+  }
+
+  const curVal: CurrencyValue = {
+    currency: Currency.BTC,
+    value: bigNr.toString(),
+    decimals: BTC_DEC
+  };
+
+  return curVal;
+}
+
+export function ethIntoCurVal(
+  eth: string | number | ethers.BigNumber
+): CurrencyValue {
+  let bigNr = eth;
+  if (!(bigNr instanceof ethers.BigNumber)) {
+    bigNr = ethers.utils.parseUnits(eth.toString(), ETH_DEC);
+  }
+
+  const curVal: CurrencyValue = {
+    currency: Currency.ETH,
+    value: bigNr.toString(),
+    decimals: ETH_DEC
+  };
+
+  return curVal;
+}

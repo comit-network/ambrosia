@@ -12,18 +12,20 @@ import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 import MyOrderList from '../components/MyOrderList';
 import {
-  CurrencyValue,
+  btcIntoCurVal,
+  daiIntoCurVal,
+  ethIntoCurVal,
+  intoBook,
   intoMarket,
-  intoOrders,
-  intoBook
+  intoOrders
 } from '../utils/types';
 
 export default function DashboardPage() {
   // TODO: useSWR to fetch from cnd
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
+  const { wallet: ethWallet } = useEthereumWallet();
+  const { wallet: btcWallet } = useBitcoinWallet();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
     null
@@ -42,12 +44,7 @@ export default function DashboardPage() {
     async function loadEthBalance() {
       const eth = await ethWallet.getBalance();
       const ethBigNumber = BigNumber.from(eth);
-      const ethCurrencyValue = {
-        currency: 'ETH',
-        value: ethBigNumber.toString(),
-        decimals: 18
-      } as CurrencyValue;
-
+      const ethCurrencyValue = ethIntoCurVal(ethBigNumber);
       setEthBalanceAsCurrencyValue(ethCurrencyValue);
     }
 
@@ -59,11 +56,7 @@ export default function DashboardPage() {
       const dai = await ethWallet.getErc20Balance(
         settings.get('ERC20_CONTRACT_ADDRESS')
       );
-      const daiCurrencyValue = {
-        currency: 'DAI',
-        value: dai.toString(),
-        decimals: 18
-      } as CurrencyValue;
+      const daiCurrencyValue = daiIntoCurVal(dai);
       setDaiBalanceAsCurrencyValue(daiCurrencyValue);
     }
 
@@ -73,12 +66,8 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadBtcBalance() {
       const btc = await btcWallet.getBalance();
-      const btcBalanceInSats = btc * 100000000;
-      const btcCurrencyValue = {
-        currency: 'BTC',
-        value: btcBalanceInSats.toString(),
-        decimals: 8
-      } as CurrencyValue;
+      const btcBalanceInSats = btc;
+      const btcCurrencyValue = btcIntoCurVal(btcBalanceInSats);
       setBtcBalanceAsCurrencyValue(btcCurrencyValue);
     }
 
@@ -130,7 +119,7 @@ export default function DashboardPage() {
         <Flex direction="row" marginTop="1rem">
           <SwapList />
         </Flex>
-        <Flex direction="row" marginTop="1rem" width="100%" >
+        <Flex direction="row" marginTop="1rem" width="100%">
           {/* Balance */}
           <Flex direction="column" maxWidth="200px" marginTop="40px">
             <AvailableBalance
@@ -143,7 +132,12 @@ export default function DashboardPage() {
             />
           </Flex>
           {/* Order Creator */}
-          <Flex direction="column" minWidth="300px" maxWidth="400px" marginRight="1rem">
+          <Flex
+            direction="column"
+            minWidth="300px"
+            maxWidth="400px"
+            marginRight="1rem"
+          >
             <OrderCreator
               highestPriceBuyOrder={market.highestBuyOrder}
               lowestPriceSellOrder={market.lowestSellOrder}

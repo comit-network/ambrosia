@@ -1,9 +1,12 @@
 import React from 'react';
-import {Box, Flex, IconButton, Text} from '@chakra-ui/core';
-import CurrencyAmount, {ColorMode} from './CurrencyAmount';
-import {Action} from '../comit-sdk/cnd/siren';
-import {calculateQuote, Order} from '../utils/types';
-import {myBuyOrderBackgroundColour, mySellOrderBackgroundColour} from "../constants/colors";
+import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
+import CurrencyAmount, { ColorMode } from './CurrencyAmount';
+import { Action } from '../comit-sdk/cnd/siren';
+import { calculateQuote, Order } from '../utils/types';
+import {
+  myBuyOrderBackgroundColour,
+  mySellOrderBackgroundColour
+} from '../constants/colors';
 
 export interface MarketOrderProperties {
   orders: Order[];
@@ -39,12 +42,12 @@ export default function MyOrderList({
   const currencyValuePadding = '0.3rem';
   const marginTopBottom = '0.3rem';
 
-
   for (const order of orders) {
-
-    const displayColorMode = order.position === "buy" ? ColorMode.CYAN : ColorMode.ORANGE;
-    const cancelButtonColor = order.position === "buy" ? "cyan" : "orange";
-    const openAmountFontColor = order.position === "buy" ? "cyan.800" : "orange.800";
+    const displayColorMode =
+      order.position === 'buy' ? ColorMode.CYAN : ColorMode.ORANGE;
+    const cancelButtonColor = order.position === 'buy' ? 'cyan' : 'orange';
+    const openAmountFontColor =
+      order.position === 'buy' ? 'cyan.800' : 'orange.800';
     const quote = calculateQuote(order.price, order.quantity);
 
     rows.push(
@@ -73,7 +76,7 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
-            noImage={true}
+            noImage
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -82,7 +85,7 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
-            noImage={true}
+            noImage
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -91,11 +94,13 @@ export default function MyOrderList({
             amountFontSize="sm"
             iconHeight="1rem"
             colourMode={displayColorMode}
-            noImage={true}
+            noImage
           />
         </Box>
         <Box width={openAmountWidth}>
-          <Text color={openAmountFontColor}>{`${+order.state.open * 100}%`}</Text>
+          <Text color={openAmountFontColor}>
+            {`${+order.state.open * 100}%`}
+          </Text>
         </Box>
       </Flex>
     );
@@ -103,7 +108,12 @@ export default function MyOrderList({
 
   const currencyValHeader = (text, subText) => {
     return (
-      <Flex direction="row" h="25px" paddingTop="0.1rem" width={currencyValueWidth}>
+      <Flex
+        direction="row"
+        h="25px"
+        paddingTop="0.1rem"
+        width={currencyValueWidth}
+      >
         <Text fontSize="sd" fontWeight="bold" marginRight="0.3rem">
           {text}
         </Text>

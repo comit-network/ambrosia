@@ -1,5 +1,5 @@
 import React from 'react';
-import {Flex, Heading} from '@chakra-ui/core';
+import { Flex, Heading } from '@chakra-ui/core';
 import BalanceHorizontal from '../components/BalanceHorizontal';
 
 export default function WalletPage() {
@@ -15,14 +15,9 @@ export default function WalletPage() {
         <BalanceHorizontal />
       </Flex>
 
-      <Flex
-        background="white"
-        shadow="md"
-        direction="row"
-        width="100%"
-      >
+      <Flex background="white" shadow="md" direction="row" width="100%">
         <Heading fontSize="1.0em" mb={8}>
-          List of trades, should show what "goes in and out of the wallet"
+          List of trades, should show what goes in and out of the wallet
         </Heading>
       </Flex>
     </Flex>

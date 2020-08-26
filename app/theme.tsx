@@ -2,7 +2,7 @@ import React from 'react';
 import { theme } from '@chakra-ui/core';
 
 const customIcons = {
-    // #142533
+  // #142533
   ledger: {
     path: (
       <g fill="currentColor" fillRule="nonzero">

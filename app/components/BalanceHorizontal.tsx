@@ -5,17 +5,23 @@ import Store from 'electron-store';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
 import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 import CurrencyAmount from './CurrencyAmount';
-import {amountToUnitString, CurrencyValue, intoBook, intoOrders} from '../utils/types';
+import {
+  amountToUnitString,
+  btcIntoCurVal,
+  daiIntoCurVal,
+  ethIntoCurVal,
+  intoBook,
+  intoOrders
+} from '../utils/types';
 import { mockOrders } from './MockData';
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
-
   // TODO: Replace with actual data
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
+  const { wallet: ethWallet } = useEthereumWallet();
+  const { wallet: btcWallet } = useBitcoinWallet();
 
   // TODO: To be replaced with using CurrencyValue only, refactor once there is time
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
@@ -35,12 +41,7 @@ export default function BalanceHorizontal() {
     async function loadEthBalance() {
       const eth = await ethWallet.getBalance();
       const ethBigNumber = BigNumber.from(eth);
-      let ethCurrencyValue = {
-        currency: "ETH",
-        value: ethBigNumber.toString(),
-        decimals: 18
-      } as CurrencyValue;
-
+      const ethCurrencyValue = ethIntoCurVal(ethBigNumber);
       setEthBalanceAsCurrencyValue(ethCurrencyValue);
     }
 
@@ -50,13 +51,9 @@ export default function BalanceHorizontal() {
   useEffect(() => {
     async function loadDaiBalance() {
       const dai = await ethWallet.getErc20Balance(
-          settings.get('ERC20_CONTRACT_ADDRESS')
+        settings.get('ERC20_CONTRACT_ADDRESS')
       );
-      let daiCurrencyValue = {
-        currency: "DAI",
-        value: dai.toString(),
-        decimals: 18
-      } as CurrencyValue;
+      const daiCurrencyValue = daiIntoCurVal(dai);
       setDaiBalanceAsCurrencyValue(daiCurrencyValue);
     }
 
@@ -66,12 +63,8 @@ export default function BalanceHorizontal() {
   useEffect(() => {
     async function loadBtcBalance() {
       const btc = await btcWallet.getBalance();
-      const btcBalanceInSats = btc * 100000000;
-      let btcCurrencyValue = {
-        currency: "BTC",
-        value: btcBalanceInSats.toString(),
-        decimals: 8
-      } as CurrencyValue;
+      const btcBalanceInSats = btc;
+      const btcCurrencyValue = btcIntoCurVal(btcBalanceInSats);
       setBtcBalanceAsCurrencyValue(btcCurrencyValue);
     }
 
@@ -80,12 +73,12 @@ export default function BalanceHorizontal() {
 
   useEffect(() => {
     setBook(
-        intoBook(
-            btcBalanceAsCurrencyValue,
-            daiBalanceAsCurrencyValue,
-            ethBalanceAsCurrencyValue,
-            myOrders
-        )
+      intoBook(
+        btcBalanceAsCurrencyValue,
+        daiBalanceAsCurrencyValue,
+        ethBalanceAsCurrencyValue,
+        myOrders
+      )
     );
   }, [
     ethBalanceAsCurrencyValue,
