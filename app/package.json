@@ -14,7 +14,11 @@
     "postinstall": "yarn electron-rebuild"
   },
   "dependencies": {
+    "@ledgerhq/hw-app-btc": "^5.22.0",
+    "@ledgerhq/hw-transport-node-hid": "^5.22.0",
     "@radar/lnrpc": "^0.9.1-beta",
-    "bitcoin-core": "^2.2.0"
+    "bitcoin-core": "^2.2.0",
+    "bitcoinjs-lib": "^5.1.10",
+    "create-xpub": "^2.1.0"
   }
 }
