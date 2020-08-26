@@ -4,7 +4,7 @@ import {
     Flex,
     FormControl,
     FormErrorMessage,
-    FormLabel,
+    FormLabel, Image,
     Input,
     InputGroup,
     InputLeftAddon,
@@ -32,6 +32,8 @@ import {
 } from '../utils/types';
 import {BigNumber} from "ethers";
 import {myBuyOrderVariantColor, mySellOrderVariantColor} from "../constants/colors";
+import BitcoinIcon from '../assets/Bitcoin.svg';
+import DaiIcon from '../assets/Dai.svg';
 
 interface OrderCreatorProperties {
     highestPriceBuyOrder: MarketOrder;
@@ -241,14 +243,19 @@ function Form({initialState, label, variantColor}: FormProperties) {
                 <FormControl isInvalid={state.priceErrorMessage != ""}>
                     <FormLabel htmlFor="price">Limit Price</FormLabel>
                     <InputGroup>
-                        <InputLeftAddon children={DAI_SYMBOL}/>
+                        <InputLeftAddon padding="0.5rem" children={<Image
+                            src={DaiIcon}
+                            height="20px"
+                            alignSelf="center"
+                        />}/>
                         <Input type="text" id="price"
+                               rounded="0"
                                placeholder={initialState.price}
                                value={state.price} onChange={(event) => dispatch({
                             type: 'priceChange',
                             value: event.target.value
                         })}/>
-                        <InputRightAddon children={<Button
+                        <InputRightAddon padding="0" children={<Button
                             onClick={() => dispatch({type: 'priceChange', value: initialState.price})}
                             variantColor={variantColor}>best</Button>}/>
                     </InputGroup>
@@ -257,12 +264,17 @@ function Form({initialState, label, variantColor}: FormProperties) {
                 <FormControl isInvalid={state.quantityErrorMessage != ""}>
                     <FormLabel htmlFor="quantity">Quantity</FormLabel>
                     <InputGroup>
-                        <InputLeftAddon children={BTC_SYMBOL}/>
+                        <InputLeftAddon padding="0.5rem" children={<Image
+                            src={BitcoinIcon}
+                            height="20px"
+                            alignSelf="center"
+                        />}/>
                         <Input type="text" id="quantity"
+                               rounded="0"
                                placeholder={initialState.maxQuantity}
                                value={state.quantity}
                                onChange={(event) => dispatch({type: 'quantityChange', value: event.target.value})}/>
-                        <InputRightAddon children={<Button
+                        <InputRightAddon padding="0" children={<Button
                             onClick={() => dispatch({type: 'quantityChange', value: initialState.maxQuantity})}
                             variantColor={variantColor}>max</Button>}/>
                     </InputGroup>
@@ -271,7 +283,11 @@ function Form({initialState, label, variantColor}: FormProperties) {
                 <FormControl isInvalid={state.quoteErrorMessage != ""}>
                     <FormLabel htmlFor="quote">Quote</FormLabel>
                     <InputGroup>
-                        <InputLeftAddon children={DAI_SYMBOL}/>
+                        <InputLeftAddon padding="0.5rem" children={<Image
+                            src={DaiIcon}
+                            height="20px"
+                            alignSelf="center"
+                        />}/>
                         <Input type="text" id="quote"
                                value={state.quote}
                                isDisabled color="gray.800"/>
