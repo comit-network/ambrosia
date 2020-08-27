@@ -1,7 +1,7 @@
 import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/core';
 import CurrencyAmount, { ColorMode } from './CurrencyAmount';
-import { MarketOrder } from '../utils/types';
+import { MarketOrder } from '../utils/market';
 import {
   myBuyOrderBackgroundColour,
   mySellOrderBackgroundColour

@@ -1,5 +1,5 @@
-import { AxiosResponse } from 'axios';
-import { Entity } from '../comit-sdk/cnd/siren';
+import {AxiosResponse} from 'axios';
+import {Entity} from '../comit-sdk/cnd/siren';
 
 export function mockSwapHistory(): AxiosResponse<Entity> {
   // @ts-ignore

@@ -18,7 +18,7 @@ import {
   Currency,
   CurrencyValue,
   getCurrencyAndUnit
-} from '../utils/types';
+} from '../utils/currency';
 
 export enum ColorMode {
   RED = 'RED',

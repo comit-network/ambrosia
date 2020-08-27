@@ -16,23 +16,19 @@ import {
     TabPanels,
     Tabs
 } from '@chakra-ui/core';
-import {
-    amountToUnitString,
-    BTC_FEE,
-    btcIntoCurVal,
-    calculateBaseFromAvailableQuote,
-    calculateQuote,
-    CurrencyValue,
-    daiIntoCurVal,
-    ETH_FEE,
-    MarketOrder,
-    MIN_BTC,
-    MIN_DAI
-} from '../utils/types';
 import {BigNumber} from "ethers";
 import {myBuyOrderVariantColor, mySellOrderVariantColor} from "../constants/colors";
 import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
+import {
+    amountToUnitString,
+    BTC_FEE,
+    btcIntoCurVal, calculateBaseFromAvailableQuote,
+    calculateQuote,
+    CurrencyValue,
+    daiIntoCurVal, ETH_FEE, MIN_BTC, MIN_DAI
+} from "../utils/currency";
+import {MarketOrder} from "../utils/market";
 
 interface OrderCreatorProperties {
     highestPriceBuyOrder: MarketOrder;

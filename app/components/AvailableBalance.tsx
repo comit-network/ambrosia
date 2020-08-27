@@ -1,7 +1,7 @@
 import React from 'react';
 import { StatGroup } from '@chakra-ui/core';
 import CurrencyAmount from './CurrencyAmount';
-import { amountToUnitString, CurrencyValue } from '../utils/types';
+import { amountToUnitString, CurrencyValue } from '../utils/currency';
 
 interface AvailableBalanceProperties {
   btcAvailable: CurrencyValue;

@@ -10,10 +10,10 @@ import {
   btcIntoCurVal,
   daiIntoCurVal,
   ethIntoCurVal,
-  intoBook,
-  intoOrders
-} from '../utils/types';
+} from '../utils/currency';
 import { mockOrders } from './MockData';
+import {intoOrders} from "../utils/order";
+import {intoBook} from "../utils/book";
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {

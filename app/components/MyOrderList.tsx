@@ -2,11 +2,12 @@ import React from 'react';
 import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
 import CurrencyAmount, { ColorMode } from './CurrencyAmount';
 import { Action } from '../comit-sdk/cnd/siren';
-import { calculateQuote, Order } from '../utils/types';
 import {
   myBuyOrderBackgroundColour,
   mySellOrderBackgroundColour
 } from '../constants/colors';
+import {Order} from "../utils/order";
+import {calculateQuote} from "../utils/currency";
 
 export interface MarketOrderProperties {
   orders: Order[];

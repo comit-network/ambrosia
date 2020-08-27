@@ -1,6 +1,6 @@
 import React from 'react';
 import {Flex, Stack, Text} from '@chakra-ui/core';
-import Swap from './Swap';
+import SwapRow from './SwapRow';
 import { mockOngoingSwaps } from './MockData';
 
 export default function SwapList() {
@@ -25,7 +25,7 @@ export default function SwapList() {
 
   const swaps = swapsResponse.data.entities;
   const listItems = swaps.map(swap => (
-    <Swap key={swap.href} href={swap.href} />
+    <SwapRow key={swap.href} href={swap.href} />
   ));
 
   const header = (

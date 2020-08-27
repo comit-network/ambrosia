@@ -11,7 +11,10 @@ import MarketOrderList from '../components/MarketOrderList';
 import {useEthereumWallet} from '../hooks/useEthereumWallet';
 import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import MyOrderList from '../components/MyOrderList';
-import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, intoBook, intoMarket, intoOrders} from '../utils/types';
+import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal} from "../utils/currency";
+import {intoBook} from "../utils/book";
+import {intoMarket} from "../utils/market";
+import {intoOrders} from "../utils/order";
 
 export default function DashboardPage() {
   // TODO: useSWR to fetch from cnd

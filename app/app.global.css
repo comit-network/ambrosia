@@ -18,3 +18,26 @@
   position: absolute;
   left: 80px;
 }
+
+.button.ledger.pink {
+  background: rgba(213, 63, 140, 1);
+  box-shadow: 0 0 0 0 rgba(213, 63, 140, 1);
+  animation: pulse-red 2s infinite;
+}
+
+@keyframes pulse-red {
+  0% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(213, 63, 140, 0.7);
+  }
+
+  70% {
+    transform: scale(1);
+    box-shadow: 0 0 0 10px rgba(213, 63, 140, 0);
+  }
+
+  100% {
+    transform: scale(0.95);
+    box-shadow: 0 0 0 0 rgba(213, 63, 140, 0);
+  }
+}
