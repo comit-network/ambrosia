@@ -101,8 +101,8 @@ async function getWalletDescriptors(change: number, account: number, network: Ne
   const master = await btc.getWalletPublicKey('', { format: 'bech32' });
   let fingerprint = makeFingerPrint(master.publicKey);
 
-  const coinType = network === "mainnet" ? 0 : 1;
-  const networkVersion = network === "mainnet" ? createXPub.mainnet : createXPub.testnet;
+  const coinType = network === "main" ? 0 : 1;
+  const networkVersion = network === "main" ? createXPub.mainnet : createXPub.testnet;
 
   let path = `/84'/${coinType}'/${account}'`;
   const result = await btc.getWalletPublicKey(`m${path}`, { format: 'bech32' });

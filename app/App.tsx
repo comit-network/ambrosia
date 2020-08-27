@@ -3,7 +3,7 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
+import { CSSReset, ThemeProvider } from '@chakra-ui/core';
 import Store from 'electron-store';
 import { Store as ReduxStore } from 'redux';
 import AppRegionDrag from './components/AppRegionDrag';
@@ -13,7 +13,7 @@ import { BitcoinWalletProvider } from './hooks/useBitcoindWallet';
 import { EthereumWalletProvider } from './hooks/useEthereumWallet';
 import { CndProvider } from './hooks/useCnd';
 import { LedgerClient } from './ledgerIpc';
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 import { LedgerBitcoinWallet, LedgerBitcoinWalletProvider } from './hooks/useLedgerBitcoinWallet';
 
 type Props = {
@@ -23,6 +23,7 @@ type Props = {
 };
 
 const App = ({ store, history, settings }: Props) => {
+
   return (
     <CndProvider settings={settings}>
       <BitcoinWalletProvider settings={settings}>
@@ -33,7 +34,7 @@ const App = ({ store, history, settings }: Props) => {
               <Provider store={store}>
                 <ConnectedRouter history={history}>
                   {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-                  <Layout />
+                  <Layout settings={settings} />
                 </ConnectedRouter>
               </Provider>
             </LedgerBitcoinWalletProvider>

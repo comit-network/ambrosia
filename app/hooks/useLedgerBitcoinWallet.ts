@@ -6,8 +6,10 @@ import { Psbt } from 'bitcoinjs-lib';
 const WALLET_NAME = 'tantalus';
 
 type Response<R = any> = {
-  result: R
+  result: R,
+  error: null
 } | {
+  result: null,
   error: {
     message: string,
     code: number,
@@ -15,7 +17,7 @@ type Response<R = any> = {
   }
 }
 
-export type Network = 'mainnet' | 'testnet' | 'regtest';
+export type Network = 'main' | 'test' | 'regtest';
 
 export type Seconds = number;
 
@@ -27,13 +29,9 @@ export interface ScanProgress {
 export class LedgerBitcoinWallet {
   private readonly client: AxiosInstance;
 
-  constructor(private readonly ledgerClient: LedgerClient, rpcEndpoint: string, username: string, password: string, private readonly network: Network) {
+  constructor(private readonly ledgerClient: LedgerClient, rpcEndpoint: string) {
     this.client = axios.create({
-      baseURL: rpcEndpoint,
-      auth: {
-        username,
-        password
-      }
+      baseURL: rpcEndpoint
     });
   }
 
@@ -43,7 +41,7 @@ export class LedgerBitcoinWallet {
       params: []
     }).then(r => r.data);
 
-    if ('error' in listWalletResponse) {
+    if (listWalletResponse.error) {
       throw new Error(listWalletResponse.error.message);
     }
 
@@ -66,7 +64,7 @@ export class LedgerBitcoinWallet {
       ]
     }).then(r => r.data);
 
-    if ('error' in createWalletResponse) {
+    if (createWalletResponse.error) {
       throw new Error(createWalletResponse.error.message);
     }
 
@@ -91,7 +89,7 @@ export class LedgerBitcoinWallet {
     }).then(r => r.data);
 
     // TODO: create an axios response middleware to make this check automatically
-    if ('error' in body) {
+    if (body.error) {
       throw new Error(body.error.message);
     }
 
@@ -105,7 +103,7 @@ export class LedgerBitcoinWallet {
         params: [txId, false]
       }).then(r => r.data);
 
-      if ('error' in body) {
+      if (body.error) {
         throw new Error(body.error.message);
       }
 
@@ -129,7 +127,7 @@ export class LedgerBitcoinWallet {
       ]
     }).then(r => r.data);
 
-    if ('error' in body) {
+    if (body.error) {
       throw new Error(body.error.message);
     }
 
@@ -142,22 +140,36 @@ export class LedgerBitcoinWallet {
       params: [hex]
     }).then(r => r.data);
 
-    if ('error' in sendResponse) {
+    if (sendResponse.error) {
       throw new Error(sendResponse.error.message);
     }
 
     return Promise.resolve(sendResponse.result);
   }
 
+  public async getConnectedNetwork(): Promise<Network> {
+    let blockchainInfoResponse = await this.client.post<Response>(`/`, {
+      method: 'getblockchaininfo',
+    }).then(r => r.data);
+
+    if (blockchainInfoResponse.error) {
+      throw new Error(blockchainInfoResponse.error.message);
+    }
+
+    return blockchainInfoResponse.result.chain;
+  }
+
   public async importLedgerKeys(accountIndex = 0): Promise<void> {
-    const descriptors = await this.ledgerClient.getBitcoinWalletDescriptors(accountIndex, this.network);
+    const network = await this.getConnectedNetwork();
+
+    const descriptors = await this.ledgerClient.getBitcoinWalletDescriptors(accountIndex, network);
 
     const externalDescriptorInfoResponse = await this.client.post<Response>(`/`, {
       method: 'getdescriptorinfo',
       params: [descriptors.external]
     }).then(r => r.data);
 
-    if ('error' in externalDescriptorInfoResponse) {
+    if (externalDescriptorInfoResponse.error) {
       throw new Error(externalDescriptorInfoResponse.error.message);
     }
 
@@ -166,7 +178,7 @@ export class LedgerBitcoinWallet {
       params: [descriptors.internal]
     }).then(r => r.data);
 
-    if ('error' in internalDescriptorInfoResponse) {
+    if (internalDescriptorInfoResponse.error) {
       throw new Error(internalDescriptorInfoResponse.error.message);
     }
 
@@ -205,7 +217,7 @@ export class LedgerBitcoinWallet {
       params: []
     }).then(r => r.data);
 
-    if ('error' in walletInfoResponse) {
+    if (walletInfoResponse.error) {
       throw new Error(walletInfoResponse.error.message);
     }
 
