@@ -13,9 +13,9 @@ export const BTC_FEE = ethers.BigNumber.from(8960);
 export const MIN_BTC = ethers.BigNumber.from(0);
 export const MIN_DAI = ethers.BigNumber.from(0);
 
-export const BTC_SYMBOL = String.fromCharCode(0x20bf);
-export const DAI_SYMBOL = String.fromCharCode(0x25c8);
-export const ETH_SYMBOL = String.fromCharCode(0x039e);
+// export const BTC_SYMBOL = String.fromCharCode(0x20bf);
+// export const DAI_SYMBOL = String.fromCharCode(0x25c8);
+// export const ETH_SYMBOL = String.fromCharCode(0x039e);
 
 export const BTC_DEC = 8;
 export const DAI_DEC = 18;

@@ -168,8 +168,8 @@ export default function Swap({ href }: SwapProperties) {
           >
             Show details
           </IconButton>
-          {/* @ts-ignore */}
           <Button
+              // @ts-ignore
             leftIcon="ledger"
             onClick={handleDetailsToggle}
             minWidth="100px"

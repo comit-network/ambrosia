@@ -155,6 +155,7 @@ export default function CurrencyAmount({
             color={displayNumberColor}
             fontSize={amountFontSize}
             overflow="hidden"
+              // @ts-ignore
             textOverflow="ellipsis"
             whiteSpace="nowrap"
           >
@@ -171,12 +172,12 @@ export default function CurrencyAmount({
   let renderSubText2;
 
   if (topText) {
-    // @ts-ignore
     renderTopText = (
       <StatLabel
         color={displayTextColor}
         minWidth="80px"
         overflow="hidden"
+          // @ts-ignore
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
@@ -186,11 +187,11 @@ export default function CurrencyAmount({
   }
 
   if (subText1) {
-    // @ts-ignore
     renderSubText1 = (
       <StatHelpText
         color={displayTextColor}
         overflow="hidden"
+          // @ts-ignore
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
@@ -201,12 +202,12 @@ export default function CurrencyAmount({
 
   if (subText2) {
     // TODO: Fix the hacky minus margin
-    // @ts-ignore
     renderSubText2 = (
       <StatHelpText
         color={displayTextColor}
         marginTop="-10px"
         overflow="hidden"
+        // @ts-ignore
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
