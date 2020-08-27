@@ -163,22 +163,21 @@ function LedgerInteractionButton({state, action}: LedgerInteractionButtonPropert
     );
   }
 
-  const ledgerStatusModal = () => {
+  const ledgerStatusModal = (header: string) => {
     return (
         <Modal isOpen={isOpen} onClose={onClose}>
           <ModalOverlay/>
           <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>{}</ModalHeader>
             <ModalCloseButton/>
             <ModalBody>
               <Text>Connecting to Ledger device...</Text>
             </ModalBody>
 
             <ModalFooter>
-              <Button variantColor="blue" mr={3} onClick={onClose}>
+              <Button variantColor="blue" onClick={onClose}>
                 Close
               </Button>
-              <Button variant="ghost">Secondary Action</Button>
             </ModalFooter>
           </ModalContent>
         </Modal>
@@ -196,21 +195,21 @@ function LedgerInteractionButton({state, action}: LedgerInteractionButtonPropert
       return (
           <>
             {activeButton("Lock (1/2)")}
-            {ledgerStatusModal()}
+            {ledgerStatusModal("Confirm DAI Locking TX (1/2)")}
           </>
       );
     case LedgerButtonState.HERC20_FUND:
       return (
           <>
             {activeButton("Lock (2/2)")}
-            {ledgerStatusModal()}
+            {ledgerStatusModal("Confirm DAI Locking TX (2/2)")}
           </>
       );
     case LedgerButtonState.HBIT_FUND:
       return (
           <>
             {activeButton("Lock")}
-            {ledgerStatusModal()}
+            {ledgerStatusModal("Confirm BTC Locking TX")}
           </>
       );
     case LedgerButtonState.AWAITING_REDEEMING:
@@ -223,7 +222,7 @@ function LedgerInteractionButton({state, action}: LedgerInteractionButtonPropert
       return (
           <>
             {activeButton("Unlock")}
-            {ledgerStatusModal()}
+            {ledgerStatusModal("Confirm DAI Unlocking TX")}
           </>
       );
     case LedgerButtonState.NO_BUTTON:
