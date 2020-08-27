@@ -1,24 +1,17 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading } from '@chakra-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Box, Flex, Heading} from '@chakra-ui/core';
 import Store from 'electron-store';
-import { BigNumber } from 'ethers';
+import {BigNumber} from 'ethers';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
-import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
-import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
+import {mockMarketsBtcDai, mockOrders} from '../components/MockData';
+import CurrencyAmount, {ColorMode} from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import {useEthereumWallet} from '../hooks/useEthereumWallet';
+import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import MyOrderList from '../components/MyOrderList';
-import {
-  btcIntoCurVal,
-  daiIntoCurVal,
-  ethIntoCurVal,
-  intoBook,
-  intoMarket,
-  intoOrders
-} from '../utils/types';
+import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, intoBook, intoMarket, intoOrders} from '../utils/types';
 
 export default function DashboardPage() {
   // TODO: useSWR to fetch from cnd
@@ -106,17 +99,14 @@ export default function DashboardPage() {
   return (
     <Flex direction="row" width="100%" padding="1rem">
       <Flex direction="column" width="100%" flexGrow={2}>
-        {/* Graph */}
+        {/* Placeholder for more market data */}
         <Flex
           direction="row"
           flexGrow={2}
           alignContent="center"
-          backgroundColor="gray.400"
-        >
-          <Heading>Imagine market data chart here</Heading>
-        </Flex>
+        />
         {/* Swaps */}
-        <Flex direction="row" marginTop="1rem">
+        <Flex direction="column">
           <SwapList />
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">
@@ -176,11 +166,13 @@ export default function DashboardPage() {
             currencyValue={market.lowestSellOrder.price}
             topText="Bid"
             colourMode={ColorMode.RED}
+            noImage
           />
           <CurrencyAmount
             currencyValue={market.highestBuyOrder.price}
             topText="Ask"
             colourMode={ColorMode.GREEN}
+            noImage
           />
         </Flex>
         <MarketOrderList

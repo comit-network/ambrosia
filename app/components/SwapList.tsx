@@ -1,5 +1,5 @@
 import React from 'react';
-import { Stack } from '@chakra-ui/core';
+import {Flex, Stack, Text} from '@chakra-ui/core';
 import Swap from './Swap';
 import { mockOngoingSwaps } from './MockData';
 
@@ -28,9 +28,27 @@ export default function SwapList() {
     <Swap key={swap.href} href={swap.href} />
   ));
 
+  const header = (
+      <Text textShadow="md" fontSize="lg">
+        Ongoing Swaps
+      </Text>
+  );
+
+  if (!listItems || listItems.length === 0) {
+    return (
+        <Flex justifyItems="center" alignItems="center" shadow="md">
+          {header}
+          <Text>Currently no swaps...</Text>
+        </Flex>
+    );
+  }
+
   return (
-    <Stack isReversed width="100%" spacing={4}>
-      {listItems}
-    </Stack>
+      <Flex direction="column">
+        {header}
+        <Stack width="100%" backgroundColor="white" shadow="md" paddingRight="1rem" paddingLeft="1rem" paddingBottom="1rem" paddingTop="0.5rem">
+          {listItems}
+        </Stack>
+      </Flex>
   );
 }

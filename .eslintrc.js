@@ -5,7 +5,8 @@ module.exports = {
     'import/no-extraneous-dependencies': 'off',
     'react/jsx-one-expression-per-line': 'off',
     'react/prop-types': 'off',
-    'react/jsx-curly-newline': 'off'
+    'react/jsx-curly-newline': 'off',
+    'react/jsx-closing-bracket-location': 'off'
   },
   settings: {
     'import/resolver': {

@@ -107,19 +107,24 @@ export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity
         events: [
           {
             name: 'herc20_deployed',
-            seen_at: '',
-            tx: ''
+            seen_at: '2020-08-27T05:40:15Z',
+            tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
           },
           {
             name: 'herc20_funded',
-            seen_at: '',
-            tx: ''
+            seen_at: '2020-08-27T05:45:15Z',
+            tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
           },
           {
             name: 'hbit_funded',
-            seen_at: '',
-            tx: ''
-          }
+            seen_at: '2020-08-27T05:50:15Z',
+            tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
+          },
+          {
+            name: 'hbit_redeemed',
+            seen_at: '2020-08-27T05:55:15Z',
+            tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
+          },
         ]
       },
       actions: [

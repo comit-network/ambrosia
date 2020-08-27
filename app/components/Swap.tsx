@@ -1,29 +1,163 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Button, Collapse, Flex, IconButton, Text } from '@chakra-ui/core';
-import { RiExchangeLine } from 'react-icons/ri';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
-import { useCnd } from '../hooks/useCnd';
+import React, {useEffect, useState} from 'react';
+import {
+  Badge,
+  Box,
+  Button,
+  Collapse,
+  Flex,
+  Icon,
+  IconButton,
+  Link,
+  List,
+  ListIcon,
+  ListItem,
+  Text,
+  Tooltip
+} from '@chakra-ui/core';
+import {RiExchangeLine} from 'react-icons/ri';
+import {useEthereumWallet} from '../hooks/useEthereumWallet';
+import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import CurrencyAmount from './CurrencyAmount';
-import { mockSwap } from './MockData';
-import { Currency } from '../utils/types';
+import {mockSwap} from './MockData';
+import {Currency} from '../utils/types';
+import {Action} from "../comit-sdk/cnd/siren";
 
-const swapStatus = (alphaStatus: string, betaStatus: string) => {
-  // TODO: Work on more elaborate status
-};
+enum Role {
+  ALICE = 'Alice',
+  BOB = 'Bob'
+}
+
+enum Event {
+  HERC20_DEPLOYED = 'herc20_deployed',
+  HERC20_FUNDED = 'herc20_funded',
+  HERC20_REDEEMED = 'herc20_redeemed',
+  HERC20_REFUNDED = 'herc20_refunded',
+  HBIT_FUNDED = 'hbit_funded',
+  HBIT_REDEEMED = 'hbit_redeemed',
+  HBIT_REFUNDED = 'hbit_refunded'
+}
+
+enum Protocol {
+  HBIT = 'hbit',
+  HER20 = 'herc20'
+}
+
+type SwapEvent = {
+  name: Event,
+  seen_at: string,
+  tx: string
+}
+
+type Asset = {
+  currency: Currency,
+  value: string,
+  decimals: number,
+}
+
+type ProtocolParams = {
+  protocol: Protocol,
+  asset: Asset
+}
+
+type Swap = {
+  role: Role,
+  alpha: ProtocolParams,
+  beta: ProtocolParams
+  events: SwapEvent[]
+  actions: Action[]
+}
 
 export interface SwapProperties {
   href: string;
 }
 
+function eventLabel(event: Event): string {
+  switch (event) {
+    case Event.HERC20_DEPLOYED:
+      return "DAI LOCK 1/2";
+    case Event.HERC20_FUNDED:
+      return "DAI LOCK 2/2";
+    case Event.HERC20_REDEEMED:
+      return "DAI UNLOCK 1/2";
+    case Event.HERC20_REFUNDED:
+      return "DAI REFUND 1/2";
+    case Event.HBIT_FUNDED:
+      return "BITCOIN LOCK";
+    case Event.HBIT_REDEEMED:
+      return "BITCOIN UNLOCK";
+    case Event.HBIT_REFUNDED:
+      return "BITCOIN REFUND";
+    default:
+      return "unknown";
+  }
+}
+
+// TODO: Include network!
+function getBlockchainExplorerUrl(event: Event): string {
+  switch (event) {
+    case Event.HERC20_DEPLOYED:
+    case Event.HERC20_FUNDED:
+    case Event.HERC20_REDEEMED:
+    case Event.HERC20_REFUNDED:
+      return "https://etherscan.io/tx/";
+    case Event.HBIT_FUNDED:
+    case Event.HBIT_REDEEMED:
+    case Event.HBIT_REFUNDED:
+    default:
+      return "https://www.blockchain.com/btc/tx/";
+  }
+}
+
+interface SwapEventListProperties {
+  swapEvents: SwapEvent[]
+}
+
+function SwapEventList({swapEvents}: SwapEventListProperties) {
+
+  let eventListItems = swapEvents.map((event) => {
+
+    const timestamp = new Date(event.seen_at);
+    const label = eventLabel(event.name);
+    const txId = event.tx;
+
+    return (
+        <ListItem>
+          <Flex direction="row" alignItems="center">
+            <ListIcon icon="check-circle" color="green.500" />
+            <Badge>{label}</Badge>
+            <Text marginLeft="0.5rem">{`at ${timestamp.toLocaleString()} with id`}</Text>
+            <Link href={`${getBlockchainExplorerUrl(event.name)}${txId}`} isExternal marginLeft="0.5rem" color="teal.500">
+              {txId}
+              <Icon name="external-link" mx="2px" />
+            </Link>
+          </Flex>
+        </ListItem>
+    );
+  });
+
+  return (
+      <List spacing={1} paddingRight="1rem" paddingLeft="1rem" paddingBottom="1rem">
+        {eventListItems}
+      </List>
+  );
+}
+
 export default function Swap({ href }: SwapProperties) {
   const [executedActions, setExecutedActions] = useState([]);
 
-  const { wallet: ethWallet, loaded: ethLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcLoaded } = useBitcoinWallet();
-  const { cnd } = useCnd();
+  const { wallet: ethWallet } = useEthereumWallet();
+  const { wallet: btcWallet } = useBitcoinWallet();
+  // const { cnd } = useCnd();
 
-  const swap = mockSwap(href, 'fund');
+  const response = mockSwap(href, 'fund').data;
+  const swap: Swap = {
+    role: response.properties.role,
+    alpha: response.properties.alpha,
+    beta: response.properties.beta,
+    events: response.properties.events,
+    actions: response.actions,
+  };
+
   // TODO: Production code
   // const { data: swap } = useSWR<AxiosResponse<SwapResponse>>(
   //     () => href,
@@ -39,16 +173,16 @@ export default function Swap({ href }: SwapProperties) {
     console.log(swap);
 
     // Wallet guard
-    if (!ethLoaded || !btcLoaded) {
+    if (!ethWallet || !btcWallet) {
       return;
     }
     // Swap has one action available guard
     const swapHasExactlyOneAction =
-      swap && swap.data.actions && swap.data.actions.length === 1;
+      swap && swap.actions && swap.actions.length === 1;
     if (!swapHasExactlyOneAction) {
       return;
     }
-    const action = swap.data.actions[0];
+    const action = swap.actions[0];
     // Don't trigger action twice guard
     if (executedActions.includes(action.href)) {
       return;
@@ -77,54 +211,34 @@ export default function Swap({ href }: SwapProperties) {
   let receiveAmount;
   let receiveCurrency;
 
-  const { role } = swap.data.properties;
+  let alpha = swap.alpha;
+  let beta = swap.beta;
 
-  const { alpha } = swap.data.properties;
-  if (!alpha) {
-    // TODO proper error handling
-    return (
-      <Text color="red">
-        Error: could not properly deserialize alpha params
-      </Text>
-    );
-  }
-
-  const { beta } = swap.data.properties;
-  if (!beta) {
-    return (
-      <Text color="red">Error: could not properly deserialize beta params</Text>
-    );
-  }
-
-  // TODO: Properly use types (not just Siren Entity) - might require adding "Asset" to be accepted by <CurrencyAmount />
-  if (role === 'Alice') {
+  if (swap.role === Role.ALICE) {
     sendAmount = alpha.asset;
-    sendCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    sendCurrency = alpha.protocol === Protocol.HBIT ? Currency.BTC : Currency.DAI;
     receiveAmount = beta.asset;
-    receiveCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    receiveCurrency = beta.protocol === Protocol.HBIT ? Currency.BTC : Currency.DAI;
   } else {
     receiveAmount = alpha.asset;
-    receiveCurrency = alpha.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    receiveCurrency = alpha.protocol === Protocol.HBIT ? Currency.BTC : Currency.DAI;
     sendAmount = beta.asset;
-    sendCurrency = beta.protocol === 'hbit' ? Currency.BTC : Currency.DAI;
+    sendCurrency = beta.protocol === Protocol.HBIT ? Currency.BTC : Currency.DAI;
   }
 
   const sendAmountLabel = 'You send';
   const receiveAmountLabel = 'You receive';
-  const numberShortenPos = 6;
 
   const sendAmountDisplay =
     sendCurrency === Currency.BTC ? (
       <CurrencyAmount
         currencyValue={sendAmount}
         topText={sendAmountLabel}
-        amountShortenPosition={numberShortenPos}
       />
     ) : (
       <CurrencyAmount
         currencyValue={sendAmount}
         topText={sendAmountLabel}
-        amountShortenPosition={numberShortenPos}
       />
     );
 
@@ -133,32 +247,30 @@ export default function Swap({ href }: SwapProperties) {
       <CurrencyAmount
         currencyValue={receiveAmount}
         topText={receiveAmountLabel}
-        amountShortenPosition={numberShortenPos}
       />
     ) : (
       <CurrencyAmount
         currencyValue={receiveAmount}
         topText={receiveAmountLabel}
-        amountShortenPosition={numberShortenPos}
       />
     );
 
   return (
-    <Box maxWidth="100%" marginTop="1rem">
-      <Flex direction="column" shadow="md" border="1px" borderColor="gray.200">
+    <Box maxWidth="100%" border="1px" borderColor="gray.400" backgroundColor="gray.100" marginTop="0.5rem" rounded="lg">
+      <Flex direction="column">
         <Flex
           direction="row"
           alignItems="center"
-          padding="5px"
-          background="white"
+          padding="0.5rem"
         >
-          <Box as={RiExchangeLine} size="32px" />
+          <Box as={RiExchangeLine} size="45px" marginRight="0.5rem" />
           {/* <Spinner size="sm" marginLeft="10px" marginRight="20px"/> */}
           <Text fontSize="md" marginRight="20px" fontWeight="bold">
             Swap
           </Text>
           <Flex marginRight="20px">{sendAmountDisplay}</Flex>
           <Flex>{receiveAmountDisplay}</Flex>
+
           <Flex width="100%" />
           <IconButton
             aria-label="Swap Details"
@@ -168,20 +280,20 @@ export default function Swap({ href }: SwapProperties) {
           >
             Show details
           </IconButton>
-          <Button
-              // @ts-ignore
-            leftIcon="ledger"
-            onClick={handleDetailsToggle}
-            minWidth="100px"
-          >
-            Fund
-          </Button>
+          <Tooltip aria-label="confirm-ledger-tx" label="Click to confirm tx with ledger Nano S" placement="top" hasArrow bg="pink.600">
+            <Button
+                // @ts-ignore
+              leftIcon="ledger"
+              onClick={handleDetailsToggle}
+              minWidth="120px"
+              variantColor="pink"
+            >
+              Lock (1/2)
+            </Button>
+          </Tooltip>
         </Flex>
         <Collapse mt={4} isOpen={show}>
-          <Text>
-            TODO Work on swap details - What was the original price (order
-            mapping?), list of events, tx hashes
-          </Text>
+          <SwapEventList swapEvents={swap.events} />
         </Collapse>
       </Flex>
     </Box>
