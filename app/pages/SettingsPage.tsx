@@ -20,7 +20,7 @@ import {
 import Store from 'electron-store';
 import useSWR from 'swr';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import { useCnd } from '../hooks/useCnd';
 
 const settings = new Store();
@@ -35,7 +35,7 @@ export default function SettingsPage() {
 
   const { wallet: ETHWallet, loaded: ETHLoaded } = useEthereumWallet();
   const [ETHAddress, setETHAddress] = useState(null);
-  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoinWallet();
+  const { wallet: BTCWallet, loaded: BTCLoaded } = useBitcoindWallet();
   const [BTCAddress, setBTCAddress] = useState(null);
   const { cnd, loaded: cndLoaded } = useCnd();
   const [cndDetails, setCndDetails] = useState({

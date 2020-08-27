@@ -3,7 +3,7 @@ import { Box, Flex, Heading, StatGroup } from '@chakra-ui/core';
 import { BigNumber } from 'ethers';
 import Store from 'electron-store';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import CurrencyAmount from './CurrencyAmount';
 import {amountToUnitString, CurrencyValue, intoBook, intoOrders} from '../utils/types';
 import { mockOrders } from './MockData';
@@ -15,7 +15,7 @@ export default function BalanceHorizontal() {
   const myOrders = intoOrders(mockOrders());
 
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
+  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoindWallet();
 
   // TODO: To be replaced with using CurrencyValue only, refactor once there is time
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(

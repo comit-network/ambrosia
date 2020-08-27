@@ -71,4 +71,4 @@ export const BitcoinWalletProvider: React.FC<BitcoinWalletProviderProps> = ({
   );
 };
 
-export const useBitcoinWallet = () => useContext(BitcoinWalletContext);
+export const useBitcoindWallet = () => useContext(BitcoinWalletContext);

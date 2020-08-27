@@ -9,7 +9,7 @@ import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
 import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import MyOrderList from '../components/MyOrderList';
 import {
   CurrencyValue,
@@ -23,7 +23,7 @@ export default function DashboardPage() {
   const myOrders = intoOrders(mockOrders());
 
   const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoinWallet();
+  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoindWallet();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
     null

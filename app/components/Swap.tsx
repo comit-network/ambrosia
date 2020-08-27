@@ -1,14 +1,13 @@
-import React, { useEffect, useReducer, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Button, Collapse, Flex, IconButton, Text } from '@chakra-ui/core';
 import { RiExchangeLine } from 'react-icons/ri';
 import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
+import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import { useCnd } from '../hooks/useCnd';
 import CurrencyAmount from './CurrencyAmount';
 import { mockSwap } from './MockData';
 import { Currency } from '../utils/types';
-import { useLedgerClient } from '../hooks/useLedgerClient';
-import { Psbt } from 'bitcoinjs-lib';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 
 const swapStatus = (alphaStatus: string, betaStatus: string) => {
   // TODO: Work on more elaborate status
@@ -22,9 +21,9 @@ export default function Swap({ href }: SwapProperties) {
   const [executedActions, setExecutedActions] = useState([]);
 
   const { wallet: ethWallet, loaded: ethLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcLoaded } = useBitcoinWallet();
+  const { wallet: btcWallet, loaded: btcLoaded } = useBitcoindWallet();
   const { cnd } = useCnd();
-  const ledgerClient = useLedgerClient();
+  const ledgerBitcoinWallet = useLedgerBitcoinWallet();
 
   const swap = mockSwap(href, 'fund');
   // TODO: Production code
@@ -176,13 +175,10 @@ export default function Swap({ href }: SwapProperties) {
             leftIcon="ledger"
             onClick={async () => {
               try {
-                let response = await ledgerClient.signBitcoinTransaction(Psbt.fromBase64('cHNidP8BAHECAAAAAaRQ5OtfQp3pAgxhTogbAhknSJESkYOe4NGhEtYZjtrEAQAAAAD+////AuyxpDUAAAAAFgAUJDzHJSQHi/gOqZXtPppUAOqzwzkA4fUFAAAAABYAFIsDtpxhQOLeEhpLIv+gneRnr93+AAAAAAABAR8Aypo7AAAAABYAFO4BIbzv1Rm3jA75Ng3qmk1ZEUIfIgYDbXrhM7lpiaTJhxwJSplsX1r33gCcoD9xL4wEteLypE8YRwNsJ1QAAIABAACAAAAAgAAAAAAAAAAAACICA41qbwkk52gSv+O5uhwZF6VACefY18tUzuMuWI8rSfwoGEcDbCdUAACAAQAAgAAAAIABAAAAAAAAAAAA'), [{
-                  tx: '0200000000010118196daed60782013221096d18d28106eff5a2197b14ec4354cc90aa130882db0000000000feffffff02fc236859000000001600143a4ac63f49f2bc287c8f7ac14a52de4f7a7ba14d00ca9a3b00000000160014ee0121bcefd519b78c0ef9360dea9a4d5911421f0247304402202e174366ae829a53d251ed53f5f907bf7183917d048820952c54d580ab765c20022017a01c564e08937ae644fb7a03d9525fda7c978418cc9931fb7126731eae1226012103fc9a820681479d7db6b161045263f34f0aedc73a7801f8d0380ac1991162d4ae2f010000',
-                  index: 0
-                }]);
-                console.log("Signed transaction", response);
+                let txId = await ledgerBitcoinWallet.sendToAddress("bcrt1q3vpmd8rpgr3duys6fv30lgyau3n6lh07qns2ck", "100000", 0.001);
+                console.log("TX ID", txId);
               } catch (e) {
-                console.warn("Signing failed", e)
+                console.warn("Failed to send BTC to address", e)
               }
 
             }}
