@@ -15,6 +15,7 @@ import { CndProvider } from './hooks/useCnd';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
 import { LedgerBitcoinWallet, LedgerBitcoinWalletProvider } from './hooks/useLedgerBitcoinWallet';
+import { LedgerEthereumWallet, LedgerEthereumWalletProvider } from './hooks/useLedgerEthereumWallet';
 
 type Props = {
   store: ReduxStore;
@@ -29,14 +30,19 @@ const App = ({ store, history, settings }: Props) => {
       <BitcoinWalletProvider settings={settings}>
         <EthereumWalletProvider settings={settings}>
           <ThemeProvider theme={customTheme}>
-            <LedgerBitcoinWalletProvider value={new LedgerBitcoinWallet(new LedgerClient(ipcRenderer), settings.get('BITCOIN_HTTP_URI'), settings.get('BITCOIN_USERNAME'), settings.get('BITCOIN_PASSWORD'), 'regtest')}>
-              <CSSReset />
-              <Provider store={store}>
-                <ConnectedRouter history={history}>
-                  {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-                  <Layout settings={settings} />
-                </ConnectedRouter>
-              </Provider>
+            <LedgerBitcoinWalletProvider value={new LedgerBitcoinWallet(new LedgerClient(ipcRenderer), settings.get('LEDGER_BITCOIN_ACCOUNT_INDEX'), settings.get('BITCOIND_ENDPOINT'))}>
+              <LedgerEthereumWalletProvider value={new LedgerEthereumWallet(new LedgerClient(ipcRenderer), {
+                index: settings.get('LEDGER_ETHEREUM_ACCOUNT_INDEX'),
+                address: settings.get('LEDGER_ETHEREUM_ACCOUNT_ADDRESS')
+              }, settings.get('WEB3_ENDPOINT'))}>
+                <CSSReset />
+                <Provider store={store}>
+                  <ConnectedRouter history={history}>
+                    {process.platform === 'darwin' ? <AppRegionDrag /> : null}
+                    <Layout settings={settings} />
+                  </ConnectedRouter>
+                </Provider>
+              </LedgerEthereumWalletProvider>
             </LedgerBitcoinWalletProvider>
           </ThemeProvider>
         </EthereumWalletProvider>

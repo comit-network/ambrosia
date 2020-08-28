@@ -59,7 +59,7 @@ export default function Layout({settings}) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeContent, setActiveContent] = useState(DASHBOARD);
 
-  const setupCompleted = settings.get('SETUP_COMPLETED');
+  const setupCompleted = settings.get('SETUP_COMPLETE');
 
   const handleClick = () => {
     onOpen();
@@ -69,15 +69,23 @@ export default function Layout({settings}) {
 
   useEffect(() => {
     if (!setupCompleted) {
-      // history.push(routes.WELCOME)
-      history.push(routes.SETUP)
+      history.push(routes.WELCOME)
     }
   }, [setupCompleted])
 
   return (
     <Switch>
       <Route path={routes.WELCOME} component={WelcomePage} />
-      <Route path={routes.SETUP} component={SetupPage} />
+      <Route path={routes.SETUP} render={props => (<SetupPage {...props} onComplete={(values) => {
+        settings.set("BITCOIND_ENDPOINT", values.bitcoinRpcEndpoint);
+        settings.set("WEB3_ENDPOINT", values.web3Endpoint);
+        settings.set("LEDGER_BITCOIN_ACCOUNT_INDEX", values.bitcoinLedgerAccountIndex);
+        settings.set("LEDGER_ETHEREUM_ACCOUNT_INDEX", values.ethereumLedgerAccountIndex);
+        settings.set("LEDGER_ETHEREUM_ACCOUNT_ADDRESS", values.ethereumLedgerAccountAddress);
+        settings.set("SETUP_COMPLETE", true);
+
+        history.push(routes.HOME);
+      }} />)} />
       <Route render={() => <Flex flexDirection="row" minHeight="100%" alignItems="stretch">
         <Box
           backgroundColor="white"

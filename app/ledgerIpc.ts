@@ -2,12 +2,16 @@ import { IpcMain, IpcRenderer } from 'electron';
 import { Psbt, crypto } from 'bitcoinjs-lib';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import AppBtc from '@ledgerhq/hw-app-btc';
+import AppEth from '@ledgerhq/hw-app-eth';
 import createXPub from "create-xpub"
 import { serializeTransactionOutputs } from '@ledgerhq/hw-app-btc/lib/serializeTransaction';
 import { Network } from './hooks/useLedgerBitcoinWallet';
+import { serializeTransaction } from 'ethers/lib/utils';
 
 const SIGN_BITCOIN_TRANSACTION = 'sign-bitcoin-transaction';
 const GET_BITCOIN_WALLET_DESCRIPTORS = 'get-bitcoin-wallet-descriptors';
+const GET_ETHEREUM_ACCOUNT = 'get-ethereum-account';
+const SIGN_ETHEREUM_TRANSACTION = 'sign-ethereum-transaction';
 
 export interface Descriptors {
   external: string,
@@ -25,6 +29,14 @@ export class LedgerClient {
 
   async getBitcoinWalletDescriptors(accountIndex, network: Network): Promise<Descriptors> {
     return this.ipc.invoke(GET_BITCOIN_WALLET_DESCRIPTORS, accountIndex, network);
+  }
+
+  async getEthereumAccount(accountIndex): Promise<string> {
+    return this.ipc.invoke(GET_ETHEREUM_ACCOUNT, accountIndex);
+  }
+
+  async signEthereumTransaction(hex: string, accountIndex: number, chainId: number) {
+    return this.ipc.invoke(SIGN_ETHEREUM_TRANSACTION, hex, accountIndex, chainId);
   }
 }
 
@@ -46,6 +58,38 @@ export class LedgerServer {
         external,
         internal
       }
+    })
+    this.ipc.handle(GET_ETHEREUM_ACCOUNT, async (_, accountIndex) => {
+      let transport = await TransportNodeHid.open();
+      const eth = new AppEth(transport)
+      const result = await eth.getAddress(`m/44'/60'/${accountIndex}'/0`)
+
+      return result.address;
+    })
+    this.ipc.handle(SIGN_ETHEREUM_TRANSACTION, async (_, tx, accountIndex, chainId) => {
+      let transport = await TransportNodeHid.open();
+      const eth = new AppEth(transport)
+
+      const hex = tx.startsWith("0x") ? tx.substr(2) : tx;
+
+      let {v, r, s} = await eth.signTransaction(`m/44'/60'/${accountIndex}'/0`, hex);
+
+      // Work around Ledger not properly supporting EIP155 for chainIds > 255
+      // https://github.com/LedgerHQ/ledgerjs/issues/168
+      // https://eips.ethereum.org/EIPS/eip-155
+      let rv = parseInt(v, 16);
+      let cv = chainId * 2 + 35;
+
+      if (rv !== cv && (rv & cv) !== rv) {
+        cv += 1;
+      }
+      v = cv;
+      r = "0x" + r;
+      s = "0x" + s;
+
+      return serializeTransaction(tx, {
+        v, r, s
+      })
     })
   }
 }
