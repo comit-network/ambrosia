@@ -10,7 +10,7 @@ export class LedgerBitcoinWallet {
 
   constructor(private readonly ledgerClient: LedgerClient, private readonly accountIndex: number, rpcEndpoint: string) {
     this.client = axios.create({
-      baseURL: `http://${rpcEndpoint}`,
+      baseURL: rpcEndpoint,
     });
     this.client.interceptors.response.use((response) =>  ({
       ...response,

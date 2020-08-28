@@ -1,13 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Button, Collapse, Flex, IconButton, Text } from '@chakra-ui/core';
 import { RiExchangeLine } from 'react-icons/ri';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import { useCnd } from '../hooks/useCnd';
 import CurrencyAmount from './CurrencyAmount';
 import { mockSwap } from './MockData';
 import { Currency } from '../utils/types';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 
 const swapStatus = (alphaStatus: string, betaStatus: string) => {
   // TODO: Work on more elaborate status
@@ -20,8 +19,8 @@ export interface SwapProperties {
 export default function Swap({ href }: SwapProperties) {
   const [executedActions, setExecutedActions] = useState([]);
 
-  const { wallet: ethWallet, loaded: ethLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcLoaded } = useBitcoindWallet();
+  const ethWallet = useLedgerEthereumWallet();
+  const btcWallet = useLedgerBitcoinWallet();
   const { cnd } = useCnd();
   const ledgerBitcoinWallet = useLedgerBitcoinWallet();
 
@@ -40,10 +39,6 @@ export default function Swap({ href }: SwapProperties) {
   useEffect(() => {
     console.log(swap);
 
-    // Wallet guard
-    if (!ethLoaded || !btcLoaded) {
-      return;
-    }
     // Swap has one action available guard
     const swapHasExactlyOneAction =
       swap && swap.data.actions && swap.data.actions.length === 1;

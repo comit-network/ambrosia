@@ -148,6 +148,7 @@ interface Progress<T> {
   error?: any
 }
 
+// TODO: Add a field for cnd here ...
 export default function SetupPage({ onComplete }: Props) {
   const [fetchBitcoinNetworkProgress, setFetchBitcoinNetworkProgress] = useState<Progress<string>>({
     inProgress: false,
@@ -179,26 +180,26 @@ export default function SetupPage({ onComplete }: Props) {
 
       <Formik
         validateOnBlur
-        initialValues={{
-          bitcoinRpcEndpoint: '__cookie__:59838af3a5a06d5977f612acacb1c788370a2734dd7057e9442ed309f0557c6e@localhost:18443',
-          web3Endpoint: 'https://ropsten.infura.io/v3/882e8bd8f15a488f9b025ce33c006b23',
-          bitcoinLedgerAccountIndex: 0,
-          ethereumLedgerAccountIndex: 0,
-          ethereumLedgerAccountAddress: undefined
-        }}
         // initialValues={{
-        //   bitcoinRpcEndpoint: undefined,
-        //   web3Endpoint: undefined,
-        //   bitcoinLedgerAccountIndex: undefined,
-        //   ethereumLedgerAccountIndex: undefined,
+        //   bitcoinRpcEndpoint: '__cookie__:59838af3a5a06d5977f612acacb1c788370a2734dd7057e9442ed309f0557c6e@localhost:18443',
+        //   web3Endpoint: 'https://ropsten.infura.io/v3/882e8bd8f15a488f9b025ce33c006b23',
+        //   bitcoinLedgerAccountIndex: 0,
+        //   ethereumLedgerAccountIndex: 0,
         //   ethereumLedgerAccountAddress: undefined
         // }}
+        initialValues={{
+          bitcoinRpcEndpoint: undefined,
+          web3Endpoint: undefined,
+          bitcoinLedgerAccountIndex: undefined,
+          ethereumLedgerAccountIndex: undefined,
+          ethereumLedgerAccountAddress: undefined
+        }}
         onSubmit={async (values, actions) => {
           let somethingFailed = false; // TODO: Instead of this, we should somehow use formik's `validate` function here
 
           const ledgerClient = new LedgerClient(ipcRenderer);
 
-          const bitcoinWallet = new LedgerBitcoinWallet(ledgerClient, values.bitcoinLedgerAccountIndex, values.bitcoinRpcEndpoint);
+          const bitcoinWallet = new LedgerBitcoinWallet(ledgerClient, values.bitcoinLedgerAccountIndex, `http://${values.bitcoinRpcEndpoint}`);
           const ethereumWallet = new LedgerEthereumWallet(ledgerClient, {
             index: values.ethereumLedgerAccountIndex,
             address: ''
@@ -334,7 +335,8 @@ export default function SetupPage({ onComplete }: Props) {
           if (!somethingFailed) {
             onComplete({
               ...values,
-              ethereumLedgerAccountAddress: address
+              ethereumLedgerAccountAddress: address,
+              bitcoinRpcEndpoint: `http://${values.bitcoinRpcEndpoint}`
             });
           }
         }}
@@ -347,8 +349,6 @@ export default function SetupPage({ onComplete }: Props) {
                   if (!url || url.length === 0) {
                     return 'URL cannot be empty!';
                   }
-
-                  // TODO: Fancy validation where we connect to the node and display a little green icon on the right?
 
                   return undefined;
                 }}>
@@ -380,8 +380,6 @@ export default function SetupPage({ onComplete }: Props) {
                   if (!url || url.length === 0) {
                     return 'URL cannot be empty!';
                   }
-
-                  // TODO: Fancy validation where we connect to the node and display a little green icon on the right?
 
                   return undefined;
                 }}>

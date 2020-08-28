@@ -2,11 +2,16 @@ import { LedgerClient } from '../ledgerIpc';
 import ethers, { UnsignedTransaction } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { createContext, useContext } from 'react';
+import abi from '@ethersproject/abi';
 
 interface Account {
   index: number,
   address: string
 }
+
+const erc20Interface = new abi.Interface([
+  "function balanceOf(address owner) view returns (uint256)",
+]);
 
 export class LedgerEthereumWallet {
   web3: ethers.ethers.providers.JsonRpcProvider;
@@ -49,7 +54,10 @@ export class LedgerEthereumWallet {
    * Returns the ERC20 token balance of the account in WEI.
    */
   public async getErc20Balance(contract: string): Promise<string> {
-    throw new Error("not yet implemented")
+    const erc20Contract = new ethers.Contract(contract, erc20Interface, this.web3);
+    const balance = await erc20Contract.balanceOf(this.account.address);
+
+    return balance.toString()
   }
 }
 

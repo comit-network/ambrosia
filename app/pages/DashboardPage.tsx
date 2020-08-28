@@ -1,29 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading } from '@chakra-ui/core';
 import Store from 'electron-store';
-import { BigNumber } from 'ethers';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
 import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
 import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import MyOrderList from '../components/MyOrderList';
-import {
-  CurrencyValue,
-  intoMarket,
-  intoOrders,
-  intoBook
-} from '../utils/types';
+import { CurrencyValue, intoBook, intoMarket, intoOrders } from '../utils/types';
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 
 export default function DashboardPage() {
   // TODO: useSWR to fetch from cnd
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoindWallet();
+
+  const ethWallet = useLedgerEthereumWallet();
+  const btcWallet = useLedgerBitcoinWallet();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
     null
@@ -40,11 +35,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadEthBalance() {
-      const eth = await ethWallet.getBalance();
-      const ethBigNumber = BigNumber.from(eth);
+      const eth = await ethWallet.getEtherBalance();
       const ethCurrencyValue = {
         currency: 'ETH',
-        value: ethBigNumber.toString(),
+        value: eth,
         decimals: 18
       } as CurrencyValue;
 
@@ -61,7 +55,7 @@ export default function DashboardPage() {
       );
       const daiCurrencyValue = {
         currency: 'DAI',
-        value: dai.toString(),
+        value: dai,
         decimals: 18
       } as CurrencyValue;
       setDaiBalanceAsCurrencyValue(daiCurrencyValue);
@@ -72,11 +66,10 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadBtcBalance() {
-      const btc = await btcWallet.getBalance();
-      const btcBalanceInSats = btc * 100000000;
+      const sats = await btcWallet.getBalance();
       const btcCurrencyValue = {
         currency: 'BTC',
-        value: btcBalanceInSats.toString(),
+        value: sats,
         decimals: 8
       } as CurrencyValue;
       setBtcBalanceAsCurrencyValue(btcCurrencyValue);

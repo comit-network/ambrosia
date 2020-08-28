@@ -1,6 +1,6 @@
-import React, { createContext, useState, useContext, useEffect } from 'react';
-import Store from 'electron-store';
+import React, { createContext, useContext, useEffect, useState } from 'react';
 import { Cnd } from '../comit-sdk';
+import { Config } from '../config';
 
 interface CndContextProps {
   cnd: Cnd;
@@ -15,7 +15,7 @@ export const CndContext = createContext<CndContextProps>({
 });
 
 export interface CndProviderProps {
-  settings: Store;
+  settings: Config;
 }
 
 export const CndProvider: React.FunctionComponent<CndProviderProps> = ({
@@ -30,7 +30,7 @@ export const CndProvider: React.FunctionComponent<CndProviderProps> = ({
     function initializeCnd() {
       setLoading(true);
 
-      const c = new Cnd(settings.get('HTTP_URL_CND'));
+      const c = new Cnd(settings.CND_URL);
       setCnd(c);
 
       setLoading(false);

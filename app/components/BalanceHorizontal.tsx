@@ -2,11 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, StatGroup } from '@chakra-ui/core';
 import { BigNumber } from 'ethers';
 import Store from 'electron-store';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoindWallet } from '../hooks/useBitcoindWallet';
 import CurrencyAmount from './CurrencyAmount';
 import {amountToUnitString, CurrencyValue, intoBook, intoOrders} from '../utils/types';
 import { mockOrders } from './MockData';
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
@@ -14,8 +14,8 @@ export default function BalanceHorizontal() {
   // TODO: Replace with actual data
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet, loaded: ethWalletLoaded } = useEthereumWallet();
-  const { wallet: btcWallet, loaded: btcWalletLoaded } = useBitcoindWallet();
+  const ethWallet = useLedgerEthereumWallet();
+  const btcWallet = useLedgerBitcoinWallet();
 
   // TODO: To be replaced with using CurrencyValue only, refactor once there is time
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
@@ -33,7 +33,7 @@ export default function BalanceHorizontal() {
 
   useEffect(() => {
     async function loadEthBalance() {
-      const eth = await ethWallet.getBalance();
+      const eth = await ethWallet.getEtherBalance();
       const ethBigNumber = BigNumber.from(eth);
       let ethCurrencyValue = {
         currency: "ETH",
@@ -66,10 +66,9 @@ export default function BalanceHorizontal() {
   useEffect(() => {
     async function loadBtcBalance() {
       const btc = await btcWallet.getBalance();
-      const btcBalanceInSats = btc * 100000000;
       let btcCurrencyValue = {
         currency: "BTC",
-        value: btcBalanceInSats.toString(),
+        value: btc,
         decimals: 8
       } as CurrencyValue;
       setBtcBalanceAsCurrencyValue(btcCurrencyValue);
