@@ -1,8 +1,17 @@
-<svg data-name="Layer 1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 628.3 628.3" width="2500" height="2500">
-    <title>dai</title>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="74.204" height="74.204" clip-rule="evenodd" fill-rule="evenodd" stroke-linejoin="round" stroke-miterlimit="1.4142" version="1.1" viewBox="0 0 628.3 628.3" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#">
+    <metadata>
+        <rdf:RDF>
+            <cc:Work rdf:about="">
+                <dc:format>image/svg+xml</dc:format>
+                <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+                <dc:title/>
+            </cc:Work>
+        </rdf:RDF>
+    </metadata>
     <circle cx="314.15" cy="314.15" r="309" fill="#fff" stroke="#ffce45" stroke-miterlimit="10" stroke-width="10.3"/>
-    <path fill="#ffce45" d="M314.152 72.307L550.856 309.01 314.152 545.715 77.448 309.01z"/>
-    <path fill="#febe44" d="M314.15 386.25L77.25 309l236.9-236.7L551.05 309l-236.9 77.25z"/>
-    <path fill="#fff" d="M159.65 293.55H267.8l46.35-51.5 51.5 51.5H473.8L314.15 121.03l-154.5 172.52z"/>
-    <path fill="#d9a547" opacity=".42" d="M314.15 545.7V72.3L550.85 309l-236.7 236.7z"/>
+    <path d="m314.15 72.307 236.7 236.7-236.7 236.7-236.7-236.7z" fill="#ffce45"/>
+    <path d="M314.15 386.25L77.25 309l236.9-236.7L551.05 309l-236.9 77.25z" fill="#febe44"/>
+    <path d="M159.65 293.55H267.8l46.35-51.5 51.5 51.5H473.8L314.15 121.03l-154.5 172.52z" fill="#fff"/>
+    <path d="M314.15 545.7V72.3L550.85 309l-236.7 236.7z" fill="#d9a547" opacity=".42"/>
 </svg>

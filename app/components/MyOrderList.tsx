@@ -1,11 +1,7 @@
 import React from 'react';
-import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
-import CurrencyAmount, { ColorMode } from './CurrencyAmount';
-import { Action } from '../comit-sdk/cnd/siren';
-import {
-  myBuyOrderBackgroundColour,
-  mySellOrderBackgroundColour
-} from '../constants/colors';
+import {Box, Flex, IconButton, Text} from '@chakra-ui/core';
+import CurrencyAmount, {ColorMode} from './CurrencyAmount';
+import {Action} from '../comit-sdk/cnd/siren';
 import {Order} from "../utils/order";
 import {calculateQuote} from "../utils/currency";
 
@@ -13,12 +9,6 @@ export interface MarketOrderProperties {
   orders: Order[];
   label?: string;
   tableContentHeightLock?: string;
-}
-
-function getColorForOrder(order: Order): string {
-  return order.position === 'buy'
-    ? myBuyOrderBackgroundColour
-    : mySellOrderBackgroundColour;
 }
 
 function cancel(action: Action) {
@@ -56,11 +46,10 @@ export default function MyOrderList({
         direction="row"
         key={`price-${order.id}`}
         padding={currencyValuePadding}
-        backgroundColor={getColorForOrder(order)}
+        border="1px" borderColor="gray.400" backgroundColor="gray.100" rounded="lg"
         marginBottom={marginTopBottom}
         marginTop={marginTopBottom}
         alignItems="center"
-        shadow="md"
       >
         <Box width={cancelButtonWidth}>
           <IconButton
@@ -126,8 +115,12 @@ export default function MyOrderList({
   };
 
   return (
-    <Box>
-      <Box padding="0.2rem">
+    <Box
+    padding="1rem"
+    shadow="md"
+    backgroundColor="white"
+    >
+      <Box padding="0.2rem" paddingTop="0">
         <Text textShadow="md" fontSize="lg">
           {label}
         </Text>

@@ -1,4 +1,5 @@
 import {Currency} from "./currency";
+import {Action as SirenAction} from "../comit-sdk/cnd/siren";
 
 export enum Role {
     ALICE = 'Alice',
@@ -40,6 +41,18 @@ export type ProtocolParams = {
 export type Swap = {
     role: Role,
     alpha: ProtocolParams,
-    beta: ProtocolParams
-    events: SwapEvent[]
+    beta: ProtocolParams,
+    events: SwapEvent[],
+    action: Action
+}
+
+export enum SwapAction {
+    DEPLOY = "deploy",
+    FUND = "fund",
+    REDEEM = "redeem",
+    REFUND = "refund",
+}
+
+export interface Action extends SirenAction {
+    name: SwapAction;
 }

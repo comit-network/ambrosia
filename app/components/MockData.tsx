@@ -68,11 +68,11 @@ export function mockOngoingSwaps(): AxiosResponse<Entity> {
       properties: {},
       entities: [
         {
-          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cab/',
+          href: '/swaps/1/',
           rel: ["item"]
         },
         {
-          href: '/swaps/6a5fbbb1-d50e-4ceb-bed4-086bd5523cac/',
+          href: '/swaps/2/',
           rel: ["item"]
         }
       ]
@@ -82,62 +82,126 @@ export function mockOngoingSwaps(): AxiosResponse<Entity> {
 
 // GET /swaps/:id
 export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity> {
-  // @ts-ignore
-  return {
-    data: {
-      class: ['swap'],
-      properties: {
-        role: 'Alice',
-        alpha: {
-          protocol: 'herc20',
-          asset: {
-            currency: "DAI",
-            value: "9000000000000000000000",
-            decimals: 18,
+  if (href === "/swaps/1/") {
+    // @ts-ignore
+    return {
+      data: {
+        class: ['swap'],
+        properties: {
+          role: 'Alice',
+          alpha: {
+            protocol: 'hbit',
+            asset: {
+              currency: "BTC",
+              value: "100000000",
+              decimals: 8,
+            },
           },
+          beta: {
+            protocol: 'herc20',
+            asset: {
+              currency: "DAI",
+              value: "9000000000000000000000",
+              decimals: 18,
+            },
+          },
+          events: [
+            {
+              name: 'hbit_funded',
+              seen_at: '2020-08-27T05:00:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'herc20_deployed',
+              seen_at: '2020-08-27T05:10:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'herc20_funded',
+              seen_at: '2020-08-27T05:15:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'herc20_redeemed',
+              seen_at: '2020-08-27T05:20:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'hbit_redeemed',
+              seen_at: '2020-08-27T05:55:15Z',
+              tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
+            },
+          ]
         },
-        beta: {
-          protocol: 'hbit',
-          asset: {
-            currency: "BTC",
-            value: "100000000",
-            decimals: 8,
-          },
-        },
-        events: [
+        actions: [
           {
-            name: 'herc20_deployed',
-            seen_at: '2020-08-27T05:40:15Z',
-            tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
-          },
-          {
-            name: 'herc20_funded',
-            seen_at: '2020-08-27T05:45:15Z',
-            tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
-          },
-          {
-            name: 'hbit_funded',
-            seen_at: '2020-08-27T05:50:15Z',
-            tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
-          },
-          {
-            name: 'hbit_redeemed',
-            seen_at: '2020-08-27T05:55:15Z',
-            tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
-          },
+            name: mockAction,
+            class: [],
+            method: 'GET',
+            href: href + mockAction,
+            fields: []
+          }
         ]
-      },
-      actions: [
-        {
-          name: mockAction,
-          class: [],
-          method: 'GET',
-          href: href + mockAction,
-          fields: []
-        }
-      ]
-    }
-  };
+      }
+    };
+  } else {
+    // @ts-ignore
+    return {
+      data: {
+        class: ['swap'],
+        properties: {
+          role: 'Alice',
+          alpha: {
+            protocol: 'herc20',
+            asset: {
+              currency: "DAI",
+              value: "9000000000000000000000",
+              decimals: 18,
+            },
+          },
+          beta: {
+            protocol: 'hbit',
+            asset: {
+              currency: "BTC",
+              value: "100000000",
+              decimals: 8,
+            },
+          },
+          events: [
+            {
+              name: 'herc20_deployed',
+              seen_at: '2020-08-27T05:40:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'herc20_funded',
+              seen_at: '2020-08-27T05:45:15Z',
+              tx: '0x47e8a601b1eb417df4b3bd205367a2721ba665c52a80d17a29e1bc0d8bd4f72e'
+            },
+            {
+              name: 'hbit_funded',
+              seen_at: '2020-08-27T05:50:15Z',
+              tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
+            },
+            {
+              name: 'hbit_redeemed',
+              seen_at: '2020-08-27T05:55:15Z',
+              tx: 'b8e8dfab02f23de1e944ec1f5fe87928f889ba27c12836a4e28ca0b63afd5882'
+            },
+          ]
+        },
+        actions: [
+          {
+            name: mockAction,
+            class: [],
+            method: 'GET',
+            href: href + mockAction,
+            fields: []
+          }
+        ]
+      }
+    };
+  }
 }
 
 // POST /orders
