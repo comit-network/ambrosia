@@ -25,7 +25,8 @@ export enum ColorMode {
   GREEN = 'GREEN',
   WHITE = 'WHITE',
   ORANGE = 'ORANGE',
-  CYAN = 'CYAN'
+  CYAN = 'CYAN',
+  GRAY = 'GRAY'
 }
 
 interface CurrencyAmountProps {
@@ -119,16 +120,20 @@ export default function CurrencyAmount({
         displayTextColor = 'cyan.600';
         break;
       case ColorMode.GREEN:
-        displayNumberColor = 'green.800';
+        displayNumberColor = 'green.600';
         displayTextColor = 'green.600';
         break;
       case ColorMode.RED:
-        displayNumberColor = 'red.800';
+        displayNumberColor = 'red.600';
         displayTextColor = 'red.600';
         break;
       case ColorMode.WHITE:
         displayNumberColor = 'white';
         displayTextColor = 'white';
+        break;
+      case ColorMode.GRAY:
+        displayNumberColor = 'gray.600';
+        displayTextColor = 'gray.600';
         break;
       default:
         break;

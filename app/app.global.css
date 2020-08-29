@@ -22,10 +22,10 @@
 .button.ledger.pink {
   background: rgba(213, 63, 140, 1);
   box-shadow: 0 0 0 0 rgba(213, 63, 140, 1);
-  animation: pulse-red 2s infinite;
+  animation: pulse-pink 2s infinite;
 }
 
-@keyframes pulse-red {
+@keyframes pulse-pink {
   0% {
     transform: scale(0.95);
     box-shadow: 0 0 0 0 rgba(213, 63, 140, 0.7);

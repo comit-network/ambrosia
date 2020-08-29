@@ -97,7 +97,7 @@ export default function DashboardPage() {
     );
   }
 
-  const orderTableOffset = '136px';
+  const orderTableOffset = '138px';
 
   return (
     <Flex direction="row" width="100%" padding="1rem">
@@ -114,7 +114,7 @@ export default function DashboardPage() {
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">
           {/* Balance */}
-          <Flex direction="column" maxWidth="200px" marginTop="40px">
+          <Flex direction="column" maxWidth="200px" height="100%" backgroundColor="white" shadow="md" padding="1rem" marginRight="1rem">
             <AvailableBalance
               btcAvailable={book.btcAvailableForTrading}
               btcReserved={book.btcInOrders}
@@ -145,7 +145,7 @@ export default function DashboardPage() {
               key="my-orders"
               orders={myOrders}
               label="Your Orders"
-              tableContentHeightLock="300px"
+              tableContentHeightLock="248px"
             />
           </Flex>
         </Flex>
@@ -153,37 +153,45 @@ export default function DashboardPage() {
 
       {/* Current Market */}
       <Flex direction="column" marginLeft="1rem" flexGrow={1}>
-        <MarketOrderList
-          key="sell-orders"
-          orders={market.sellOrders}
-          label="Sell Orders"
-          tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
-        />
-        <Flex
-          direction="column"
-          marginTop="1rem"
-          marginBottom="1rem"
-          align="center"
-        >
-          <CurrencyAmount
-            currencyValue={market.lowestSellOrder.price}
-            topText="Bid"
-            colourMode={ColorMode.RED}
-            noImage
+        <Box backgroundColor="white" shadow="md" padding="1rem">
+          <MarketOrderList
+            key="sell-orders"
+            orders={market.sellOrders}
+            label="Sell Orders"
+            tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
           />
-          <CurrencyAmount
-            currencyValue={market.highestBuyOrder.price}
-            topText="Ask"
-            colourMode={ColorMode.GREEN}
-            noImage
+          <Flex
+            direction="row"
+            marginTop="1rem"
+            marginBottom="1rem"
+            align="center"
+            borderTopWidth="1px"
+            borderBottom="1px"
+            borderColor="gray.200"
+            justifyItems="space-between"
+            paddingTop="0.5rem"
+            paddingBottom="0.5rem"
+          >
+            <CurrencyAmount
+              currencyValue={market.lowestSellOrder.price}
+              topText="Bid"
+              colourMode={ColorMode.RED}
+              noImage
+            />
+            <CurrencyAmount
+              currencyValue={market.highestBuyOrder.price}
+              topText="Ask"
+              colourMode={ColorMode.GREEN}
+              noImage
+            />
+          </Flex>
+          <MarketOrderList
+            key="buy-orders"
+            orders={market.buyOrders}
+            label="Buy Orders"
+            tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
           />
-        </Flex>
-        <MarketOrderList
-          key="buy-orders"
-          orders={market.buyOrders}
-          label="Buy Orders"
-          tableContentHeightLock={`calc(50vh - ${orderTableOffset})`}
-        />
+        </Box>
       </Flex>
     </Flex>
   );

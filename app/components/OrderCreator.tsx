@@ -418,12 +418,12 @@ export default function OrderCreator({
                     </Tab>
                 </TabList>
                 <TabPanels>
-                    <TabPanel backgroundColor="white">
+                    <TabPanel backgroundColor="white" height="100%">
                         <Flex direction="column" padding="1rem">
                             <Form initialState={initialBuyState} label={"Buy"} variantColor={myBuyOrderVariantColor}/>
                         </Flex>
                     </TabPanel>
-                    <TabPanel>
+                    <TabPanel backgroundColor="white" height="100%">
                         <Flex direction="column" padding="1rem">
                             <Form initialState={initialSellState} label={"Sell"}
                                   variantColor={mySellOrderVariantColor}/>

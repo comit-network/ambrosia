@@ -41,7 +41,7 @@ import {RiLockUnlockLine} from 'react-icons/ri';
 import {RiFileSettingsLine} from 'react-icons/ri';
 import {useEthereumWallet} from '../hooks/useEthereumWallet';
 import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
-import CurrencyAmount from './CurrencyAmount';
+import CurrencyAmount, {ColorMode} from './CurrencyAmount';
 import {mockSwap, mockSwapHbitHerc20} from './MockData';
 import {Currency} from '../utils/currency';
 import {Action, Protocol, Role, Swap, SwapAction, SwapEvent, SwapEventName} from "../utils/swap";

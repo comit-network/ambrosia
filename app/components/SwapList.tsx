@@ -44,9 +44,9 @@ export default function SwapList() {
   }
 
   return (
-      <Flex direction="column">
+      <Flex direction="column" backgroundColor="white" shadow="md" paddingRight="1rem" paddingLeft="1rem" paddingBottom="1rem" paddingTop="0.5rem">
         {header}
-        <Stack width="100%" backgroundColor="white" shadow="md" paddingRight="1rem" paddingLeft="1rem" paddingBottom="1rem" paddingTop="0.5rem">
+        <Stack width="100%">
           {listItems}
         </Stack>
       </Flex>

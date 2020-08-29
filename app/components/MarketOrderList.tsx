@@ -34,13 +34,13 @@ export default function MarketOrderList({
         displayColorMode = ColorMode.CYAN;
         backgroundColor = myBuyOrderBackgroundColour;
       } else {
-        displayColorMode = ColorMode.GREEN;
+        displayColorMode = ColorMode.GRAY;
       }
     } else if (order.ours) {
       displayColorMode = ColorMode.ORANGE;
       backgroundColor = mySellOrderBackgroundColour;
     } else {
-      displayColorMode = ColorMode.RED;
+      displayColorMode = ColorMode.GRAY;
     }
 
     rows.push(
@@ -60,7 +60,7 @@ export default function MarketOrderList({
             iconHeight="1rem"
             colourMode={displayColorMode}
             noImage
-            minWidth="50px"
+            minWidth="15px"
           />
         </Box>
         <Box width={currencyValueWidth}>
@@ -70,7 +70,7 @@ export default function MarketOrderList({
             iconHeight="1rem"
             colourMode={displayColorMode}
             noImage
-            minWidth="50px"
+            minWidth="15px"
           />
         </Box>
       </Flex>
