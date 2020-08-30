@@ -114,7 +114,7 @@ export default function DashboardPage() {
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">
           {/* Balance */}
-          <Flex direction="column" maxWidth="200px" height="100%" backgroundColor="white" shadow="md" padding="1rem" marginRight="1rem">
+          <Flex direction="column" maxWidth="200px" height="100%" backgroundColor="white" shadow="md" padding="1rem" paddingRight="0" marginRight="1rem">
             <AvailableBalance
               btcAvailable={book.btcAvailableForTrading}
               btcReserved={book.btcInOrders}
@@ -130,6 +130,8 @@ export default function DashboardPage() {
             minWidth="300px"
             maxWidth="400px"
             marginRight="1rem"
+            backgroundColor="white"
+            shadow="md"
           >
             <OrderCreator
               highestPriceBuyOrder={market.highestBuyOrder}
@@ -145,7 +147,7 @@ export default function DashboardPage() {
               key="my-orders"
               orders={myOrders}
               label="Your Orders"
-              tableContentHeightLock="248px"
+              tableContentHeightLock="300px"
             />
           </Flex>
         </Flex>

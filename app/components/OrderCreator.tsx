@@ -392,7 +392,7 @@ export default function OrderCreator({
 
     return (
         <Flex direction="column">
-            <Tabs isFitted shadow="md">
+            <Tabs isFitted>
                 <TabList>
                     <Tab
                         _selected={{

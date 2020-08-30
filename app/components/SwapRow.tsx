@@ -1,6 +1,5 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {
-  Avatar,
   Badge,
   Box,
   Button,
@@ -8,7 +7,6 @@ import {
   Flex,
   Icon,
   IconButton,
-  Image,
   Link,
   List,
   ListIcon,
@@ -24,7 +22,7 @@ import {
   PopoverArrow,
   PopoverBody,
   PopoverCloseButton,
-  PopoverContent, PopoverFooter,
+  PopoverContent,
   PopoverHeader,
   PopoverTrigger,
   Stack,
@@ -35,14 +33,11 @@ import {
   Tooltip,
   useDisclosure
 } from '@chakra-ui/core';
-import {RiExchangeLine} from 'react-icons/ri';
-import {RiLockLine} from 'react-icons/ri';
-import {RiLockUnlockLine} from 'react-icons/ri';
-import {RiFileSettingsLine} from 'react-icons/ri';
+import {RiExchangeLine, RiFileSettingsLine, RiLockLine, RiLockUnlockLine} from 'react-icons/ri';
 import {useEthereumWallet} from '../hooks/useEthereumWallet';
 import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
-import CurrencyAmount, {ColorMode} from './CurrencyAmount';
-import {mockSwap, mockSwapHbitHerc20} from './MockData';
+import CurrencyAmount from './CurrencyAmount';
+import {mockSwap} from './MockData';
 import {Currency} from '../utils/currency';
 import {Action, Protocol, Role, Swap, SwapAction, SwapEvent, SwapEventName} from "../utils/swap";
 
@@ -71,8 +66,23 @@ function eventLabel(event: SwapEventName): string {
   }
 }
 
-function actionStepToEvent(actionStep: Action) {
-
+function swapEventToSwapAction(swapEvent: SwapEvent): SwapAction {
+  switch (swapEvent.name) {
+    case SwapEventName.HERC20_DEPLOYED:
+      return SwapAction.DEPLOY;
+    case SwapEventName.HERC20_FUNDED:
+      return SwapAction.FUND;
+    case SwapEventName.HERC20_REDEEMED:
+      return SwapAction.REDEEM;
+    case SwapEventName.HERC20_REFUNDED:
+      break;
+    case SwapEventName.HBIT_FUNDED:
+      break;
+    case SwapEventName.HBIT_REDEEMED:
+      break;
+    case SwapEventName.HBIT_REFUNDED:
+      break;
+  }
 }
 
 function actionLabel(action: SwapAction, protocol: Protocol): string {
