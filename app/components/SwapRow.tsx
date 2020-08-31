@@ -117,9 +117,13 @@ function reducer(state: State, action: ComponentAction): State {
     }
 }
 
+function containsEvent(events: SwapEvent[], eventName: SwapEventName) {
+    return events.find((event) => event.name === eventName) !== undefined;
+}
+
 export default function SwapRow({href}: SwapProperties) {
 
-    const [swapResponse] = useState(mockSwap(href, 'fund').data);
+    const [swapResponse] = useState(mockSwap(href, href.endsWith("1") ? 'redeem' : 'redeem').data);
 
     // TODO: Production code
     // const { data: swapResponse } = useSWR<AxiosResponse<SwapResponse>>(
@@ -177,6 +181,10 @@ export default function SwapRow({href}: SwapProperties) {
     const [show, setShow] = React.useState(false);
     const handleDetailsToggle = () => setShow(!show);
 
+    if (!state.swap) {
+        return <Text>Loading Swap...</Text>;
+    }
+
     let sendAmount;
     let sendCurrency;
     let receiveAmount;
@@ -226,10 +234,6 @@ export default function SwapRow({href}: SwapProperties) {
             />
         );
 
-    if (!state.swap) {
-        return <Text>Loading</Text>;
-    }
-
     function isSwapStepActive(swapStep: SwapStepName, alphaProtocol: Protocol) {
         let activeAction = state.activeAction;
         let events = state.swap.events;
@@ -237,25 +241,38 @@ export default function SwapRow({href}: SwapProperties) {
         if (alphaProtocol === Protocol.HER20) {
             switch (swapStep) {
                 case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
-                    return activeAction.name === SwapAction.DEPLOY;
+                    return activeAction.name === SwapAction.DEPLOY
+                        && !containsEvent(events, SwapEventName.HERC20_DEPLOYED);
                 case SwapStepName.HERC20_HBIT_ALICE_FUND:
-                    return activeAction.name === SwapAction.FUND;
+                    return activeAction.name === SwapAction.FUND
+                        && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
+                        && !containsEvent(events, SwapEventName.HERC20_FUNDED);
                 case SwapStepName.HERC20_HBIT_BOB_FUND:
-                    return events.find((event) => event.name === SwapEventName.HERC20_DEPLOYED) !== undefined
-                        && events.find((event) => event.name === SwapEventName.HERC20_FUNDED) !== undefined;
+                    return containsEvent(events, SwapEventName.HERC20_DEPLOYED)
+                        && containsEvent(events, SwapEventName.HERC20_FUNDED)
+                        && !containsEvent(events, SwapEventName.HBIT_FUNDED);
                 case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
-                    return activeAction.name === SwapAction.REDEEM;
+                    return activeAction.name === SwapAction.REDEEM
+                        && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
+                        && containsEvent(events, SwapEventName.HERC20_FUNDED)
+                        && containsEvent(events, SwapEventName.HBIT_FUNDED)
+                        && !containsEvent(events, SwapEventName.HBIT_REDEEMED);
                 default:
                     return false;
             }
         } else {
             switch (swapStep) {
                 case SwapStepName.HBIT_HERC20_ALICE_FUND:
-                    return activeAction.name === SwapAction.FUND;
+                    return activeAction.name === SwapAction.FUND
+                        && !containsEvent(events, SwapEventName.HBIT_FUNDED);
                 case SwapStepName.HBIT_HERC20_BOB_FUND:
-                    return events.find((event) => event.name === SwapEventName.HBIT_FUNDED) !== undefined;
+                    return containsEvent(events, SwapEventName.HBIT_FUNDED)
+                        && !containsEvent(events, SwapEventName.HERC20_FUNDED);
                 case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
-                    return activeAction.name === SwapAction.REDEEM;
+                    return activeAction.name === SwapAction.REDEEM
+                        && containsEvent(events, SwapEventName.HBIT_FUNDED)
+                        && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
+                        && containsEvent(events, SwapEventName.HERC20_FUNDED);
                 default:
                     return false;
             }
@@ -388,7 +405,7 @@ export default function SwapRow({href}: SwapProperties) {
     }
 
     return (
-        <Box maxWidth="100%" border="1px" borderColor="gray.400" marginTop="1rem" rounded="lg" key={href}
+        <Box maxWidth="100%" border="1px" borderColor="gray.400" marginBottom="1rem" rounded="lg" key={href}
              backgroundColor="gray.100">
             <Flex direction="column">
                 <Flex

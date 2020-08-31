@@ -36,23 +36,24 @@ export default function SwapList() {
 
   if (!listItems || listItems.length === 0) {
     return (
-        <Flex justifyItems="center" alignItems="center" shadow="md">
+        <Flex direction="column"
+              paddingRight="1rem"
+              paddingLeft="1rem"
+              paddingBottom="1rem"
+              paddingTop="0.5rem"
+        >
           {header}
-          <Text>Currently no swaps...</Text>
+          <Text color="gray.400">Currently no swaps, once an order matches swaps will appear here.</Text>
         </Flex>
     );
   }
 
   return (
       <Flex direction="column"
-            backgroundColor="white"
-            shadow="md"
             paddingRight="1rem"
             paddingLeft="1rem"
             paddingBottom="1rem"
-            paddingTop="0.5rem"
       >
-          {header}
         <Stack width="100%">
           {listItems}
         </Stack>

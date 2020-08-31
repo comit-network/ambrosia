@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Box, Flex, Heading} from '@chakra-ui/core';
+import {Box, Flex, Heading, Text} from '@chakra-ui/core';
 import Store from 'electron-store';
 import {BigNumber} from 'ethers';
 import SwapList from '../components/SwapList';
@@ -102,19 +102,18 @@ export default function DashboardPage() {
   return (
     <Flex direction="row" width="100%" padding="1rem">
       <Flex direction="column" width="100%" flexGrow={2}>
-        {/* Placeholder for more market data */}
-        <Flex
-          direction="row"
-          flexGrow={2}
-          alignContent="center"
-        />
         {/* Swaps */}
-        <Flex direction="column" overflow="scroll" shadow="md">
+        <Flex direction="column" padding="0.5rem" width="100%" backgroundColor="white" shadow="md">
+          <Text textShadow="md" fontSize="lg">
+            Ongoing Swaps
+          </Text>
+        </Flex>
+        <Flex direction="column" overflow="scroll" shadow="md" height="100%" backgroundColor="white">
           <SwapList />
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">
           {/* Balance */}
-          <Flex direction="column" maxWidth="200px" height="100%" backgroundColor="white" shadow="md" padding="1rem" paddingRight="0" marginRight="1rem">
+          <Flex direction="column" maxWidth="300px" height="100%" backgroundColor="white" shadow="md" padding="1rem" paddingRight="0" marginRight="1rem">
             <AvailableBalance
               btcAvailable={book.btcAvailableForTrading}
               btcReserved={book.btcInOrders}

@@ -133,7 +133,7 @@ export default function SwapStep ({swapId, name, isActive, isUserInteractionActi
             break;
         case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
             index = 4;
-            label = "You Unlock";
+            label = "Auto Unlock Your";
             protocol = Protocol.HER20;
             currency = Currency.BTC;
             isInteractionRequired = false;
