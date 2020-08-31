@@ -46,10 +46,11 @@ export default function MyOrderList({
         direction="row"
         key={`price-${order.id}`}
         padding={currencyValuePadding}
-        border="1px" borderColor="gray.400" backgroundColor="gray.100" rounded="lg"
+        border="1px" borderColor="gray.400" rounded="lg"
         marginBottom={marginTopBottom}
         marginTop={marginTopBottom}
         alignItems="center"
+        backgroundColor="gray.100"
       >
         <Box width={cancelButtonWidth}>
           <IconButton

@@ -109,7 +109,7 @@ export default function DashboardPage() {
           alignContent="center"
         />
         {/* Swaps */}
-        <Flex direction="column">
+        <Flex direction="column" overflow="scroll" shadow="md">
           <SwapList />
         </Flex>
         <Flex direction="row" marginTop="1rem" width="100%">

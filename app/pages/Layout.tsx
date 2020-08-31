@@ -146,7 +146,7 @@ export default function Layout() {
           </Drawer>
         </Stack>
       </Box>
-      <Flex backgroundColor="gray.50" id="content">
+      <Flex backgroundColor="gray.100" id="content">
         <Switch>
           <Route path={routes.ABOUT} component={AboutPage} />
           <Route path={routes.WALLET} component={WalletPage} />
