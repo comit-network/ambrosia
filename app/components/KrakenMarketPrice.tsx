@@ -9,7 +9,7 @@ import {
 } from '@chakra-ui/core';
 import useSWR from 'swr';
 
-export default function CurrentMarketPrice() {
+export default function KrakenMarketPrice() {
   const [btcDaiBid, setBtcDaiBid] = useState(0);
   const [btcDaiAsk, setBtcDaiAsk] = useState(0);
 
