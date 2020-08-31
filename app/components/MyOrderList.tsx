@@ -53,13 +53,17 @@ export default function MyOrderList({
         backgroundColor="gray.100"
       >
         <Box width={cancelButtonWidth}>
-          <IconButton
-            size="xs"
-            aria-label="cancel"
-            icon="close"
-            onClick={() => cancel(order.actions[0])}
-            variantColor={cancelButtonColor}
-          />
+          {
+            order.state.open && +order.state.open > 0
+                ? <IconButton
+                    size="xs"
+                    aria-label="cancel"
+                    icon="close"
+                    onClick={() => cancel(order.actions[0])}
+                    variantColor={cancelButtonColor}
+                />
+                : <></>
+          }
         </Box>
         <Box width={currencyValueWidth}>
           <CurrencyAmount

@@ -346,8 +346,8 @@ export function mockOrders(): AxiosResponse<Entity> {
               decimals: 8,
             },
             state: {
-              open: "0.3", //percentage, 0.3=30%, rounded to precision 2
-              closed: "0.1",
+              open: "0.0", //percentage, 0.3=30%, rounded to precision 2
+              closed: "0.4",
               settling: "0.0",
               failed: "0.6"
             }
