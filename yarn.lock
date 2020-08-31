@@ -2429,10 +2429,10 @@
   resolved "https://registry.yarnpkg.com/@types/unist/-/unist-2.0.3.tgz#9c088679876f374eb5983f150d4787aa6fb32d7e"
   integrity sha512-FvUupuM3rlRsRtCN+fDudtmytGO6iHJuuRKS1Ss0pG5z8oX0diNEw94UEL7hgDbpN94rgaK5R7sWm6RrSkZuAQ==
 
-"@types/urijs@^1.19.6":
-  version "1.19.9"
-  resolved "https://registry.yarnpkg.com/@types/urijs/-/urijs-1.19.9.tgz#cedccc8e69677080cc8bb2e9ec50c6dd6093429e"
-  integrity sha512-/tiJyrc0GPcsReHzgC0SXwOmoPjLqYe01W7dLYB0yasQXMbcRee+ZIk+g8MIQhoBS8fPoBQO3Y93+aeBrI93Ug==
+"@types/urijs@^1.19.11":
+  version "1.19.11"
+  resolved "https://registry.yarnpkg.com/@types/urijs/-/urijs-1.19.11.tgz#9cb7adb6f4866e0197c4dbb1d16739ad9ad51a05"
+  integrity sha512-nZ1MAYvftKvqeQpKYTdUHg6cjKDHD95n4hon7VqJl5KnhXrKUCmy009oy8N8uAaVFicdsTPnjV7HM4AUrtcF9g==
 
 "@types/vfile-message@^2.0.0":
   version "2.0.0"
