@@ -8,20 +8,21 @@ import AvailableBalance from '../components/AvailableBalance';
 import {mockMarketsBtcDai, mockOrders} from '../components/MockData';
 import CurrencyAmount, {ColorMode} from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
-import {useEthereumWallet} from '../hooks/useEthereumWallet';
-import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import MyOrderList from '../components/MyOrderList';
+import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
+import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
 import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal} from "../utils/currency";
-import {intoBook} from "../utils/book";
 import {intoMarket} from "../utils/market";
+import {intoBook} from "../utils/book";
 import {intoOrders} from "../utils/order";
 
 export default function DashboardPage() {
   // TODO: useSWR to fetch from cnd
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet } = useEthereumWallet();
-  const { wallet: btcWallet } = useBitcoinWallet();
+
+  const ethWallet = useLedgerEthereumWallet();
+  const btcWallet = useLedgerBitcoinWallet();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
     null
@@ -38,7 +39,7 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadEthBalance() {
-      const eth = await ethWallet.getBalance();
+      const eth = await ethWallet.getEtherBalance();
       const ethBigNumber = BigNumber.from(eth);
       const ethCurrencyValue = ethIntoCurVal(ethBigNumber);
       setEthBalanceAsCurrencyValue(ethCurrencyValue);

@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, StatGroup } from '@chakra-ui/core';
 import { BigNumber } from 'ethers';
 import Store from 'electron-store';
-import { useEthereumWallet } from '../hooks/useEthereumWallet';
-import { useBitcoinWallet } from '../hooks/useBitcoinWallet';
 import CurrencyAmount from './CurrencyAmount';
 import {
   amountToUnitString,
@@ -12,6 +10,8 @@ import {
   ethIntoCurVal,
 } from '../utils/currency';
 import { mockOrders } from './MockData';
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import {intoOrders} from "../utils/order";
 import {intoBook} from "../utils/book";
 
@@ -20,8 +20,8 @@ export default function BalanceHorizontal() {
   // TODO: Replace with actual data
   const myOrders = intoOrders(mockOrders());
 
-  const { wallet: ethWallet } = useEthereumWallet();
-  const { wallet: btcWallet } = useBitcoinWallet();
+  const ethWallet = useLedgerEthereumWallet();
+  const btcWallet = useLedgerBitcoinWallet();
 
   // TODO: To be replaced with using CurrencyValue only, refactor once there is time
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
@@ -39,7 +39,7 @@ export default function BalanceHorizontal() {
 
   useEffect(() => {
     async function loadEthBalance() {
-      const eth = await ethWallet.getBalance();
+      const eth = await ethWallet.getEtherBalance();
       const ethBigNumber = BigNumber.from(eth);
       const ethCurrencyValue = ethIntoCurVal(ethBigNumber);
       setEthBalanceAsCurrencyValue(ethCurrencyValue);

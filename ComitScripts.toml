@@ -1,0 +1,9 @@
+[bitcoin]
+addresses_to_fund = [
+    "bcrt1qacqjr08065vm0rqwlymqm656f4v3zssl9kjmyl"
+]
+
+[ethereum]
+addresses_to_fund = [
+    "0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e"
+]
