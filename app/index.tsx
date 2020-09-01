@@ -3,11 +3,11 @@ import { render } from 'react-dom';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
 import { configureStore, history } from './store/configureStore';
 import './app.global.css';
-import { Config, fromComitEnv } from './config';
+import { Config, fromComitEnv, Provider as ConfigProvider } from './config';
 import ElectronStore from 'electron-store';
 import { LedgerBitcoinWallet } from './hooks/useLedgerBitcoinWallet';
 import { LedgerClient } from './ledgerIpc';
-import { ipcRenderer } from "electron";
+import { ipcRenderer } from 'electron';
 
 const reduxStore = configureStore();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
@@ -30,7 +30,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   render(
     <AppContainer>
-      <App store={reduxStore} history={history} settings={effectiveConfig} />
+      <ConfigProvider value={effectiveConfig}>
+        <App store={reduxStore} history={history} />
+      </ConfigProvider>
     </AppContainer>,
     document.getElementById('root')
   );

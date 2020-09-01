@@ -1,6 +1,7 @@
 import os from "os";
 import fs from "fs";
 import dotenv from 'dotenv';
+import { createContext, useContext } from 'react';
 
 export interface Config {
   LEDGER_BITCOIN_ACCOUNT_INDEX: number,
@@ -10,7 +11,8 @@ export interface Config {
   WEB3_ENDPOINT: string,
   CND_URL: string,
   SETUP_COMPLETE: boolean,
-  ERC20_CONTRACT_ADDRESS: string
+  ERC20_CONTRACT_ADDRESS: string,
+  ROLE: "alice" | "bob"
 }
 
 const ENV_PATH = `${os.homedir()}/.create-comit-app/env`;
@@ -32,6 +34,15 @@ export function fromComitEnv(): Config | null {
     LEDGER_ETHEREUM_ACCOUNT_ADDRESS: '0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e', // This is only valid for Daniel's Nano Ledger :)
     CND_URL: "http://127.0.0.1:8000",
     SETUP_COMPLETE: true,
-    ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS // TODO: This should be fetched from cnd instead!
+    ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS, // TODO: This should be fetched from cnd instead!
+    ROLE: 'alice'
   };
+}
+
+const CONFIG_CONTEXT = createContext(null);
+
+export const Provider = CONFIG_CONTEXT.Provider;
+
+export function useConfig() {
+  return useContext(CONFIG_CONTEXT)
 }

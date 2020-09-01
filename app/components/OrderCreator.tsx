@@ -279,7 +279,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
       quantity: sats.toString(10),
       price: weiPerSat.toString(10),
       swap: {
-        role: 'alice',
+        role: 'bob',
         bitcoin_address: await btcWallet.getNewAddress(),
         ethereum_address: ethWallet.getAccount()
       }

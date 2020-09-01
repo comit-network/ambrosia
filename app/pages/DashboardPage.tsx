@@ -1,29 +1,26 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Flex, Text} from '@chakra-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Text } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
 import MarketOrderList from '../components/MarketOrderList';
 import MyOrderList from '../components/MyOrderList';
-import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
-import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
-import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, ZERO_BTC, ZERO_DAI, ZERO_ETH} from '../utils/currency';
-import {intoBook} from '../utils/book';
-import {Config} from '../config';
-import {useCnd} from "../hooks/useCnd";
-import useSWR from "swr/esm/use-swr";
-import {intoOrders} from "../utils/order";
-import {intoMarket} from "../utils/market";
-import BidAndAsk from "../components/BidAndAsk";
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
+import { btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, ZERO_BTC, ZERO_DAI, ZERO_ETH } from '../utils/currency';
+import { intoBook } from '../utils/book';
+import { useConfig } from '../config';
+import { useCnd } from '../hooks/useCnd';
+import useSWR from 'swr/esm/use-swr';
+import { intoOrders } from '../utils/order';
+import { intoMarket } from '../utils/market';
+import BidAndAsk from '../components/BidAndAsk';
 
-interface Props {
-  settings: Config
-}
-
-export default function DashboardPage({settings}: Props) {
+export default function DashboardPage() {
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
+  const config = useConfig();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
       ZERO_ETH
@@ -48,7 +45,7 @@ export default function DashboardPage({settings}: Props) {
 
       try {
         const dai = await ethWallet.getErc20Balance(
-            settings.ERC20_CONTRACT_ADDRESS
+            config.ERC20_CONTRACT_ADDRESS
         );
         const daiCurrencyValue = daiIntoCurVal(dai);
         setDaiBalanceAsCurrencyValue(daiCurrencyValue);

@@ -1,5 +1,5 @@
-import React, {useEffect, useState} from 'react';
-import {Flex, StatGroup} from '@chakra-ui/core';
+import React, { useEffect, useState } from 'react';
+import { Flex, StatGroup } from '@chakra-ui/core';
 import CurrencyAmount from './CurrencyAmount';
 import {
   amountToUnitString,
@@ -10,24 +10,21 @@ import {
   ZERO_DAI,
   ZERO_ETH
 } from '../utils/currency';
-import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
-import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
-import {intoOrders} from '../utils/order';
-import {Book, intoBook} from '../utils/book';
-import {Config} from '../config';
-import {useCnd} from "../hooks/useCnd";
-import useSWR from "swr/esm/use-swr";
-
-interface Props {
-  settings: Config
-}
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
+import { intoOrders } from '../utils/order';
+import { Book, intoBook } from '../utils/book';
+import { useCnd } from '../hooks/useCnd';
+import useSWR from 'swr/esm/use-swr';
+import { useConfig } from '../config';
 
 // TODO: Rethink if this should keep its own state.
-export default function BalanceHorizontal({settings}: Props) {
+export default function BalanceHorizontal() {
 
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
+  const config = useConfig();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
       ZERO_ETH
@@ -64,7 +61,7 @@ export default function BalanceHorizontal({settings}: Props) {
 
       try {
         const dai = await ethWallet.getErc20Balance(
-            settings.ERC20_CONTRACT_ADDRESS
+            config.ERC20_CONTRACT_ADDRESS
         );
         const daiCurrencyValue = daiIntoCurVal(dai);
         setDaiBalanceAsCurrencyValue(daiCurrencyValue);

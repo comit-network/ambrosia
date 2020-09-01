@@ -24,7 +24,7 @@ import WalletPage from './WalletPage';
 import DashboardPage from './DashboardPage';
 import WelcomePage from './WelcomePage';
 import SetupPage from './SetupPage';
-import { Config } from '../config';
+import { Config, useConfig } from '../config';
 import ElectronStore from 'electron-store';
 
 const NavIcon = styled(Icon)`
@@ -57,15 +57,12 @@ const DASHBOARD = 'DASHBOARD';
 const ABOUT = 'ABOUT';
 const WALLET = 'WALLET';
 
-interface Props {
-  settings: Config
-}
-
-export default function Layout({settings}: Props) {
+export default function Layout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeContent, setActiveContent] = useState(DASHBOARD);
+  const config = useConfig();
 
-  const setupCompleted = settings.SETUP_COMPLETE;
+  const setupCompleted = config.SETUP_COMPLETE;
 
   const handleClick = () => {
     onOpen();
@@ -181,8 +178,8 @@ export default function Layout({settings}: Props) {
         <Flex backgroundColor="gray.100" id="content">
           <Switch>
             <Route path={routes.ABOUT} component={AboutPage} />
-            <Route path={routes.WALLET} render={(props => <WalletPage settings={settings} {...props} />)} />
-            <Route path={routes.HOME} render={(props => <DashboardPage settings={settings} {...props} />)} />
+            <Route path={routes.WALLET} component={WalletPage} />
+            <Route path={routes.HOME} component={DashboardPage} />
           </Switch>
         </Flex>
       </Flex>} />
