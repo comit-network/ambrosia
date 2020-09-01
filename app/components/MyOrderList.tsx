@@ -121,11 +121,7 @@ export default function MyOrderList({
   };
 
   return (
-    <Box
-    padding="1rem"
-    shadow="md"
-    backgroundColor="white"
-    >
+    <Box>
       <Box padding="0.2rem" paddingTop="0">
         <Text textShadow="md" fontSize="lg">
           {label}

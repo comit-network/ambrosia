@@ -147,7 +147,7 @@ export default function DashboardPage({settings}: Props) {
             />
           </Flex>
           {/* My Orders */}
-          <Flex direction="column" width="100%">
+          <Flex direction="column" width="100%" height="100%" backgroundColor="white" shadow="md" padding="1rem">
             <MyOrderList
               key="my-orders"
               orders={orders}
