@@ -1,4 +1,4 @@
-export { Ledger, Asset, Cnd, Peer } from "./cnd/cnd";
+export { Cnd } from "./cnd/cnd";
 export {
   LedgerAction,
   BitcoinBroadcastSignedTransactionPayload,
@@ -13,14 +13,11 @@ export { siren };
 
 export { Transaction, TransactionStatus } from "./transaction";
 
-export { AllWallets, Wallets } from "./wallet";
 export {
-  BitcoinWallet,
   BitcoindWallet,
-  BitcoindWalletArgs
 } from "./wallet/bitcoin";
 export { EthereumWallet } from "./wallet/ethereum";
-export { LightningWallet, Outpoint } from "./wallet/lightning";
+export { LightningWallet } from "./wallet/lightning";
 
 export { BigNumber } from "bignumber.js";
 
