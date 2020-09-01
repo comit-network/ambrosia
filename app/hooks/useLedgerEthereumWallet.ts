@@ -1,15 +1,15 @@
 import { LedgerClient } from '../ledgerIpc';
-import ethers, { UnsignedTransaction } from 'ethers';
+import ethers, { BigNumber, UnsignedTransaction } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { createContext, useContext } from 'react';
-import abi from '@ethersproject/abi';
+import { Interface } from '@ethersproject/abi';
 
 interface Account {
   index: number,
   address: string
 }
 
-const erc20Interface = new abi.Interface([
+const erc20Interface = new Interface([
   "function balanceOf(address owner) view returns (uint256)",
 ]);
 
@@ -44,20 +44,18 @@ export class LedgerEthereumWallet {
   /**
    * Returns the ETH balance of the account in WEI.
    */
-  public async getEtherBalance(): Promise<string> {
-    const balance = await this.web3.getBalance(this.account.address);
-
-    return balance.toString()
+  public async getEtherBalance(): Promise<BigNumber> {
+    return this.web3.getBalance(this.account.address);
   }
 
   /**
    * Returns the ERC20 token balance of the account in WEI.
    */
-  public async getErc20Balance(contract: string): Promise<string> {
+  public async getErc20Balance(contract: string): Promise<BigNumber> {
     const erc20Contract = new ethers.Contract(contract, erc20Interface, this.web3);
     const balance = await erc20Contract.balanceOf(this.account.address);
 
-    return balance.toString()
+    return BigNumber.from(balance)
   }
 }
 

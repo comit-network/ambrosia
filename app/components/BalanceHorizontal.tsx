@@ -1,22 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { Box, Flex, Heading, StatGroup } from '@chakra-ui/core';
 import { BigNumber } from 'ethers';
-import Store from 'electron-store';
 import CurrencyAmount from './CurrencyAmount';
-import {
-  amountToUnitString,
-  btcIntoCurVal,
-  daiIntoCurVal,
-  ethIntoCurVal,
-} from '../utils/currency';
+import { amountToUnitString, btcIntoCurVal, daiIntoCurVal, ethIntoCurVal } from '../utils/currency';
 import { mockOrders } from './MockData';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
-import {intoOrders} from "../utils/order";
-import {intoBook} from "../utils/book";
+import { intoOrders } from '../utils/order';
+import { intoBook } from '../utils/book';
+import { Config } from '../config';
+
+interface Props {
+  settings: Config
+}
 
 // TODO: Rethink if this should keep its own state.
-export default function BalanceHorizontal() {
+export default function BalanceHorizontal({settings}: Props) {
   // TODO: Replace with actual data
   const myOrders = intoOrders(mockOrders());
 
@@ -35,7 +34,6 @@ export default function BalanceHorizontal() {
   );
 
   const [book, setBook] = useState(null);
-  const settings = new Store();
 
   useEffect(() => {
     async function loadEthBalance() {
@@ -51,7 +49,7 @@ export default function BalanceHorizontal() {
   useEffect(() => {
     async function loadDaiBalance() {
       const dai = await ethWallet.getErc20Balance(
-        settings.get('ERC20_CONTRACT_ADDRESS')
+        settings.ERC20_CONTRACT_ADDRESS
       );
       const daiCurrencyValue = daiIntoCurVal(dai);
       setDaiBalanceAsCurrencyValue(daiCurrencyValue);

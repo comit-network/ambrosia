@@ -28,7 +28,10 @@ export default class MenuBuilder {
               // TODO: let the user confirm this with a dialog, need IPC for that
               const configPath = path.join(app.getPath('userData'), "config.json");
 
-              fs.unlinkSync(configPath);
+              if (fs.existsSync(configPath)) {
+                fs.unlinkSync(configPath);
+              }
+
               this.mainWindow.reload();
             }
           },

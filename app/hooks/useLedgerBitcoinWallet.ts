@@ -2,6 +2,7 @@ import { createContext, useContext } from 'react';
 import { Descriptors, LedgerClient } from '../ledgerIpc';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Psbt } from 'bitcoinjs-lib';
+import { BigNumber } from 'ethers';
 
 const WALLET_NAME = 'tantalus';
 
@@ -177,13 +178,13 @@ export class LedgerBitcoinWallet {
   /**
    * Returns the current balance in satoshis.
    */
-  public async getBalance(): Promise<string> {
+  public async getBalance(): Promise<BigNumber> {
     const balance = await this.client.post(`/wallet/${WALLET_NAME}`, {
       method: 'getbalance',
       params: []
     }).then(r => r.data);
 
-    return (balance * 100_000_000).toString(10)
+    return BigNumber.from(balance * 100_000_000)
   }
 }
 

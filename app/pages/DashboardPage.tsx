@@ -1,22 +1,25 @@
-import React, {useEffect, useState} from 'react';
-import {Box, Flex, Heading, Text} from '@chakra-ui/core';
-import Store from 'electron-store';
-import {BigNumber} from 'ethers';
+import React, { useEffect, useState } from 'react';
+import { Box, Flex, Heading, Text } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
-import {mockMarketsBtcDai, mockOrders} from '../components/MockData';
-import CurrencyAmount, {ColorMode} from '../components/CurrencyAmount';
+import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
+import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
 import MyOrderList from '../components/MyOrderList';
-import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
-import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
-import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal} from "../utils/currency";
-import {intoMarket} from "../utils/market";
-import {intoBook} from "../utils/book";
-import {intoOrders} from "../utils/order";
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
+import { btcIntoCurVal, daiIntoCurVal, ethIntoCurVal } from '../utils/currency';
+import { intoMarket } from '../utils/market';
+import { intoBook } from '../utils/book';
+import { intoOrders } from '../utils/order';
+import { Config } from '../config';
 
-export default function DashboardPage() {
+interface Props {
+  settings: Config
+}
+
+export default function DashboardPage({settings}: Props) {
   // TODO: useSWR to fetch from cnd
   const myOrders = intoOrders(mockOrders());
 
@@ -35,13 +38,10 @@ export default function DashboardPage() {
   );
   const [book, setBook] = useState(null);
 
-  const settings = new Store();
-
   useEffect(() => {
     async function loadEthBalance() {
       const eth = await ethWallet.getEtherBalance();
-      const ethBigNumber = BigNumber.from(eth);
-      const ethCurrencyValue = ethIntoCurVal(ethBigNumber);
+      const ethCurrencyValue = ethIntoCurVal(eth);
       setEthBalanceAsCurrencyValue(ethCurrencyValue);
     }
 
@@ -51,7 +51,7 @@ export default function DashboardPage() {
   useEffect(() => {
     async function loadDaiBalance() {
       const dai = await ethWallet.getErc20Balance(
-        settings.get('ERC20_CONTRACT_ADDRESS')
+        settings.ERC20_CONTRACT_ADDRESS
       );
       const daiCurrencyValue = daiIntoCurVal(dai);
       setDaiBalanceAsCurrencyValue(daiCurrencyValue);
@@ -62,9 +62,8 @@ export default function DashboardPage() {
 
   useEffect(() => {
     async function loadBtcBalance() {
-      const btc = await btcWallet.getBalance();
-      const btcBalanceInSats = btc;
-      const btcCurrencyValue = btcIntoCurVal(btcBalanceInSats);
+      const sats = await btcWallet.getBalance();
+      const btcCurrencyValue = btcIntoCurVal(sats);
       setBtcBalanceAsCurrencyValue(btcCurrencyValue);
     }
 

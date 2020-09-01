@@ -24,6 +24,8 @@ import WalletPage from './WalletPage';
 import DashboardPage from './DashboardPage';
 import WelcomePage from './WelcomePage';
 import SetupPage from './SetupPage';
+import { Config } from '../config';
+import ElectronStore from 'electron-store';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -55,11 +57,15 @@ const DASHBOARD = 'DASHBOARD';
 const ABOUT = 'ABOUT';
 const WALLET = 'WALLET';
 
-export default function Layout({settings}) {
+interface Props {
+  settings: Config
+}
+
+export default function Layout({settings}: Props) {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeContent, setActiveContent] = useState(DASHBOARD);
 
-  const setupCompleted = settings.get('SETUP_COMPLETE');
+  const setupCompleted = settings.SETUP_COMPLETE;
 
   const handleClick = () => {
     onOpen();
@@ -77,12 +83,14 @@ export default function Layout({settings}) {
     <Switch>
       <Route path={routes.WELCOME} component={WelcomePage} />
       <Route path={routes.SETUP} render={props => (<SetupPage {...props} onComplete={(values) => {
-        settings.set("BITCOIND_ENDPOINT", values.bitcoinRpcEndpoint);
-        settings.set("WEB3_ENDPOINT", values.web3Endpoint);
-        settings.set("LEDGER_BITCOIN_ACCOUNT_INDEX", values.bitcoinLedgerAccountIndex);
-        settings.set("LEDGER_ETHEREUM_ACCOUNT_INDEX", values.ethereumLedgerAccountIndex);
-        settings.set("LEDGER_ETHEREUM_ACCOUNT_ADDRESS", values.ethereumLedgerAccountAddress);
-        settings.set("SETUP_COMPLETE", true);
+
+        const store = new ElectronStore<Config>()
+        store.set("BITCOIND_ENDPOINT", values.bitcoinRpcEndpoint);
+        store.set("WEB3_ENDPOINT", values.web3Endpoint);
+        store.set("LEDGER_BITCOIN_ACCOUNT_INDEX", values.bitcoinLedgerAccountIndex);
+        store.set("LEDGER_ETHEREUM_ACCOUNT_INDEX", values.ethereumLedgerAccountIndex);
+        store.set("LEDGER_ETHEREUM_ACCOUNT_ADDRESS", values.ethereumLedgerAccountAddress);
+        store.set("SETUP_COMPLETE", true);
 
         history.push(routes.HOME);
       }} />)} />
@@ -173,8 +181,8 @@ export default function Layout({settings}) {
         <Flex backgroundColor="gray.100" id="content">
           <Switch>
             <Route path={routes.ABOUT} component={AboutPage} />
-            <Route path={routes.WALLET} component={WalletPage} />
-            <Route path={routes.HOME} component={DashboardPage} />
+            <Route path={routes.WALLET} render={(props => <WalletPage settings={settings} {...props} />)} />
+            <Route path={routes.HOME} render={(props => <DashboardPage settings={settings} {...props} />)} />
           </Switch>
         </Flex>
       </Flex>} />

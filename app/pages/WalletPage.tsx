@@ -1,8 +1,13 @@
 import React from 'react';
 import { Flex, Heading } from '@chakra-ui/core';
 import BalanceHorizontal from '../components/BalanceHorizontal';
+import { Config } from '../config';
 
-export default function WalletPage() {
+interface Props {
+  settings: Config
+}
+
+export default function WalletPage({settings}: Props) {
   return (
     <Flex direction="column" width="100%" padding="1rem">
       <Flex
@@ -12,7 +17,7 @@ export default function WalletPage() {
         maxHeight="400px"
         marginBottom="1rem"
       >
-        <BalanceHorizontal />
+        <BalanceHorizontal settings={settings} />
       </Flex>
 
       <Flex background="white" shadow="md" direction="row" width="100%">
