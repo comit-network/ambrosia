@@ -35,7 +35,7 @@ export function fromComitEnv(): Config | null {
     CND_URL: "http://127.0.0.1:8000",
     SETUP_COMPLETE: true,
     ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS, // TODO: This should be fetched from cnd instead!
-    ROLE: 'alice'
+    ROLE: 'bob'
   };
 }
 
@@ -43,6 +43,6 @@ const CONFIG_CONTEXT = createContext(null);
 
 export const Provider = CONFIG_CONTEXT.Provider;
 
-export function useConfig() {
+export function useConfig(): Config {
   return useContext(CONFIG_CONTEXT)
 }

@@ -1,4 +1,4 @@
-import { Protocol, SwapEvent, SwapEventName } from '../utils/swap';
+import {Protocol, SwapEvent, SwapEventName} from '../utils/swap';
 import {
   Badge,
   Box,
@@ -24,12 +24,12 @@ import {
   Tooltip,
   useDisclosure
 } from '@chakra-ui/core';
-import { Currency } from '../utils/currency';
-import React, { useState } from 'react';
-import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
-import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
-import { LedgerAction } from '../comit-sdk';
-import { BigNumber } from 'ethers';
+import {Currency} from '../utils/currency';
+import React, {useState} from 'react';
+import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
+import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
+import {LedgerAction} from '../comit-sdk';
+import {BigNumber} from 'ethers';
 
 
 export enum SwapStepName {
@@ -37,10 +37,13 @@ export enum SwapStepName {
   HERC20_HBIT_ALICE_FUND = 'HERC20_HBIT_ALICE_FUND',
   HERC20_HBIT_BOB_FUND = 'HERC20_HBIT_BOB_FUND',
   HERC20_HBIT_ALICE_REDEEM = 'HERC20_HBIT_ALICE_REDEEM',
+  HERC20_HBIT_BOB_REDEEM = 'HERC20_HBIT_BOB_REDEEM',
 
   HBIT_HERC20_ALICE_FUND = 'HBIT_HERC20_ALICE_FUND',
+  HBIT_HERC20_BOB_DEPLOY = 'HBIT_HERC20_BOB_DEPLOY',
   HBIT_HERC20_BOB_FUND = 'HBIT_HERC20_BOB_FUND',
   HBIT_HERC20_ALICE_REDEEM = 'HBIT_HERC20_ALICE_REDEEM',
+  HBIT_HERC20_BOB_REDEEM = 'HBIT_HERC20_BOB_REDEEM',
 }
 
 interface LedgerInteractionButtonProperties {
@@ -143,6 +146,7 @@ function getBlockchainExplorerUrl(event: SwapEventName): string {
 
 interface StepProperties {
   swapId: string;
+  role: string;
   name: SwapStepName;
   isActive: boolean;
   isUserInteractionActive: boolean;
@@ -152,7 +156,178 @@ interface StepProperties {
   onSigned: (txId: string) => void;
 }
 
-export default function SwapStep({ swapId, name, isActive, isUserInteractionActive, event, asActiveStep, ledgerAction, onSigned }: StepProperties) {
+interface DisplayParams {
+  protocol: Protocol;
+  currency: Currency;
+  isInteractionRequired: boolean;
+
+  index: number;
+  label: string;
+}
+
+function getAliceParams(name: SwapStepName): DisplayParams {
+    switch (name) {
+      case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
+        return {
+          index: 1,
+          label: 'You Lock (1/2)',
+          protocol: Protocol.HER20,
+          currency: Currency.DAI,
+          isInteractionRequired: true,
+        }
+      case SwapStepName.HERC20_HBIT_ALICE_FUND:
+        return {
+          index: 2,
+          label: 'You Lock (2/2)',
+          protocol: Protocol.HER20,
+          currency: Currency.DAI,
+          isInteractionRequired: true,
+        }
+      case SwapStepName.HERC20_HBIT_BOB_FUND:
+        return {
+          index: 3,
+          label: 'Maker Locks',
+          protocol: Protocol.HER20,
+          currency: Currency.BTC,
+          isInteractionRequired: false,
+        }
+      case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+        return {
+          index: 4,
+          label: 'Auto Unlock Your',
+          protocol: Protocol.HER20,
+          currency: Currency.BTC,
+          isInteractionRequired: false,
+        }
+      case SwapStepName.HBIT_HERC20_ALICE_FUND:
+        return {
+          index: 1,
+          label: 'You Lock',
+          protocol: Protocol.HBIT,
+          currency: Currency.BTC,
+          isInteractionRequired: true,
+        }
+      case SwapStepName.HBIT_HERC20_BOB_FUND:
+        return {
+          index: 2,
+          label: 'Maker Locks',
+          protocol: Protocol.HBIT,
+          currency: Currency.DAI,
+          isInteractionRequired: false,
+        }
+      case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+        return {
+          index: 3,
+          label: 'You Unlock',
+          protocol: Protocol.HBIT,
+          currency: Currency.DAI,
+          isInteractionRequired: true,
+        }
+      default:
+        return {
+          index : 0,
+          label : 'Swap Step',
+          protocol : Protocol.HBIT,
+          currency : Currency.BTC,
+          isInteractionRequired : false,
+        }
+    }
+}
+
+function getBobParams(name: SwapStepName) {
+  switch (name) {
+    case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
+      return {
+        index: 1,
+        label: 'Wait (1/2)',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: false,
+      }
+    case SwapStepName.HERC20_HBIT_ALICE_FUND:
+      return {
+        index: 2,
+        label: 'Wait (2/2)',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: false,
+      }
+    case SwapStepName.HERC20_HBIT_BOB_FUND:
+      return {
+        index: 3,
+        label: 'You Lock',
+        protocol: Protocol.HER20,
+        currency: Currency.BTC,
+        isInteractionRequired: true,
+      }
+    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+      return {
+        index: 4,
+        label: 'Alice Unlocks',
+        protocol: Protocol.HER20,
+        currency: Currency.BTC,
+        isInteractionRequired: false,
+      }
+    case SwapStepName.HERC20_HBIT_BOB_REDEEM:
+      return {
+        index: 5,
+        label: 'You Unlock',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: true,
+      }
+    case SwapStepName.HBIT_HERC20_ALICE_FUND:
+      return {
+        index: 1,
+        label: 'Wait',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: false,
+      }
+    case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
+      return {
+        index: 2,
+        label: 'You Lock (1/2)',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: true,
+      }
+    case SwapStepName.HBIT_HERC20_BOB_FUND:
+      return {
+        index: 3,
+        label: 'You Lock (2/2)',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: true,
+      }
+    case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+      return {
+        index: 4,
+        label: 'Alice Unlock',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: false,
+      }
+    case SwapStepName.HBIT_HERC20_BOB_REDEEM:
+      return {
+        index: 5,
+        label: 'Auto Unlock Your',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: true,
+      }
+    default:
+      return {
+        index : 0,
+        label : 'Swap Step',
+        protocol : Protocol.HBIT,
+        currency : Currency.BTC,
+        isInteractionRequired : false,
+      }
+  }
+}
+
+export default function SwapStep({ swapId, name, isActive, isUserInteractionActive, event, asActiveStep, ledgerAction, onSigned, role }: StepProperties) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [isSigning, setIsSigning] = useState(false);
@@ -160,71 +335,9 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
   const bitcoinWallet = useLedgerBitcoinWallet();
   const ethereumWallet = useLedgerEthereumWallet();
 
-  let protocol;
-  let currency;
-  let isInteractionRequired;
-
-  let index;
-  let label;
-
-  switch (name) {
-    case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
-      index = 1;
-      label = 'You Lock (1/2)';
-      protocol = Protocol.HER20;
-      currency = Currency.DAI;
-      isInteractionRequired = true;
-      break;
-    case SwapStepName.HERC20_HBIT_ALICE_FUND:
-      index = 2;
-      label = 'You Lock (2/2)';
-      protocol = Protocol.HER20;
-      currency = Currency.DAI;
-      isInteractionRequired = true;
-      break;
-    case SwapStepName.HERC20_HBIT_BOB_FUND:
-      index = 3;
-      label = 'Maker Locks';
-      protocol = Protocol.HER20;
-      currency = Currency.BTC;
-      isInteractionRequired = false;
-      break;
-    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
-      index = 4;
-      label = 'Auto Unlock Your';
-      protocol = Protocol.HER20;
-      currency = Currency.BTC;
-      isInteractionRequired = false;
-      break;
-    case SwapStepName.HBIT_HERC20_ALICE_FUND:
-      index = 1;
-      label = 'You Lock';
-      protocol = Protocol.HBIT;
-      currency = Currency.BTC;
-      isInteractionRequired = true;
-      break;
-    case SwapStepName.HBIT_HERC20_BOB_FUND:
-      index = 2;
-      label = 'Maker Locks';
-      protocol = Protocol.HBIT;
-      currency = Currency.DAI;
-      isInteractionRequired = false;
-      break;
-    case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
-      index = 3;
-      label = 'You Unlock';
-      protocol = Protocol.HBIT;
-      currency = Currency.DAI;
-      isInteractionRequired = true;
-      break;
-    default:
-      index = 0;
-      label = 'Swap Step';
-      protocol = Protocol.HBIT;
-      currency = Currency.BTC;
-      isInteractionRequired = false;
-      break;
-  }
+  let { protocol, currency, isInteractionRequired, index, label }: DisplayParams = role === "alice"
+      ? getAliceParams(name)
+      : getBobParams(name);
 
   let rounded;
   let interactionButton;
