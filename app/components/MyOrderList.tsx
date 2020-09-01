@@ -1,9 +1,11 @@
 import React from 'react';
 import {Box, Flex, IconButton, Text} from '@chakra-ui/core';
 import CurrencyAmount, {ColorMode} from './CurrencyAmount';
-import {Action} from '../comit-sdk/cnd/siren';
 import {Order} from "../utils/order";
 import {calculateQuote} from "../utils/currency";
+import actionToHttpRequest from "../comit-sdk/cnd/action_to_http_request";
+import {useCnd} from "../hooks/useCnd";
+import {mutate} from "swr";
 
 export interface MarketOrderProperties {
   orders: Order[];
@@ -11,21 +13,15 @@ export interface MarketOrderProperties {
   tableContentHeightLock?: string;
 }
 
-function cancel(action: Action) {
-  if (action && action.name === 'cancel') {
-    // TODO: Call cnd to cancel action
-    // TODO: Manual trigger refresh needed?
-    console.log(`Cancel order: ${action.href}`);
-  }
-}
-
 export default function MyOrderList({
   orders,
   label,
   tableContentHeightLock
 }: MarketOrderProperties) {
-  const rows = [];
 
+  const cnd = useCnd();
+
+  const rows = [];
   const currencyValueWidth = '30%';
   const openAmountWidth = '10%';
   const cancelButtonWidth = '30px';
@@ -41,6 +37,8 @@ export default function MyOrderList({
       order.position === 'buy' ? 'cyan.800' : 'orange.800';
     const quote = calculateQuote(order.price, order.quantity);
 
+    const cancelAction = order.actions.find((action) => action.name === "cancel");
+
     rows.push(
       <Flex
         direction="row"
@@ -54,15 +52,18 @@ export default function MyOrderList({
       >
         <Box width={cancelButtonWidth}>
           {
-            order.state.open && +order.state.open > 0
-                ? <IconButton
+            cancelAction
+                && <IconButton
                     size="xs"
                     aria-label="cancel"
                     icon="close"
-                    onClick={() => cancel(order.actions[0])}
+                    onClick={ async () => {
+                        await cnd.client.request(await actionToHttpRequest(cancelAction));
+                        await mutate("/orders");
+                      }
+                    }
                     variantColor={cancelButtonColor}
                 />
-                : <></>
           }
         </Box>
         <Box width={currencyValueWidth}>
