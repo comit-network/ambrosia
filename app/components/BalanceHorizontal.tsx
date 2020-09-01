@@ -16,7 +16,6 @@ import { intoOrders } from '../utils/order';
 import { Book, intoBook } from '../utils/book';
 import { useCnd } from '../hooks/useCnd';
 import useSWR from 'swr/esm/use-swr';
-import { useConfig } from '../config';
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
@@ -24,7 +23,6 @@ export default function BalanceHorizontal() {
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
-  const config = useConfig();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
       ZERO_ETH
@@ -61,7 +59,7 @@ export default function BalanceHorizontal() {
 
       try {
         const dai = await ethWallet.getErc20Balance(
-            config.ERC20_CONTRACT_ADDRESS
+            await cnd.daiContractAddress()
         );
         const daiCurrencyValue = daiIntoCurVal(dai);
         setDaiBalanceAsCurrencyValue(daiCurrencyValue);

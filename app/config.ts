@@ -11,7 +11,6 @@ export interface Config {
   WEB3_ENDPOINT: string,
   CND_URL: string,
   SETUP_COMPLETE: boolean,
-  ERC20_CONTRACT_ADDRESS: string,
   ROLE: "alice" | "bob"
 }
 
@@ -49,7 +48,6 @@ export function fromComitEnv(): Config | null {
             ? "http://127.0.0.1:8000"
             : "http://127.0.0.1:8100",
     SETUP_COMPLETE: true,
-    ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS, // TODO: This should be fetched from cnd instead!
     ROLE: role
   };
 }

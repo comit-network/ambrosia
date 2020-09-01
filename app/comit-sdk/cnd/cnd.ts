@@ -8,6 +8,12 @@ interface GetInfo {
   listen_addresses: string[]; // multiaddresses
 }
 
+interface Token {
+  symbol: string,
+  address: string,
+  decimals: number
+}
+
 export interface Ledger {
   name: string;
   chain_id?: number;
@@ -80,6 +86,18 @@ export class Cnd {
    */
   public fetch<T>(path: string): AxiosPromise<T> {
     return this.client.get(path);
+  }
+
+  public async daiContractAddress(): Promise<string> {
+    const tokens = await this.fetch<Token[]>("/tokens");
+
+    const daiToken = tokens.data.find(token => token.symbol === 'DAI');
+
+    if (!daiToken) {
+      throw new Error("Your cnd instance doesn't seem to know about the DAI token contract for the current network")
+    }
+
+    return daiToken.address
   }
 
   /**

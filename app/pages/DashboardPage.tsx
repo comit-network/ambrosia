@@ -9,7 +9,6 @@ import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, ZERO_BTC, ZERO_DAI, ZERO_ETH } from '../utils/currency';
 import { intoBook } from '../utils/book';
-import { useConfig } from '../config';
 import { useCnd } from '../hooks/useCnd';
 import useSWR from 'swr/esm/use-swr';
 import { intoOrders } from '../utils/order';
@@ -20,7 +19,6 @@ export default function DashboardPage() {
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
-  const config = useConfig();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
       ZERO_ETH
@@ -45,7 +43,7 @@ export default function DashboardPage() {
 
       try {
         const dai = await ethWallet.getErc20Balance(
-            config.ERC20_CONTRACT_ADDRESS
+            await cnd.daiContractAddress()
         );
         const daiCurrencyValue = daiIntoCurVal(dai);
         setDaiBalanceAsCurrencyValue(daiCurrencyValue);
