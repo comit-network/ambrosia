@@ -86,7 +86,7 @@ export class LedgerBitcoinWallet {
           feeRate: btcPerKB
         }
       ]
-    }).then(r => Psbt.fromBase64(r.data));
+    }).then(r => Psbt.fromBase64(r.data.psbt));
 
     let prevTxs = await Promise.all(psbt.txInputs.map(async utxo => {
       let txId = typeof utxo.hash === 'string' ? utxo.hash : utxo.hash.reverse().toString('hex');
