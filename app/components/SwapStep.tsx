@@ -1,4 +1,4 @@
-import {Protocol, SwapEvent, SwapEventName} from '../utils/swap';
+import { Protocol, SwapEvent, SwapEventName } from '../utils/swap';
 import {
   Badge,
   Box,
@@ -24,12 +24,12 @@ import {
   Tooltip,
   useDisclosure
 } from '@chakra-ui/core';
-import {Currency} from '../utils/currency';
-import React, {useState} from 'react';
-import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
-import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
-import {LedgerAction} from '../comit-sdk';
-import {BigNumber} from 'ethers';
+import { Currency } from '../utils/currency';
+import React, { useState } from 'react';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { LedgerAction } from '../comit-sdk';
+import { BigNumber } from 'ethers';
 
 
 export enum SwapStepName {
@@ -55,13 +55,69 @@ interface LedgerInteractionButtonProperties {
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
-  app: 'Bitcoin' | 'Ethereum';
-  onSign: () => void;
-  isSigning: boolean,
-  error?: string
+  ledgerAction?: LedgerAction;
+  onTransactionSigned: (txId: string) => void;
 }
 
-function LedgerInteractionModel({ isOpen, onClose, app, onSign, isSigning, error }: ModalProps) {
+function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigned }: ModalProps) {
+  const [isSigning, setIsSigning] = useState(false);
+  const [signingError, setSigningError] = useState('');
+  const bitcoinWallet = useLedgerBitcoinWallet();
+  const ethereumWallet = useLedgerEthereumWallet();
+
+  if (!ledgerAction) {
+    return null;
+  }
+
+  const ledgerApp = (() => {
+    switch (ledgerAction.type) {
+      case 'bitcoin-send-amount-to-address':
+        return 'Bitcoin';
+      case 'ethereum-call-contract':
+      case 'ethereum-deploy-contract':
+        return 'Ethereum';
+      default:
+        throw new Error(`Cannot use Ledger for ${ledgerAction.type} action`)
+    }
+  })();
+
+  const onSign = async () => {
+    setIsSigning(true);
+    setSigningError('');
+
+    try {
+      let txId;
+      switch (ledgerAction.type) {
+        case 'bitcoin-send-amount-to-address': {
+          txId = await bitcoinWallet.sendToAddress(ledgerAction.payload.to, ledgerAction.payload.amount, 0.00035);
+          break;
+        }
+        case 'ethereum-call-contract': {
+          txId = await ethereumWallet.signAndSend({
+            to: ledgerAction.payload.contract_address,
+            gasLimit: ledgerAction.payload.gas_limit,
+            data: ledgerAction.payload.data
+          }).then(r => r.hash);
+          break;
+        }
+        case 'ethereum-deploy-contract': {
+          txId = await ethereumWallet.signAndSend({
+            gasLimit: ledgerAction.payload.gas_limit,
+            value: BigNumber.from(ledgerAction.payload.amount).toHexString(),
+            data: ledgerAction.payload.data
+          }).then(r => r.hash);
+          break;
+        }
+      }
+      onTransactionSigned(txId);
+      onClose();
+    } catch (e) {
+      setSigningError(e.message);
+    } finally {
+      setIsSigning(false);
+    }
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay/>
@@ -69,16 +125,16 @@ function LedgerInteractionModel({ isOpen, onClose, app, onSign, isSigning, error
         <ModalHeader>Sign transaction with Nano Ledger S</ModalHeader>
         <ModalCloseButton/>
         <ModalBody>
-          <Text>Please unlock your Ledger and open the {app} app! After that, click "Sign" and follow the on-screen
+          <Text>Please unlock your Ledger and open the {ledgerApp} app! After that, click "Sign" and follow the on-screen
             instructions of your Ledger!</Text>
-          {error && <Text color="red.500">{error}</Text>}
+          {signingError && <Text color="red.500">{signingError}</Text>}
         </ModalBody>
 
         <ModalFooter>
           <Button variantColor="blue" onClick={onSign} isLoading={isSigning}>
             Sign
           </Button>
-          <Button variantColor="grey" onClick={onClose} isDisabled={isSigning}>
+          <Button variantColor="gray" onClick={onClose} isDisabled={isSigning}>
             Close
           </Button>
         </ModalFooter>
@@ -166,72 +222,72 @@ interface DisplayParams {
 }
 
 function getAliceParams(name: SwapStepName): DisplayParams {
-    switch (name) {
-      case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
-        return {
-          index: 1,
-          label: 'You Lock (1/2)',
-          protocol: Protocol.HER20,
-          currency: Currency.DAI,
-          isInteractionRequired: true,
-        }
-      case SwapStepName.HERC20_HBIT_ALICE_FUND:
-        return {
-          index: 2,
-          label: 'You Lock (2/2)',
-          protocol: Protocol.HER20,
-          currency: Currency.DAI,
-          isInteractionRequired: true,
-        }
-      case SwapStepName.HERC20_HBIT_BOB_FUND:
-        return {
-          index: 3,
-          label: 'Maker Locks',
-          protocol: Protocol.HER20,
-          currency: Currency.BTC,
-          isInteractionRequired: false,
-        }
-      case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
-        return {
-          index: 4,
-          label: 'Auto Unlock Your',
-          protocol: Protocol.HER20,
-          currency: Currency.BTC,
-          isInteractionRequired: false,
-        }
-      case SwapStepName.HBIT_HERC20_ALICE_FUND:
-        return {
-          index: 1,
-          label: 'You Lock',
-          protocol: Protocol.HBIT,
-          currency: Currency.BTC,
-          isInteractionRequired: true,
-        }
-      case SwapStepName.HBIT_HERC20_BOB_FUND:
-        return {
-          index: 2,
-          label: 'Maker Locks',
-          protocol: Protocol.HBIT,
-          currency: Currency.DAI,
-          isInteractionRequired: false,
-        }
-      case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
-        return {
-          index: 3,
-          label: 'You Unlock',
-          protocol: Protocol.HBIT,
-          currency: Currency.DAI,
-          isInteractionRequired: true,
-        }
-      default:
-        return {
-          index : 0,
-          label : 'Swap Step',
-          protocol : Protocol.HBIT,
-          currency : Currency.BTC,
-          isInteractionRequired : false,
-        }
-    }
+  switch (name) {
+    case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
+      return {
+        index: 1,
+        label: 'You Lock (1/2)',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: true
+      };
+    case SwapStepName.HERC20_HBIT_ALICE_FUND:
+      return {
+        index: 2,
+        label: 'You Lock (2/2)',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: true
+      };
+    case SwapStepName.HERC20_HBIT_BOB_FUND:
+      return {
+        index: 3,
+        label: 'Maker Locks',
+        protocol: Protocol.HER20,
+        currency: Currency.BTC,
+        isInteractionRequired: false
+      };
+    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+      return {
+        index: 4,
+        label: 'Auto Unlock Your',
+        protocol: Protocol.HER20,
+        currency: Currency.BTC,
+        isInteractionRequired: false
+      };
+    case SwapStepName.HBIT_HERC20_ALICE_FUND:
+      return {
+        index: 1,
+        label: 'You Lock',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: true
+      };
+    case SwapStepName.HBIT_HERC20_BOB_FUND:
+      return {
+        index: 2,
+        label: 'Maker Locks',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: false
+      };
+    case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+      return {
+        index: 3,
+        label: 'You Unlock',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: true
+      };
+    default:
+      return {
+        index: 0,
+        label: 'Swap Step',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: false
+      };
+  }
 }
 
 function getBobParams(name: SwapStepName) {
@@ -242,102 +298,98 @@ function getBobParams(name: SwapStepName) {
         label: 'Wait (1/2)',
         protocol: Protocol.HER20,
         currency: Currency.DAI,
-        isInteractionRequired: false,
-      }
+        isInteractionRequired: false
+      };
     case SwapStepName.HERC20_HBIT_ALICE_FUND:
       return {
         index: 2,
         label: 'Wait (2/2)',
         protocol: Protocol.HER20,
         currency: Currency.DAI,
-        isInteractionRequired: false,
-      }
+        isInteractionRequired: false
+      };
     case SwapStepName.HERC20_HBIT_BOB_FUND:
       return {
         index: 3,
         label: 'You Lock',
         protocol: Protocol.HER20,
         currency: Currency.BTC,
-        isInteractionRequired: true,
-      }
+        isInteractionRequired: true
+      };
     case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
       return {
         index: 4,
         label: 'Alice Unlocks',
         protocol: Protocol.HER20,
         currency: Currency.BTC,
-        isInteractionRequired: false,
-      }
+        isInteractionRequired: false
+      };
     case SwapStepName.HERC20_HBIT_BOB_REDEEM:
       return {
         index: 5,
         label: 'You Unlock',
         protocol: Protocol.HER20,
         currency: Currency.DAI,
-        isInteractionRequired: true,
-      }
+        isInteractionRequired: true
+      };
     case SwapStepName.HBIT_HERC20_ALICE_FUND:
       return {
         index: 1,
         label: 'Wait',
         protocol: Protocol.HBIT,
         currency: Currency.BTC,
-        isInteractionRequired: false,
-      }
+        isInteractionRequired: false
+      };
     case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
       return {
         index: 2,
         label: 'You Lock (1/2)',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
-        isInteractionRequired: true,
-      }
+        isInteractionRequired: true
+      };
     case SwapStepName.HBIT_HERC20_BOB_FUND:
       return {
         index: 3,
         label: 'You Lock (2/2)',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
-        isInteractionRequired: true,
-      }
+        isInteractionRequired: true
+      };
     case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
       return {
         index: 4,
         label: 'Alice Unlock',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
-        isInteractionRequired: false,
-      }
+        isInteractionRequired: false
+      };
     case SwapStepName.HBIT_HERC20_BOB_REDEEM:
       return {
         index: 5,
         label: 'Auto Unlock Your',
         protocol: Protocol.HBIT,
         currency: Currency.BTC,
-        isInteractionRequired: true,
-      }
+        isInteractionRequired: true
+      };
     default:
       return {
-        index : 0,
-        label : 'Swap Step',
-        protocol : Protocol.HBIT,
-        currency : Currency.BTC,
-        isInteractionRequired : false,
-      }
+        index: 0,
+        label: 'Swap Step',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: false
+      };
   }
 }
 
 export default function SwapStep({ swapId, name, isActive, isUserInteractionActive, event, asActiveStep, ledgerAction, onSigned, role }: StepProperties) {
 
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const [isSigning, setIsSigning] = useState(false);
-  const [signingError, setSigningError] = useState('');
-  const bitcoinWallet = useLedgerBitcoinWallet();
-  const ethereumWallet = useLedgerEthereumWallet();
 
-  let { protocol, currency, isInteractionRequired, index, label }: DisplayParams = role === "alice"
-      ? getAliceParams(name)
-      : getBobParams(name);
+  let { protocol, currency, isInteractionRequired, index, label }: DisplayParams = role === 'alice'
+    ? getAliceParams(name)
+    : getBobParams(name);
 
   let rounded;
   let interactionButton;
@@ -387,56 +439,6 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
     );
   };
 
-  const app = () => {
-    switch (ledgerAction.type) {
-      case 'bitcoin-send-amount-to-address':
-        return 'Bitcoin';
-      case 'ethereum-call-contract':
-      case 'ethereum-deploy-contract':
-        return 'Ethereum';
-      default:
-        throw new Error(`Cannot handle action ${ledgerAction.type} with Ledger`);
-    }
-  };
-  const modal = ledgerAction &&
-    <LedgerInteractionModel isOpen={isOpen} onClose={onClose} error={signingError} app={app()} isSigning={isSigning}
-                            onSign={async () => {
-                              setIsSigning(true);
-                              setSigningError('');
-
-                              try {
-                                let txId;
-                                switch (ledgerAction.type) {
-                                  case 'bitcoin-send-amount-to-address': {
-                                    txId = await bitcoinWallet.sendToAddress(ledgerAction.payload.to, ledgerAction.payload.amount, 0.00035);
-                                    break;
-                                  }
-                                  case 'ethereum-call-contract': {
-                                    txId = await ethereumWallet.signAndSend({
-                                      to: ledgerAction.payload.contract_address,
-                                      gasLimit: ledgerAction.payload.gas_limit,
-                                      data: ledgerAction.payload.data
-                                    }).then(r => r.hash);
-                                    break;
-                                  }
-                                  case 'ethereum-deploy-contract': {
-                                    txId = await ethereumWallet.signAndSend({
-                                      gasLimit: ledgerAction.payload.gas_limit,
-                                      value: BigNumber.from(ledgerAction.payload.amount).toHexString(),
-                                      data: ledgerAction.payload.data
-                                    }).then(r => r.hash);
-                                    break;
-                                  }
-                                }
-                                onSigned(txId);
-                                onClose();
-                              } catch (e) {
-                                setSigningError(e.message);
-                              } finally {
-                                setIsSigning(false);
-                              }
-                            }}/>;
-
   if (asActiveStep) {
     let activeStepMinWidth = '200px';
     return (
@@ -463,7 +465,7 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
             {interactionButton}
           </Flex>
         </Flex>
-        {modal}
+        <SignWithLedgerModal isOpen={isOpen} onClose={onClose} ledgerAction={ledgerAction} onTransactionSigned={onSigned}/>
       </>
     );
   }
@@ -493,7 +495,7 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
         {interactionButton}
       </Flex>
       <SwapEventDisplay event={event}/>
-      {modal}
+      <SignWithLedgerModal isOpen={isOpen} onClose={onClose} ledgerAction={ledgerAction} onTransactionSigned={onSigned}/>
     </Box>
   );
 }
