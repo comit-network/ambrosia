@@ -29,7 +29,7 @@ export interface Peer {
  * Facilitates access to the [COMIT network daemon (cnd)](@link https://github.com/comit-network/comit-rs) REST API.
  */
 export class Cnd {
-  private readonly client: AxiosInstance;
+  public readonly client: AxiosInstance;
 
   public constructor(cndUrl: string) {
     this.client = axios.create({

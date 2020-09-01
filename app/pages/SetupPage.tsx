@@ -188,8 +188,8 @@ export default function SetupPage({ onComplete }: Props) {
         //   ethereumLedgerAccountAddress: undefined
         // }}
         initialValues={{
-          bitcoinRpcEndpoint: undefined,
-          web3Endpoint: undefined,
+          bitcoinRpcEndpoint: "bitcoin:t68ej4UX2pB0cLlGwSwHFBLKxXYgomkXyFyxuBmm2U8%3D@127.0.0.1:18443",
+          web3Endpoint: "http://localhost:8545",
           bitcoinLedgerAccountIndex: undefined,
           ethereumLedgerAccountIndex: undefined,
           ethereumLedgerAccountAddress: undefined

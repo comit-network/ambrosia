@@ -14,14 +14,33 @@ export interface MarketOrder {
 interface Market {
     buyOrders: MarketOrder[];
     sellOrders: MarketOrder[];
-    highestBuyOrder: MarketOrder;
-    lowestSellOrder: MarketOrder;
+    highestBuyOrder?: MarketOrder;
+    lowestSellOrder?: MarketOrder;
 }
 
 export function intoMarket(response: AxiosResponse<Entity>): Market {
+
+    if (!response || !response.data) {
+        return {
+            highestBuyOrder: null,
+            lowestSellOrder: null,
+            sellOrders: [],
+            buyOrders: []
+        }
+    }
+
     const marketOrders = response.data.entities.map(
         order => order.properties as MarketOrder
     );
+
+    if (!marketOrders || marketOrders.length === 0) {
+        return {
+            buyOrders: [],
+            sellOrders: [],
+            highestBuyOrder: null,
+            lowestSellOrder: null,
+        };
+    }
 
     // sorted ascending by price
     const buyOrders = marketOrders
@@ -37,6 +56,8 @@ export function intoMarket(response: AxiosResponse<Entity>): Market {
             }
             return 0;
         });
+
+
     // sorted descending by price
     const sellOrders = marketOrders
         .filter(order => order.position === 'sell')
@@ -57,19 +78,24 @@ export function intoMarket(response: AxiosResponse<Entity>): Market {
     const theirSellOrders = theirOrders.filter(
         order => order.position === 'sell'
     );
+
     // their highest buying price is my best selling price
-    const highestBuyOrder = theirBuyOrders.reduce((a, b) =>
-        a.quantity.value > b.quantity.value ? a : b
+    const highestBuyOrder = theirBuyOrders.reduce((a, b) => {
+            return a.quantity.value > b.quantity.value ? a : b;
+        }, null
     );
     // their lowest selling price is my best buying price
-    const lowestSellOrder = theirSellOrders.reduce((a, b) =>
-        a.quantity.value < b.quantity.value ? a : b
+    const lowestSellOrder = theirSellOrders.reduce((a, b) => {
+            return a.quantity.value < b.quantity.value ? a : b;
+        }, null
     );
 
-    return {
+    let result = {
         sellOrders,
         buyOrders,
         highestBuyOrder,
         lowestSellOrder
     };
+
+    return result;
 }

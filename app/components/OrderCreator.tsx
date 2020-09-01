@@ -1,4 +1,4 @@
-import React, {useReducer} from 'react';
+import React, {useEffect, useReducer} from 'react';
 import {
     Button,
     Flex,
@@ -23,12 +23,19 @@ import DaiIcon from '../assets/Dai.svg';
 import {
     amountToUnitString,
     BTC_FEE,
-    btcIntoCurVal, calculateBaseFromAvailableQuote,
+    btcIntoCurVal,
+    calculateBaseFromAvailableQuote,
     calculateQuote,
     CurrencyValue,
-    daiIntoCurVal, ETH_FEE, MIN_BTC, MIN_DAI
+    daiIntoCurVal,
+    ETH_FEE,
+    MIN_BTC,
+    MIN_DAI, ZERO_DAI
 } from "../utils/currency";
 import {MarketOrder} from "../utils/market";
+import {useLedgerEthereumWallet} from "../hooks/useLedgerEthereumWallet";
+import {useLedgerBitcoinWallet} from "../hooks/useLedgerBitcoinWallet";
+import {useCnd} from "../hooks/useCnd";
 
 interface OrderCreatorProperties {
     highestPriceBuyOrder: MarketOrder;
@@ -66,6 +73,9 @@ interface State {
 type Action = {
     type: "priceChange" | "quantityChange",
     value: string,
+} |  {
+    type: "update",
+    value: State
 };
 
 const NUM_WITHOUT_SIGN_REGEX = new RegExp('^\\d+(\\.\\d+)?$');
@@ -205,6 +215,11 @@ function reducer(state: State, action: Action): State {
                 quoteErrorMessage: quoteErrorMessage,
             };
         }
+        case "update": {
+            // TODO: We don't want to overwrite what the user already set, so we will have to track this more properly
+            //  Calculations should be done and placeholders be set but values should not be overwritten.
+            return action.value;
+        }
         default:
             throw new Error();
     }
@@ -216,19 +231,65 @@ interface FormProperties {
     variantColor: string,
 }
 
+
 function Form({initialState, label, variantColor}: FormProperties) {
 
     const [state, dispatch] = useReducer(reducer, initialState);
 
+    useEffect(() => {
+        console.log("dispatch update")
+        dispatch({
+            type: "update",
+            value: initialState
+        });
+    }, [initialState]);
+
+    const ethWallet = useLedgerEthereumWallet();
+    const btcWallet = useLedgerBitcoinWallet();
+
+    const cnd = useCnd();
+
+    async function postBtcDaiOrder(
+        position: Position,
+        quantity: string,
+        price: string
+    ): Promise<string> {
+
+        console.log(position);
+        console.log(quantity);
+        console.log(price);
+
+        const sats = Number(+quantity) * 100_000_000;
+
+        const daiPerBtc = BigInt(price);
+        const weiPerDai = BigInt("1000000000000000000");
+        const satsPerBtc = BigInt("100000000");
+        const weiPerSat = (daiPerBtc * weiPerDai) / satsPerBtc;
+
+        const response = await cnd.client.post("/orders/BTC-DAI", {
+            position,
+            quantity: sats.toString(10),
+            price: weiPerSat.toString(10),
+            swap: {
+                role: 'alice',
+                bitcoin_address: await btcWallet.getNewAddress(),
+                ethereum_address: ethWallet.getAccount(),
+            },
+        });
+
+        return response.headers.location;
+    }
+
     return (
-        <form onSubmit={() => {
+        <form onSubmit={async (event) => {
+            event.preventDefault();
             // TODO check error messages in state
 
             // TODO: Additionally check if we actually have sufficient money!
             //  (it could be that something changes in the background, but due to no changes in the fields it does not pick up that problem)
 
-            // TODO retrieve values from state
-            // TODO: POST order to cnd
+            let orderHref = await postBtcDaiOrder(state.position, state.quantity, state.price);
+            console.log(orderHref);
 
         }}>
             <fieldset disabled={state.ethErrorMessage != ""}>
@@ -312,6 +373,11 @@ export default function OrderCreator({
                                          ethAvailable
                                      }: OrderCreatorProperties) {
 
+    // TODO: Reducer in here
+    //  Hard coded initial value
+    //  Use Effect for the values, Dispatch event on change with values and let reducer update the state.
+
+
     // Check if we have Ether for fees
     let ethErrorMessage = "";
     let ethBigNumber = BigNumber.from(ethAvailable.value);
@@ -331,7 +397,7 @@ export default function OrderCreator({
         btcErrorMessage = "Insufficient DAI, add more to trade!"
     }
 
-    const initialBuyPrice = lowestPriceSellOrder.price;
+    const initialBuyPrice = lowestPriceSellOrder !== null ? lowestPriceSellOrder.price : ZERO_DAI;
     const initialBuyQuote = daiAvailable;
     const maxBuyQuantity = calculateBaseFromAvailableQuote(initialBuyPrice, initialBuyQuote);
 
@@ -355,7 +421,7 @@ export default function OrderCreator({
         btcAvailable: btcAvailable,
     };
 
-    const initialSellPrice = highestPriceBuyOrder.price;
+    const initialSellPrice = highestPriceBuyOrder  !== null ? highestPriceBuyOrder.price : ZERO_DAI;
     const maxSellQuantity = btcIntoCurVal(maxBtcTradable(btcAvailable, BTC_FEE));
 
     const initialSellState: State = {

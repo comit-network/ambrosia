@@ -57,6 +57,10 @@ export class LedgerEthereumWallet {
 
     return BigNumber.from(balance)
   }
+
+  public getAccount(): string {
+    return this.account.address;
+  }
 }
 
 const Context = createContext<LedgerEthereumWallet>(null);

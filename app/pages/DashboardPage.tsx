@@ -1,101 +1,107 @@
-import React, { useEffect, useState } from 'react';
-import { Box, Flex, Heading, Text } from '@chakra-ui/core';
+import React, {useEffect, useState} from 'react';
+import {Box, Flex, Text} from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
-import { mockMarketsBtcDai, mockOrders } from '../components/MockData';
-import CurrencyAmount, { ColorMode } from '../components/CurrencyAmount';
 import MarketOrderList from '../components/MarketOrderList';
 import MyOrderList from '../components/MyOrderList';
-import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
-import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
-import { btcIntoCurVal, daiIntoCurVal, ethIntoCurVal } from '../utils/currency';
-import { intoMarket } from '../utils/market';
-import { intoBook } from '../utils/book';
-import { intoOrders } from '../utils/order';
-import { Config } from '../config';
+import {useLedgerEthereumWallet} from '../hooks/useLedgerEthereumWallet';
+import {useLedgerBitcoinWallet} from '../hooks/useLedgerBitcoinWallet';
+import {btcIntoCurVal, daiIntoCurVal, ethIntoCurVal, ZERO_BTC, ZERO_DAI, ZERO_ETH} from '../utils/currency';
+import {intoBook} from '../utils/book';
+import {Config} from '../config';
+import {useCnd} from "../hooks/useCnd";
+import useSWR from "swr/esm/use-swr";
+import {intoOrders} from "../utils/order";
+import {intoMarket} from "../utils/market";
+import BidAndAsk from "../components/BidAndAsk";
 
 interface Props {
   settings: Config
 }
 
 export default function DashboardPage({settings}: Props) {
-  // TODO: useSWR to fetch from cnd
-  const myOrders = intoOrders(mockOrders());
-
-
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
+  const cnd = useCnd();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
-    null
+      ZERO_ETH
   );
   const [daiBalanceAsCurrencyValue, setDaiBalanceAsCurrencyValue] = useState(
-    null
+    ZERO_DAI
   );
   const [btcBalanceAsCurrencyValue, setBtcBalanceAsCurrencyValue] = useState(
-    null
+    ZERO_BTC
   );
-  const [book, setBook] = useState(null);
 
   useEffect(() => {
     async function loadEthBalance() {
-      const eth = await ethWallet.getEtherBalance();
-      const ethCurrencyValue = ethIntoCurVal(eth);
-      setEthBalanceAsCurrencyValue(ethCurrencyValue);
+      try {
+        const eth = await ethWallet.getEtherBalance();
+        const ethCurrencyValue = ethIntoCurVal(eth);
+        setEthBalanceAsCurrencyValue(ethCurrencyValue);
+      } catch (e) {
+        console.error(e);
+        console.warn("Falling back to ETH balance 0.")
+      }
+
+      try {
+        const dai = await ethWallet.getErc20Balance(
+            settings.ERC20_CONTRACT_ADDRESS
+        );
+        const daiCurrencyValue = daiIntoCurVal(dai);
+        setDaiBalanceAsCurrencyValue(daiCurrencyValue);
+      } catch (e) {
+        console.error(e);
+        console.warn("Falling back to DAI balance 0.")
+      }
     }
 
     if (ethWallet) loadEthBalance();
   }, [ethWallet]);
 
   useEffect(() => {
-    async function loadDaiBalance() {
-      const dai = await ethWallet.getErc20Balance(
-        settings.ERC20_CONTRACT_ADDRESS
-      );
-      const daiCurrencyValue = daiIntoCurVal(dai);
-      setDaiBalanceAsCurrencyValue(daiCurrencyValue);
-    }
-
-    if (ethWallet) loadDaiBalance();
-  }, [ethWallet]);
-
-  useEffect(() => {
     async function loadBtcBalance() {
-      const sats = await btcWallet.getBalance();
-      const btcCurrencyValue = btcIntoCurVal(sats);
-      setBtcBalanceAsCurrencyValue(btcCurrencyValue);
+      try {
+        const sats = await btcWallet.getBalance();
+        const btcCurrencyValue = btcIntoCurVal(sats);
+        setBtcBalanceAsCurrencyValue(btcCurrencyValue);
+      } catch (e) {
+        console.error(e);
+        console.warn("Falling back to BTC balance 0.")
+      }
     }
 
     if (btcWallet) loadBtcBalance();
   }, [btcWallet]);
 
-  useEffect(() => {
-    setBook(
-      intoBook(
-        btcBalanceAsCurrencyValue,
-        daiBalanceAsCurrencyValue,
-        ethBalanceAsCurrencyValue,
-        myOrders
-      )
-    );
-  }, [
-    ethBalanceAsCurrencyValue,
-    btcBalanceAsCurrencyValue,
-    daiBalanceAsCurrencyValue
-  ]);
+  const { data: orders } = useSWR(
+      "/orders",
+      (key) => cnd.fetch(key).then(intoOrders),
+      {
+        refreshInterval: 1000,
+        initialData: [],
+      }
+  );
 
-  // TODO: useSWR to fetch from cnd
-  const market = intoMarket(mockMarketsBtcDai());
+  console.log(orders);
 
-  if (!book) {
-    // TODO: Proper init handling
-    return (
-      <Box>
-        <Heading>Loading...</Heading>
-      </Box>
-    );
-  }
+  const { data: marketResponse } = useSWR(
+      "/markets/BTC-DAI",
+      (key) => cnd.fetch(key),
+      {
+        refreshInterval: 1000,
+      }
+  );
+
+  const market = intoMarket(marketResponse);
+  const book = intoBook(
+      btcBalanceAsCurrencyValue,
+      daiBalanceAsCurrencyValue,
+      ethBalanceAsCurrencyValue,
+      orders
+  );
 
   const orderTableOffset = '138px';
 
@@ -144,7 +150,7 @@ export default function DashboardPage({settings}: Props) {
           <Flex direction="column" width="100%">
             <MyOrderList
               key="my-orders"
-              orders={myOrders}
+              orders={orders}
               label="Your Orders"
               tableContentHeightLock="300px"
             />
@@ -173,18 +179,7 @@ export default function DashboardPage({settings}: Props) {
             paddingTop="0.5rem"
             paddingBottom="0.5rem"
           >
-            <CurrencyAmount
-              currencyValue={market.lowestSellOrder.price}
-              topText="Bid"
-              colourMode={ColorMode.RED}
-              noImage
-            />
-            <CurrencyAmount
-              currencyValue={market.highestBuyOrder.price}
-              topText="Ask"
-              colourMode={ColorMode.GREEN}
-              noImage
-            />
+            <BidAndAsk highestBuyOrder={market.highestBuyOrder} lowestSellOrder={market.lowestSellOrder} />
           </Flex>
           <MarketOrderList
             key="buy-orders"

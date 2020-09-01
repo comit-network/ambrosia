@@ -23,9 +23,6 @@ export function intoBook(
     ethBalance: CurrencyValue,
     orders: Order[]
 ): Book {
-    if (!btcBalance || !daiBalance || !ethBalance || !orders) {
-        return null;
-    }
 
     const sumOfBtcInOrdersBigNumber = orders
         .filter(order => order.position === 'sell')

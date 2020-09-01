@@ -8,7 +8,7 @@ import { Store as ReduxStore } from 'redux';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
 import Layout from './pages/Layout';
-import { CndProvider } from './hooks/useCnd';
+import { Provider as CndProvider } from './hooks/useCnd';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
 import { LedgerBitcoinWallet, LedgerBitcoinWalletProvider } from './hooks/useLedgerBitcoinWallet';
@@ -24,7 +24,7 @@ type Props = {
 const App = ({ store, history, settings }: Props) => {
 
   return (
-    <CndProvider settings={settings}>
+    <CndProvider value={settings.CND_URL}>
       <ThemeProvider theme={customTheme}>
         <LedgerBitcoinWalletProvider value={new LedgerBitcoinWallet(new LedgerClient(ipcRenderer), settings.LEDGER_BITCOIN_ACCOUNT_INDEX, settings.BITCOIND_ENDPOINT)}>
           <LedgerEthereumWalletProvider value={new LedgerEthereumWallet(new LedgerClient(ipcRenderer), {

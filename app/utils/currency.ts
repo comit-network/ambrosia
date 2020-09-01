@@ -39,6 +39,12 @@ export const ZERO_BTC: CurrencyValue = {
   decimals: BTC_DEC
 };
 
+export const ZERO_ETH: CurrencyValue = {
+  currency: Currency.ETH,
+  value: '0',
+  decimals: ETH_DEC
+};
+
 // TODO: Remove once we deal with decimals instead
 export enum CurrencyUnit {
   BTC,
@@ -85,6 +91,10 @@ export function calculateBaseFromAvailableQuote(
   // Calc with sat as base
   const priceWei = ethers.BigNumber.from(price.value); // Price in DAI(wei) for 1 BTC
   const quoteWei = ethers.BigNumber.from(quote.value); // Amount of DAI to calculate the base for
+
+  if (priceWei.eq(ethers.BigNumber.from(0))) {
+    return ZERO_BTC;
+  }
 
   // multiply first so the division does not lose precision
   const quoteAdjusted = quoteWei.mul(satDecimals);

@@ -30,7 +30,7 @@ export function fromComitEnv(): Config | null {
     LEDGER_BITCOIN_ACCOUNT_INDEX: 0,
     LEDGER_ETHEREUM_ACCOUNT_INDEX: 0,
     LEDGER_ETHEREUM_ACCOUNT_ADDRESS: '0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e', // This is only valid for Daniel's Nano Ledger :)
-    CND_URL: comitEnv.HTTP_URL_CND_0,
+    CND_URL: "http://127.0.0.1:8000",
     SETUP_COMPLETE: true,
     ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS // TODO: This should be fetched from cnd instead!
   };

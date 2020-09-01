@@ -139,7 +139,7 @@ const compressPublicKey = publicKey => {
 };
 
 async function getWalletDescriptors(change: number, account: number, network: Network) {
-  const transport = await TransportNodeHid.open();
+  const transport = await TransportNodeHid.open("");
   const btc = new AppBtc(transport);
 
   const master = await btc.getWalletPublicKey('', { format: 'bech32' });
