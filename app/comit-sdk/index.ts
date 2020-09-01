@@ -6,17 +6,6 @@ export {
   EthereumCallContractPayload,
   EthereumDeployContractPayload
 } from "./cnd/action_payload";
-export {
-  SwapResponse,
-  SwapElementResponse,
-  SwapStatus,
-  LedgerParameters,
-  LedgerState,
-  LedgerEvent,
-  EscrowStatus,
-  SwapAction,
-  Step
-} from "./cnd/swaps_payload";
 export { Problem } from "./cnd/axios_rfc7807_middleware";
 
 import * as siren from "./cnd/siren";

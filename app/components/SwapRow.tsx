@@ -1,13 +1,13 @@
 import React, {useEffect, useReducer, useState} from 'react';
 import {Box, Collapse, Flex, Icon, IconButton, Text} from '@chakra-ui/core';
 import {RiExchangeLine} from 'react-icons/ri';
-import {useEthereumWallet} from '../hooks/useEthereumWallet';
-import {useBitcoinWallet} from '../hooks/useBitcoinWallet';
 import CurrencyAmount from './CurrencyAmount';
 import {mockSwap} from './MockData';
 import {Currency} from '../utils/currency';
 import {Action, Protocol, Role, Swap, SwapAction, SwapEvent, SwapEventName} from "../utils/swap";
 import SwapStep, {SwapStepName} from "./SwapStep";
+import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 
 export interface SwapProperties {
     href: string;
@@ -136,8 +136,8 @@ export default function SwapRow({href}: SwapProperties) {
     //     }
     // );
 
-    const {wallet: ethWallet} = useEthereumWallet();
-    const {wallet: btcWallet} = useBitcoinWallet();
+    const ethWallet = useLedgerEthereumWallet();
+    const btcWallet = useLedgerBitcoinWallet();
     // const { cnd } = useCnd();
 
     const swap = swapResponse.properties as Swap;
