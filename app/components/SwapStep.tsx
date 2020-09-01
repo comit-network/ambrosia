@@ -29,6 +29,7 @@ import React, { useState } from 'react';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { LedgerAction } from '../comit-sdk';
+import { BigNumber } from 'ethers';
 
 
 export enum SwapStepName {
@@ -308,7 +309,7 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
                                   case 'ethereum-deploy-contract': {
                                     txId = await ethereumWallet.signAndSend({
                                       gasLimit: ledgerAction.payload.gas_limit,
-                                      value: ledgerAction.payload.amount,
+                                      value: BigNumber.from(ledgerAction.payload.amount).toHexString(),
                                       data: ledgerAction.payload.data
                                     }).then(r => r.hash);
                                     break;

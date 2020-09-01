@@ -1,11 +1,12 @@
 import { IpcMain, IpcRenderer } from 'electron';
-import { Psbt, crypto } from 'bitcoinjs-lib';
+import { crypto, Psbt } from 'bitcoinjs-lib';
 import TransportNodeHid from '@ledgerhq/hw-transport-node-hid';
 import AppBtc from '@ledgerhq/hw-app-btc';
 import AppEth from '@ledgerhq/hw-app-eth';
-import createXPub from "create-xpub"
+import createXPub from 'create-xpub';
 import { serializeTransactionOutputs } from '@ledgerhq/hw-app-btc/lib/serializeTransaction';
 import { Network } from './hooks/useLedgerBitcoinWallet';
+import { UnsignedTransaction } from 'ethers';
 import { serializeTransaction } from 'ethers/lib/utils';
 
 const SIGN_BITCOIN_TRANSACTION = 'sign-bitcoin-transaction';
@@ -35,8 +36,8 @@ export class LedgerClient {
     return this.ipc.invoke(GET_ETHEREUM_ACCOUNT, accountIndex);
   }
 
-  async signEthereumTransaction(hex: string, accountIndex: number, chainId: number) {
-    return this.ipc.invoke(SIGN_ETHEREUM_TRANSACTION, hex, accountIndex, chainId);
+  async signEthereumTransaction(hex: UnsignedTransaction, accountIndex: number, chainId: number): Promise<{v: number, r: string, s: string}> {
+    return this.ipc.invoke(SIGN_ETHEREUM_TRANSACTION, serializeTransaction(hex), accountIndex, chainId);
   }
 }
 
@@ -87,9 +88,9 @@ export class LedgerServer {
       r = "0x" + r;
       s = "0x" + s;
 
-      return serializeTransaction(tx, {
+      return {
         v, r, s
-      })
+      }
     })
   }
 }

@@ -3,6 +3,7 @@ import ethers, { BigNumber, UnsignedTransaction } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { createContext, useContext } from 'react';
 import { Interface } from '@ethersproject/abi';
+import { serializeTransaction } from 'ethers/lib/utils';
 
 interface Account {
   index: number,
@@ -30,14 +31,15 @@ export class LedgerEthereumWallet {
     const network = await this.web3.getNetwork();
     const nonce = await this.web3.getTransactionCount(this.account.address);
 
-    const serialized = ethers.utils.serializeTransaction({
+    const unsignedTransaction = {
       ...tx,
       nonce: nonce,
       chainId: network.chainId
-    });
+    };
 
-    const signedTx = await this.ledgerClient.signEthereumTransaction(serialized, this.account.index, network.chainId);
+    const signature = await this.ledgerClient.signEthereumTransaction(unsignedTransaction, this.account.index, network.chainId);
 
+    const signedTx = serializeTransaction(unsignedTransaction, signature);
     return this.web3.sendTransaction(signedTx);
   }
 
