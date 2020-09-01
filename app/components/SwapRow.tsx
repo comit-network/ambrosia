@@ -630,7 +630,7 @@ const ActiveStep = ({swap, href, state, dispatch}) => {
           asActiveStep={true}
           ledgerAction={state.ledgerAction}
           onSigned={(txId) => {
-            dispatch({ type: 'actionCompleted', value: txId });
+            dispatch({ type: 'actionCompleted', name: state.ledgerAction.type, value: txId });
           }}
         />
       );
