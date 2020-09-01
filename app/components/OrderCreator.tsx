@@ -249,7 +249,6 @@ function Form({ initialState, label, variantColor }: FormProperties) {
   const config = useConfig();
 
   useEffect(() => {
-    console.log('dispatch update');
     dispatch({
       type: 'update',
       value: initialState
