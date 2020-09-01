@@ -218,7 +218,20 @@ function reducer(state: State, action: Action): State {
         case "update": {
             // TODO: We don't want to overwrite what the user already set, so we will have to track this more properly
             //  Calculations should be done and placeholders be set but values should not be overwritten.
-            return action.value;
+
+            let newState = action.value;
+
+            return {
+                ...state,
+                btcAvailable: newState.btcAvailable,
+                daiAvailable: newState.daiAvailable,
+                ethAvailable: newState.ethAvailable,
+                ethErrorMessage: newState.ethErrorMessage,
+                maxQuantity: newState.maxQuantity,
+                priceErrorMessage: newState.priceErrorMessage,
+                quantityErrorMessage: newState.quantityErrorMessage,
+                quoteErrorMessage: newState.quoteErrorMessage
+            };
         }
         default:
             throw new Error();

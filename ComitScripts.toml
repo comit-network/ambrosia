@@ -1,9 +1,11 @@
 [bitcoin]
 addresses_to_fund = [
-    "bcrt1qacqjr08065vm0rqwlymqm656f4v3zssl9kjmyl"
+    "bcrt1qacqjr08065vm0rqwlymqm656f4v3zssl9kjmyl",
+    "bcrt1qc252m6afz9v5mfpjpulr92gm7ywgdhkxtlv9xr"
 ]
 
 [ethereum]
 addresses_to_fund = [
-    "0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e"
+    "0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e",
+    "0x05c40cfe76bc2bee261be51493378c24f2c96ae9"
 ]
