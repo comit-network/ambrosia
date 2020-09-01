@@ -3,28 +3,34 @@ import { Provider } from 'react-redux';
 import { ConnectedRouter } from 'connected-react-router';
 import { hot } from 'react-hot-loader/root';
 import { History } from 'history';
-import { ThemeProvider, CSSReset } from '@chakra-ui/core';
-import Store from 'electron-store';
+import { CSSReset, ThemeProvider } from '@chakra-ui/core';
 import { Store as ReduxStore } from 'redux';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
 import Layout from './pages/Layout';
-import { BitcoinWalletProvider } from './hooks/useBitcoinWallet';
-import { EthereumWalletProvider } from './hooks/useEthereumWallet';
-import { CndProvider } from './hooks/useCnd';
+import { Provider as CndProvider } from './hooks/useCnd';
+import { useConfig } from './config';
+import { LedgerClient } from './ledgerIpc';
+import { ipcRenderer } from 'electron';
+import { LedgerBitcoinWallet, LedgerBitcoinWalletProvider } from './hooks/useLedgerBitcoinWallet';
+import { LedgerEthereumWallet, LedgerEthereumWalletProvider } from './hooks/useLedgerEthereumWallet';
 
 type Props = {
   store: ReduxStore;
   history: History;
-  settings: Store;
 };
 
-const App = ({ store, history, settings }: Props) => {
+const App = ({ store, history }: Props) => {
+  const config = useConfig();
+
   return (
-    <CndProvider settings={settings}>
-      <BitcoinWalletProvider settings={settings}>
-        <EthereumWalletProvider settings={settings}>
-          <ThemeProvider theme={customTheme}>
+    <CndProvider value={config.CND_URL}>
+      <ThemeProvider theme={customTheme}>
+        <LedgerBitcoinWalletProvider value={new LedgerBitcoinWallet(new LedgerClient(ipcRenderer), config.LEDGER_BITCOIN_ACCOUNT_INDEX, config.BITCOIND_ENDPOINT)}>
+          <LedgerEthereumWalletProvider value={new LedgerEthereumWallet(new LedgerClient(ipcRenderer), {
+            index: config.LEDGER_ETHEREUM_ACCOUNT_INDEX,
+            address: config.LEDGER_ETHEREUM_ACCOUNT_ADDRESS
+          }, config.WEB3_ENDPOINT)}>
             <CSSReset />
             <Provider store={store}>
               <ConnectedRouter history={history}>
@@ -32,9 +38,9 @@ const App = ({ store, history, settings }: Props) => {
                 <Layout />
               </ConnectedRouter>
             </Provider>
-          </ThemeProvider>
-        </EthereumWalletProvider>
-      </BitcoinWalletProvider>
+          </LedgerEthereumWalletProvider>
+        </LedgerBitcoinWalletProvider>
+      </ThemeProvider>
     </CndProvider>
   );
 };

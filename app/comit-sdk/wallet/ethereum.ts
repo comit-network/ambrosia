@@ -25,36 +25,22 @@ export class EthereumWallet {
 
   public async getErc20Balance(
     contractAddress: string,
-    decimals?: number
   ): Promise<BigNumber> {
     const abi = erc20 as Array<FunctionFragment | EventFragment>;
     const contract = new ethers.Contract(contractAddress, abi, this.wallet.provider);
 
-    let dec;
-    if (decimals === undefined) {
-      try {
-        dec = await contract.decimals();
-      } catch (e) {
-        // decimals() not present on token contract, defaulting to 18
-        dec = 18;
-      }
-    } else {
-      dec = decimals;
-    }
-
     const strBalance = await contract.balanceOf(this.wallet.address);
     const intBalance = BigNumber.from(strBalance);
-    return intBalance.div(BigNumber.from(10).pow(dec));
+    return intBalance;
   }
 
   public async deployContract(
     data: string,
-    amount: BigNumber,
+    value: BigNumber,
     gasLimit: string,
     chainId: number
   ): Promise<string> {
     await this.assertNetwork(chainId);
-    const value = ethers.BigNumber.from(amount.toString());
     const transaction: ethers.providers.TransactionRequest = {
       data,
       value,

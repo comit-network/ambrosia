@@ -1,13 +1,17 @@
-import axios, { AxiosInstance, AxiosPromise, AxiosResponse } from "axios";
-import actionToHttpRequest, {
-  FieldValueResolverFn
-} from "./action_to_http_request";
-import { problemResponseInterceptor } from "./axios_rfc7807_middleware";
-import { Action } from "./siren";
+import axios, {AxiosInstance, AxiosPromise, AxiosResponse} from "axios";
+import actionToHttpRequest, {FieldValueResolverFn} from "./action_to_http_request";
+import {problemResponseInterceptor} from "./axios_rfc7807_middleware";
+import {Action} from "./siren";
 
 interface GetInfo {
   id: string;
   listen_addresses: string[]; // multiaddresses
+}
+
+interface Token {
+  symbol: string,
+  address: string,
+  decimals: number
 }
 
 export interface Ledger {
@@ -31,7 +35,7 @@ export interface Peer {
  * Facilitates access to the [COMIT network daemon (cnd)](@link https://github.com/comit-network/comit-rs) REST API.
  */
 export class Cnd {
-  private readonly client: AxiosInstance;
+  public readonly client: AxiosInstance;
 
   public constructor(cndUrl: string) {
     this.client = axios.create({
@@ -82,6 +86,18 @@ export class Cnd {
    */
   public fetch<T>(path: string): AxiosPromise<T> {
     return this.client.get(path);
+  }
+
+  public async daiContractAddress(): Promise<string> {
+    const tokens = await this.fetch<Token[]>("/tokens");
+
+    const daiToken = tokens.data.find(token => token.symbol === 'DAI');
+
+    if (!daiToken) {
+      throw new Error("Your cnd instance doesn't seem to know about the DAI token contract for the current network")
+    }
+
+    return daiToken.address
   }
 
   /**
