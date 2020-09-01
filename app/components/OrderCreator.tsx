@@ -36,6 +36,7 @@ import { MarketOrder } from '../utils/market';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useCnd } from '../hooks/useCnd';
+import { useConfig } from '../config';
 
 interface OrderCreatorProperties {
   highestPriceBuyOrder: MarketOrder;
@@ -245,6 +246,7 @@ interface FormProperties {
 function Form({ initialState, label, variantColor }: FormProperties) {
 
   const [state, dispatch] = useReducer(reducer, initialState);
+  const config = useConfig();
 
   useEffect(() => {
     console.log('dispatch update');
@@ -276,7 +278,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
       quantity: sats.toString(10),
       price: weiPerSat.toString(10),
       swap: {
-        role: 'bob',
+        role: config.ROLE,
         bitcoin_address: await btcWallet.getNewAddress(),
         ethereum_address: ethWallet.getAccount()
       }
