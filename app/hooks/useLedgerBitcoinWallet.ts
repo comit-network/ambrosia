@@ -216,7 +216,7 @@ function jsonRpcResponseInterceptor(error: AxiosError): Promise<AxiosError> {
     return Promise.reject(error);
   }
 
-  const body = JSON.parse(response.data);
+  const body = response.data;
 
   if (!body.error) {
     return Promise.reject(error);
