@@ -190,7 +190,7 @@ export default function SwapRow({ href }: SwapRowProps) {
 
   const swap = state.swap;
   if (!swap) {
-    return <Text>Loading Swap...</Text>;
+    return null;
   }
 
   let sendAmount;
