@@ -33,6 +33,7 @@ type ComponentAction = {
   }
 } | {
   type: 'actionCompleted',
+  name: LedgerAction['type'],
   value: string
 };
 
@@ -102,7 +103,7 @@ function reducer(state: State, action: ComponentAction): State {
         ledgerAction
       };
     case 'actionCompleted': {
-      console.log("Action", state.ledgerAction.type, "was completed in tx", action.value);
+      console.log("Action", action.name, "was completed in tx", action.value);
       return {
         ...state,
         ledgerAction: null,
@@ -157,24 +158,21 @@ export default function SwapRow({ href }: SwapRowProps) {
         (async () => {
           const requestConfig = await actionToHttpRequest(action);
           const response = await cnd.client.request<LedgerAction>(requestConfig);
+          const ledgerAction = response.data;
 
-          dispatch({ type: 'fetchedSwap', value: { swap, ledgerAction: response.data } });
+          if (ledgerAction && ledgerAction.type === 'bitcoin-broadcast-signed-transaction') {
+            bitcoinWallet.broadcastRawTransaction(ledgerAction.payload.hex)
+              .then(txId => dispatch({ type: 'actionCompleted', name: ledgerAction.type, value: txId }));
+            dispatch({ type: 'fetchedSwap', value: { swap, ledgerAction: null } })
+          } else {
+            dispatch({ type: 'fetchedSwap', value: { swap, ledgerAction: ledgerAction } });
+          }
         })()
       } else {
         dispatch({ type: 'fetchedSwap', value: { swap, ledgerAction: null } });
       }
     }
-
   }, [swapResponse]);
-  const ledgerAction = state.ledgerAction;
-
-  useEffect(() => {
-    if (ledgerAction && ledgerAction.type === 'bitcoin-broadcast-signed-transaction') {
-      bitcoinWallet.broadcastRawTransaction(ledgerAction.payload.hex)
-        .then(txId => dispatch({ type: 'actionCompleted', value: txId }));
-    }
-  }, [ledgerAction]);
-
 
   const handleDetailsToggle = () => setShow(!show);
 
@@ -298,6 +296,7 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
   let config = useConfig();
   let role = config.ROLE;
 
+  const ledgerAction = state.ledgerAction;
   if (protocol === Protocol.HER20) {
       let widthPercent = role === 'alice' ? "25%" : "20%";
       return (
@@ -311,9 +310,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                   isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
                   isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
                   event={findSwapEventInSwap(swap, SwapEventName.HERC20_DEPLOYED)}
-                  ledgerAction={state.ledgerAction}
+                  ledgerAction={ledgerAction}
                   onSigned={(txId) => {
-                    dispatch({ type: 'actionCompleted', value: txId });
+                    dispatch({ type: 'actionCompleted', name: ledgerAction.type, value: txId });
                   }}
               />
             </Box>
@@ -326,9 +325,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                   isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
                   isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
                   event={findSwapEventInSwap(swap, SwapEventName.HERC20_FUNDED)}
-                  ledgerAction={state.ledgerAction}
+                  ledgerAction={ledgerAction}
                   onSigned={(txId) => {
-                    dispatch({ type: 'actionCompleted', value: txId });
+                    dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                   }}
               />
             </Box>
@@ -341,9 +340,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                   isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
                   isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
                   event={findSwapEventInSwap(swap, SwapEventName.HBIT_FUNDED)}
-                  ledgerAction={state.ledgerAction}
+                  ledgerAction={ledgerAction}
                   onSigned={(txId) => {
-                    dispatch({ type: 'actionCompleted', value: txId });
+                    dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                   }}
               />
             </Box>
@@ -356,9 +355,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                   isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
                   isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
                   event={findSwapEventInSwap(swap, SwapEventName.HBIT_REDEEMED)}
-                  ledgerAction={state.ledgerAction}
+                  ledgerAction={ledgerAction}
                   onSigned={(txId) => {
-                    dispatch({ type: 'actionCompleted', value: txId });
+                    dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                   }}
               />
             </Box>
@@ -374,9 +373,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                       isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_BOB_REDEEM, protocol, state, swap, role)}
                       isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_BOB_REDEEM, protocol, state, swap, role)}
                       event={findSwapEventInSwap(swap, SwapEventName.HERC20_REDEEMED)}
-                      ledgerAction={state.ledgerAction}
+                      ledgerAction={ledgerAction}
                       onSigned={(txId) => {
-                        dispatch({ type: 'actionCompleted', value: txId });
+                        dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                       }}
                   />
                 </Box>
@@ -397,9 +396,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
             isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_ALICE_FUND, protocol, state, swap, role)}
             isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_ALICE_FUND, protocol, state, swap, role)}
             event={findSwapEventInSwap(swap, SwapEventName.HBIT_FUNDED)}
-            ledgerAction={state.ledgerAction}
+            ledgerAction={ledgerAction}
             onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
+              dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
             }}
           />
         </Box>
@@ -415,9 +414,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                       isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_BOB_DEPLOY, protocol, state, swap, role)}
                       isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_BOB_DEPLOY, protocol, state, swap, role)}
                       event={findSwapEventInSwap(swap, SwapEventName.HERC20_DEPLOYED)}
-                      ledgerAction={state.ledgerAction}
+                      ledgerAction={ledgerAction}
                       onSigned={(txId) => {
-                        dispatch({ type: 'actionCompleted', value: txId });
+                        dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                       }}
                   />
                 </Box>
@@ -432,9 +431,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
             isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_BOB_FUND, protocol, state, swap, role)}
             isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_BOB_FUND, protocol, state, swap, role)}
             event={findSwapEventInSwap(swap, SwapEventName.HERC20_FUNDED)}
-            ledgerAction={state.ledgerAction}
+            ledgerAction={ledgerAction}
             onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
+              dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
             }}
           />
         </Box>
@@ -447,9 +446,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
             isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_ALICE_REDEEM, protocol, state, swap, role)}
             isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_ALICE_REDEEM, protocol, state, swap, role)}
             event={findSwapEventInSwap(swap, SwapEventName.HERC20_REDEEMED)}
-            ledgerAction={state.ledgerAction}
+            ledgerAction={ledgerAction}
             onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
+              dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
             }}
           />
         </Box>
@@ -465,9 +464,9 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
                   isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_BOB_REDEEM, protocol, state, swap, role)}
                   isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_BOB_REDEEM, protocol, state, swap, role)}
                   event={findSwapEventInSwap(swap, SwapEventName.HBIT_REDEEMED)}
-                  ledgerAction={state.ledgerAction}
+                  ledgerAction={ledgerAction}
                   onSigned={(txId) => {
-                    dispatch({ type: 'actionCompleted', value: txId });
+                    dispatch({ type: 'actionCompleted', name: ledgerAction.type,value: txId });
                   }}
               />
             </Box>
@@ -477,8 +476,6 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
     );
   }
 };
-
-
 
 function isSwapStepActive(swapStep: SwapStepName, alphaProtocol: Protocol, state: State, swap: SwapProperties, role: string) {
   if (role === 'alice') {
