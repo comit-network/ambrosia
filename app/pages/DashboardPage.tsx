@@ -85,8 +85,6 @@ export default function DashboardPage({settings}: Props) {
       }
   );
 
-  console.log(orders);
-
   const { data: marketResponse } = useSWR(
       "/markets/BTC-DAI",
       (key) => cnd.fetch(key),

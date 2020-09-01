@@ -83,8 +83,4 @@ export type LedgerAction =
   | {
       type: "lnd-settle-invoice";
       payload: LndSettleInvoicePayload;
-    }
-  | {
-      type: string;
-      payload: any;
     };

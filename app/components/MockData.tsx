@@ -1,5 +1,6 @@
 import {AxiosResponse} from 'axios';
 import {Entity} from '../comit-sdk/cnd/siren';
+import { SwapEntity } from '../utils/swap';
 
 export function mockSwapHistory(): AxiosResponse<Entity> {
   // @ts-ignore
@@ -81,7 +82,7 @@ export function mockOngoingSwaps(): AxiosResponse<Entity> {
 }
 
 // GET /swaps/:id
-export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity> {
+export function mockSwap(href: string, mockAction: string): AxiosResponse<SwapEntity> {
   if (href === "/swaps/1/") {
     // @ts-ignore
     return {
@@ -143,7 +144,7 @@ export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity
           }
         ]
       }
-    };
+    } as SwapEntity;
   } else {
     // @ts-ignore
     return {
@@ -200,7 +201,7 @@ export function mockSwap(href: string, mockAction: string): AxiosResponse<Entity
           }
         ]
       }
-    };
+    } as SwapEntity;
   }
 }
 

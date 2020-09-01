@@ -1,38 +1,28 @@
 import React from 'react';
-import {Flex, Stack, Text} from '@chakra-ui/core';
+import { Flex, Stack, Text } from '@chakra-ui/core';
 import SwapRow from './SwapRow';
-import { mockOngoingSwaps } from './MockData';
+import { useCnd } from '../hooks/useCnd';
+import useSWR from 'swr/esm/use-swr';
+import { AxiosResponse } from 'axios';
+import { Entity } from '../comit-sdk/cnd/siren';
 
 export default function SwapList() {
-  const swapsResponse = mockOngoingSwaps();
-
-  // TODO: Production code
-  // let swapsEndpoint = "/swaps";
-  // const { cnd } = useCnd();
-  // const { data: swapsResponse } = useSWR<AxiosResponse<Entity>>(
-  //     () => swapsEndpoint,
-  //     () => cnd.fetch(swapsEndpoint),
-  //     {
-  //         refreshInterval: 1000,
-  //         dedupingInterval: 0,
-  //         compare: () => false
-  //     }
-  // );
+  const cnd = useCnd();
+  const { data: swapsResponse } = useSWR<AxiosResponse<Entity>>(
+      "/swaps",
+      (key) => cnd.fetch(key),
+      {
+          refreshInterval: 1000,
+      }
+  );
 
   if (!swapsResponse) {
     return <Stack />;
   }
 
-  const swaps = swapsResponse.data.entities;
-  const listItems = swaps.map(swap => (
+  const listItems = swapsResponse.data.entities.map(swap => (
     <SwapRow key={swap.href} href={swap.href} />
   ));
-
-  const header = (
-      <Text textShadow="md" fontSize="lg">
-        Ongoing Swaps
-      </Text>
-  );
 
   if (!listItems || listItems.length === 0) {
     return (
@@ -42,7 +32,6 @@ export default function SwapList() {
               paddingBottom="1rem"
               paddingTop="0.5rem"
         >
-          {header}
           <Text color="gray.400">Currently no swaps, once an order matches swaps will appear here.</Text>
         </Flex>
     );

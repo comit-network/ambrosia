@@ -1,10 +1,7 @@
 import {Currency} from "./currency";
-import {Action as SirenAction} from "../comit-sdk/cnd/siren";
+import { Action as SirenAction, Entity } from '../comit-sdk/cnd/siren';
 
-export enum Role {
-    ALICE = 'Alice',
-    BOB = 'Bob'
-}
+export type Role = "Alice" | "Bob";
 
 export enum SwapEventName {
     HERC20_DEPLOYED = 'herc20_deployed',
@@ -38,21 +35,26 @@ export type ProtocolParams = {
     asset: Asset
 }
 
-export type Swap = {
+export interface SwapEntity extends Entity {
+  properties: SwapProperties;
+  actions: SwapAction[]
+}
+
+export type SwapProperties = {
     role: Role,
     alpha: ProtocolParams,
     beta: ProtocolParams,
     events: SwapEvent[],
-    action: Action
+    action?: SwapAction
 }
 
-export enum SwapAction {
+export enum SwapActionKind {
     DEPLOY = "deploy",
     FUND = "fund",
     REDEEM = "redeem",
     REFUND = "refund",
 }
 
-export interface Action extends SirenAction {
-    name: SwapAction;
+export interface SwapAction extends SirenAction {
+    name: SwapActionKind;
 }
