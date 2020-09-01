@@ -26,16 +26,31 @@ export function fromComitEnv(): Config | null {
 
   const bitcoindHttpUri = new URL(comitEnv.BITCOIN_HTTP_URI);
 
+  let role: 'alice' | 'bob' = 'alice';
+  if (process.env.ROLE === 'alice') {
+    role = 'alice';
+  } else if (process.env.ROLE === 'bob') {
+    role = 'bob';
+  } else if (process.env.ROLE) {
+    throw new Error("Role has to be alice or bob");
+  }
+
   return {
     BITCOIND_ENDPOINT: `http://${comitEnv.BITCOIN_USERNAME}:${comitEnv.BITCOIN_PASSWORD}@${bitcoindHttpUri.host}`,
     WEB3_ENDPOINT: comitEnv.ETHEREUM_NODE_HTTP_URL,
-    LEDGER_BITCOIN_ACCOUNT_INDEX: 0,
-    LEDGER_ETHEREUM_ACCOUNT_INDEX: 0,
-    LEDGER_ETHEREUM_ACCOUNT_ADDRESS: '0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e', // This is only valid for Daniel's Nano Ledger :)
-    CND_URL: "http://127.0.0.1:8000",
+    LEDGER_BITCOIN_ACCOUNT_INDEX: role === 'alice' ? 0 : 1,
+    LEDGER_ETHEREUM_ACCOUNT_INDEX: role === 'alice' ? 0 : 1,
+    LEDGER_ETHEREUM_ACCOUNT_ADDRESS:
+        role === 'alice'
+            ? '0x5087fb5F19f8EF0585b4EFcb3375De97C9d0fE0e'
+            : '0xeD56BBA7d30FEb908aB7a5a7b3b16654cb45a38C',
+    CND_URL:
+        role === 'alice'
+            ? "http://127.0.0.1:8000"
+            : "http://127.0.0.1:8100",
     SETUP_COMPLETE: true,
     ERC20_CONTRACT_ADDRESS: comitEnv.ERC20_CONTRACT_ADDRESS, // TODO: This should be fetched from cnd instead!
-    ROLE: 'bob'
+    ROLE: role
   };
 }
 
