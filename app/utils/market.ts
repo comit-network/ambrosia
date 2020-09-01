@@ -79,16 +79,28 @@ export function intoMarket(response: AxiosResponse<Entity>): Market {
         order => order.position === 'sell'
     );
 
-    // their highest buying price is my best selling price
-    const highestBuyOrder = theirBuyOrders.reduce((a, b) => {
-            return a.quantity.value > b.quantity.value ? a : b;
-        }, null
-    );
-    // their lowest selling price is my best buying price
-    const lowestSellOrder = theirSellOrders.reduce((a, b) => {
-            return a.quantity.value < b.quantity.value ? a : b;
-        }, null
-    );
+    let highestBuyOrder = null;
+    let lowestSellOrder = null;
+
+    if (theirBuyOrders && theirSellOrders && theirBuyOrders.length > 1 && theirSellOrders.length > 1) {
+        // their highest buying price is my best selling price
+        highestBuyOrder = theirBuyOrders.reduce((a, b) => {
+                return a.quantity.value > b.quantity.value ? a : b;
+            }, null
+        );
+        // their lowest selling price is my best buying price
+        lowestSellOrder = theirSellOrders.reduce((a, b) => {
+                return a.quantity.value < b.quantity.value ? a : b;
+            }, null
+        );
+    }
+
+    if (theirBuyOrders.length === 1){
+        highestBuyOrder = theirBuyOrders[0];
+    }
+    if (theirSellOrders.length === 1){
+        lowestSellOrder = theirSellOrders[0];
+    }
 
     let result = {
         sellOrders,
