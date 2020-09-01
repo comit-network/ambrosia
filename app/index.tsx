@@ -26,6 +26,7 @@ document.addEventListener('DOMContentLoaded', () => {
   if (comitEnvConfig && process.env.NODE_ENV === 'development') {
     console.info("Running in development mode using comit-scripts, creating Bitcoin wallet ...");
     importDescriptorOfDanielsLedger(comitEnvConfig);
+    document.title += ` - ${comitEnvConfig.ROLE}`
   }
 
   render(
