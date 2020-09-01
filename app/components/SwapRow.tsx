@@ -61,22 +61,6 @@ interface State {
   ledgerAction?: LedgerAction
 }
 
-function actionToInitialState(action: SwapActionKind, protocol: Protocol): ActionStatus {
-  if (protocol === Protocol.HER20 && (
-    action === SwapActionKind.DEPLOY
-    || action === SwapActionKind.FUND)) {
-    return ActionStatus.AWAITING_USER_INTERACTION;
-  }
-
-  if (protocol === Protocol.HBIT && (
-    action === SwapActionKind.FUND
-    || action === SwapActionKind.REDEEM)) {
-    return ActionStatus.AWAITING_USER_INTERACTION;
-  }
-
-  return ActionStatus.READY_FOR_EXECUTION;
-}
-
 function reducer(state: State, action: ComponentAction): State {
   switch (action.type) {
     case 'fetchedSwap':
@@ -114,7 +98,7 @@ function reducer(state: State, action: ComponentAction): State {
         swap,
         alreadySeenActions: newAlreadySeenActions,
         activeAction: newActiveAction,
-        activeActionStatus: actionToInitialState(newActiveAction.name, swap.alpha.protocol),
+        activeActionStatus: ledgerAction ? ActionStatus.AWAITING_USER_INTERACTION : null,
         ledgerAction
       };
     case 'actionCompleted': {
