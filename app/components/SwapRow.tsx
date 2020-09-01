@@ -117,6 +117,7 @@ function reducer(state: State, action: ComponentAction): State {
         ledgerAction
       };
     case 'actionCompleted': {
+      console.log("Action", state.ledgerAction.type, "was completed in tx", action.value);
       return {
         ...state,
         ledgerAction: null,
