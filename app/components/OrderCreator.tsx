@@ -228,9 +228,6 @@ function reducer(state: State, action: Action): State {
         ethAvailable: newState.ethAvailable,
         ethErrorMessage: newState.ethErrorMessage,
         maxQuantity: newState.maxQuantity,
-        priceErrorMessage: newState.priceErrorMessage,
-        quantityErrorMessage: newState.quantityErrorMessage,
-        quoteErrorMessage: newState.quoteErrorMessage
       };
     }
     default:
@@ -298,8 +295,33 @@ function Form({ initialState, label, variantColor }: FormProperties) {
       // TODO: Additionally check if we actually have sufficient money!
       //  (it could be that something changes in the background, but due to no changes in the fields it does not pick up that problem)
 
-      let orderHref = await postBtcDaiOrder(state.position, state.quantity, state.price);
-      console.log(orderHref);
+        if (state.ethErrorMessage || state.priceErrorMessage || state.quantityErrorMessage || state.quoteErrorMessage) {
+            console.error("Error message active, cannot create order");
+            return;
+        }
+
+        let quantityBigInt = BigNumber.from(btcIntoCurVal(state.quantity).value);
+        let quoteBigInt = BigNumber.from(daiIntoCurVal(state.quote).value);
+
+        let availableBtcBigInt = BigNumber.from(state.btcAvailable.value);
+        let availableDaiBigInt = BigNumber.from(state.daiAvailable.value);
+
+        if (state.position === Position.SELL) {
+            if (availableBtcBigInt.lt(quantityBigInt)) {
+                console.error("Insufficient BTC");
+                return;
+            }
+        }
+
+        if (state.position === Position.BUY) {
+            if (availableDaiBigInt.lt(quoteBigInt)) {
+                console.error("Insufficient DAI");
+                return;
+            }
+        }
+
+          let orderHref = await postBtcDaiOrder(state.position, state.quantity, state.price);
+          console.log(orderHref);
 
     }}>
       <fieldset disabled={state.ethErrorMessage != ''}>
