@@ -315,75 +315,97 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
   let role = config.ROLE;
 
   if (protocol === Protocol.HER20) {
-    return (
-      <Flex direction="row" align="center" width="100%" justifyContent="space-between" alignItems="baseline"
-            padding="0.5rem" key={href + 'swapSteps'}>
-        <Box width="25%">
-          <SwapStep
-              role={role}
-            swapId={href}
-            name={SwapStepName.HERC20_HBIT_ALICE_DEPLOY}
-            isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
-            isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
-            event={findSwapEventInSwap(swap, SwapEventName.HERC20_DEPLOYED)}
-            ledgerAction={state.ledgerAction}
-            onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
-            }}
-          />
-        </Box>
-        <StepArrow/>
-        <Box width="25%">
-          <SwapStep
-              role={role}
-            swapId={href}
-            name={SwapStepName.HERC20_HBIT_ALICE_FUND}
-            isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
-            isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
-            event={findSwapEventInSwap(swap, SwapEventName.HERC20_FUNDED)}
-            ledgerAction={state.ledgerAction}
-            onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
-            }}
-          />
-        </Box>
-        <StepArrow/>
-        <Box width="25%">
-          <SwapStep
-              role={role}
-            swapId={href}
-            name={SwapStepName.HERC20_HBIT_BOB_FUND}
-            isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
-            isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
-            event={findSwapEventInSwap(swap, SwapEventName.HBIT_FUNDED)}
-            ledgerAction={state.ledgerAction}
-            onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
-            }}
-          />
-        </Box>
-        <StepArrow/>
-        <Box width="25%">
-          <SwapStep
-              role={role}
-            swapId={href}
-            name={SwapStepName.HERC20_HBIT_ALICE_REDEEM}
-            isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
-            isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
-            event={findSwapEventInSwap(swap, SwapEventName.HBIT_REDEEMED)}
-            ledgerAction={state.ledgerAction}
-            onSigned={(txId) => {
-              dispatch({ type: 'actionCompleted', value: txId });
-            }}
-          />
-        </Box>
-      </Flex>
-    );
+      let widthPercent = role === 'alice' ? "25%" : "20%";
+      return (
+          <Flex direction="row" align="center" width="100%" justifyContent="space-between" alignItems="baseline"
+                padding="0.5rem" key={href + 'swapSteps'}>
+            <Box width={widthPercent}>
+              <SwapStep
+                  role={role}
+                  swapId={href}
+                  name={SwapStepName.HERC20_HBIT_ALICE_DEPLOY}
+                  isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
+                  isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_DEPLOY, protocol, state, swap, role)}
+                  event={findSwapEventInSwap(swap, SwapEventName.HERC20_DEPLOYED)}
+                  ledgerAction={state.ledgerAction}
+                  onSigned={(txId) => {
+                    dispatch({ type: 'actionCompleted', value: txId });
+                  }}
+              />
+            </Box>
+            <StepArrow/>
+            <Box width={widthPercent}>
+              <SwapStep
+                  role={role}
+                  swapId={href}
+                  name={SwapStepName.HERC20_HBIT_ALICE_FUND}
+                  isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
+                  isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_FUND, protocol, state, swap, role)}
+                  event={findSwapEventInSwap(swap, SwapEventName.HERC20_FUNDED)}
+                  ledgerAction={state.ledgerAction}
+                  onSigned={(txId) => {
+                    dispatch({ type: 'actionCompleted', value: txId });
+                  }}
+              />
+            </Box>
+            <StepArrow/>
+            <Box width={widthPercent}>
+              <SwapStep
+                  role={role}
+                  swapId={href}
+                  name={SwapStepName.HERC20_HBIT_BOB_FUND}
+                  isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
+                  isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_BOB_FUND, protocol, state, swap, role)}
+                  event={findSwapEventInSwap(swap, SwapEventName.HBIT_FUNDED)}
+                  ledgerAction={state.ledgerAction}
+                  onSigned={(txId) => {
+                    dispatch({ type: 'actionCompleted', value: txId });
+                  }}
+              />
+            </Box>
+            <StepArrow/>
+            <Box width={widthPercent}>
+              <SwapStep
+                  role={role}
+                  swapId={href}
+                  name={SwapStepName.HERC20_HBIT_ALICE_REDEEM}
+                  isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
+                  isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_ALICE_REDEEM, protocol, state, swap, role)}
+                  event={findSwapEventInSwap(swap, SwapEventName.HBIT_REDEEMED)}
+                  ledgerAction={state.ledgerAction}
+                  onSigned={(txId) => {
+                    dispatch({ type: 'actionCompleted', value: txId });
+                  }}
+              />
+            </Box>
+            {
+              role === 'bob' &&
+              <>
+                <StepArrow/>
+                <Box width={widthPercent}>
+                  <SwapStep
+                      role={role}
+                      swapId={href}
+                      name={SwapStepName.HERC20_HBIT_BOB_REDEEM}
+                      isActive={isSwapStepActive(SwapStepName.HERC20_HBIT_BOB_REDEEM, protocol, state, swap, role)}
+                      isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HERC20_HBIT_BOB_REDEEM, protocol, state, swap, role)}
+                      event={findSwapEventInSwap(swap, SwapEventName.HERC20_REDEEMED)}
+                      ledgerAction={state.ledgerAction}
+                      onSigned={(txId) => {
+                        dispatch({ type: 'actionCompleted', value: txId });
+                      }}
+                  />
+                </Box>
+              </>
+            }
+          </Flex>
+      );
   } else {
+    let widthPercent = role === 'alice' ? "30%" : "20%";
     return (
       <Flex direction="row" align="center" width="100%" justifyContent="space-between" alignItems="baseline"
             padding="0.5rem" key={href + 'swapSteps'}>
-        <Box width="30%">
+        <Box width={widthPercent}>
           <SwapStep
               role={role}
             swapId={href}
@@ -397,8 +419,28 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
             }}
           />
         </Box>
+        {
+          role === 'bob' &&
+              <>
+                <StepArrow/>
+                <Box width={widthPercent}>
+                  <SwapStep
+                      role={role}
+                      swapId={href}
+                      name={SwapStepName.HBIT_HERC20_BOB_DEPLOY}
+                      isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_BOB_DEPLOY, protocol, state, swap, role)}
+                      isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_BOB_DEPLOY, protocol, state, swap, role)}
+                      event={findSwapEventInSwap(swap, SwapEventName.HERC20_DEPLOYED)}
+                      ledgerAction={state.ledgerAction}
+                      onSigned={(txId) => {
+                        dispatch({ type: 'actionCompleted', value: txId });
+                      }}
+                  />
+                </Box>
+              </>
+        }
         <StepArrow/>
-        <Box width="30%">
+        <Box width={widthPercent}>
           <SwapStep
               role={role}
             swapId={href}
@@ -413,7 +455,7 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
           />
         </Box>
         <StepArrow/>
-        <Box width="30%">
+        <Box width={widthPercent}>
           <SwapStep
               role={role}
             swapId={href}
@@ -427,6 +469,26 @@ const SwapStatus = ({ protocol, href, swap, state, dispatch }: SwapStatusPropert
             }}
           />
         </Box>
+        {
+          role === 'bob' &&
+          <>
+            <StepArrow/>
+            <Box width={widthPercent}>
+              <SwapStep
+                  role={role}
+                  swapId={href}
+                  name={SwapStepName.HBIT_HERC20_BOB_REDEEM}
+                  isActive={isSwapStepActive(SwapStepName.HBIT_HERC20_BOB_REDEEM, protocol, state, swap, role)}
+                  isUserInteractionActive={isLedgerInteractionButtonActive(SwapStepName.HBIT_HERC20_BOB_REDEEM, protocol, state, swap, role)}
+                  event={findSwapEventInSwap(swap, SwapEventName.HBIT_REDEEMED)}
+                  ledgerAction={state.ledgerAction}
+                  onSigned={(txId) => {
+                    dispatch({ type: 'actionCompleted', value: txId });
+                  }}
+              />
+            </Box>
+          </>
+        }
       </Flex>
     );
   }
@@ -543,11 +605,6 @@ function isSwapStepActiveForBob(swapStep: SwapStepName, alphaProtocol: Protocol,
             && containsEvent(events, SwapEventName.HBIT_FUNDED)
             && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
             && !containsEvent(events, SwapEventName.HERC20_FUNDED);
-      case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
-        return containsEvent(events, SwapEventName.HBIT_FUNDED)
-            && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
-            && containsEvent(events, SwapEventName.HERC20_FUNDED)
-            && !containsEvent(events, SwapEventName.HERC20_REDEEMED);
       case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
         return containsEvent(events, SwapEventName.HBIT_FUNDED)
             && containsEvent(events, SwapEventName.HERC20_DEPLOYED)
