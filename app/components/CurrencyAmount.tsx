@@ -160,7 +160,7 @@ export default function CurrencyAmount({
             color={displayNumberColor}
             fontSize={amountFontSize}
             overflow="hidden"
-              // @ts-ignore
+            // @ts-ignore
             textOverflow="ellipsis"
             whiteSpace="nowrap"
           >
@@ -182,7 +182,7 @@ export default function CurrencyAmount({
         color={displayTextColor}
         minWidth="80px"
         overflow="hidden"
-          // @ts-ignore
+        // @ts-ignore
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >
@@ -196,7 +196,7 @@ export default function CurrencyAmount({
       <StatHelpText
         color={displayTextColor}
         overflow="hidden"
-          // @ts-ignore
+        // @ts-ignore
         textOverflow="ellipsis"
         whiteSpace="nowrap"
       >

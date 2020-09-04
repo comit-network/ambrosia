@@ -31,7 +31,6 @@ import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { LedgerAction } from '../comit-sdk';
 import { BigNumber } from 'ethers';
 
-
 export enum SwapStepName {
   HERC20_HBIT_ALICE_DEPLOY = 'HERC20_HBIT_ALICE_DEPLOY',
   HERC20_HBIT_ALICE_FUND = 'HERC20_HBIT_ALICE_FUND',
@@ -43,7 +42,7 @@ export enum SwapStepName {
   HBIT_HERC20_BOB_DEPLOY = 'HBIT_HERC20_BOB_DEPLOY',
   HBIT_HERC20_BOB_FUND = 'HBIT_HERC20_BOB_FUND',
   HBIT_HERC20_ALICE_REDEEM = 'HBIT_HERC20_ALICE_REDEEM',
-  HBIT_HERC20_BOB_REDEEM = 'HBIT_HERC20_BOB_REDEEM',
+  HBIT_HERC20_BOB_REDEEM = 'HBIT_HERC20_BOB_REDEEM'
 }
 
 interface LedgerInteractionButtonProperties {
@@ -59,7 +58,12 @@ interface ModalProps {
   onTransactionSigned: (txId: string) => void;
 }
 
-function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigned }: ModalProps) {
+function SignWithLedgerModal({
+  isOpen,
+  onClose,
+  ledgerAction,
+  onTransactionSigned
+}: ModalProps) {
   const [isSigning, setIsSigning] = useState(false);
   const [signingError, setSigningError] = useState('');
   const bitcoinWallet = useLedgerBitcoinWallet();
@@ -77,7 +81,7 @@ function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigne
       case 'ethereum-deploy-contract':
         return 'Ethereum';
       default:
-        throw new Error(`Cannot use Ledger for ${ledgerAction.type} action`)
+        throw new Error(`Cannot use Ledger for ${ledgerAction.type} action`);
     }
   })();
 
@@ -89,23 +93,31 @@ function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigne
       let txId;
       switch (ledgerAction.type) {
         case 'bitcoin-send-amount-to-address': {
-          txId = await bitcoinWallet.sendToAddress(ledgerAction.payload.to, ledgerAction.payload.amount, 0.00035);
+          txId = await bitcoinWallet.sendToAddress(
+            ledgerAction.payload.to,
+            ledgerAction.payload.amount,
+            0.00035
+          );
           break;
         }
         case 'ethereum-call-contract': {
-          txId = await ethereumWallet.signAndSend({
-            to: ledgerAction.payload.contract_address,
-            gasLimit: ledgerAction.payload.gas_limit,
-            data: ledgerAction.payload.data
-          }).then(r => r.hash);
+          txId = await ethereumWallet
+            .signAndSend({
+              to: ledgerAction.payload.contract_address,
+              gasLimit: ledgerAction.payload.gas_limit,
+              data: ledgerAction.payload.data
+            })
+            .then(r => r.hash);
           break;
         }
         case 'ethereum-deploy-contract': {
-          txId = await ethereumWallet.signAndSend({
-            gasLimit: ledgerAction.payload.gas_limit,
-            value: BigNumber.from(ledgerAction.payload.amount).toHexString(),
-            data: ledgerAction.payload.data
-          }).then(r => r.hash);
+          txId = await ethereumWallet
+            .signAndSend({
+              gasLimit: ledgerAction.payload.gas_limit,
+              value: BigNumber.from(ledgerAction.payload.amount).toHexString(),
+              data: ledgerAction.payload.data
+            })
+            .then(r => r.hash);
           break;
         }
       }
@@ -116,17 +128,20 @@ function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigne
     } finally {
       setIsSigning(false);
     }
-  }
+  };
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <ModalOverlay/>
+      <ModalOverlay />
       <ModalContent>
         <ModalHeader>Sign transaction with Nano Ledger S</ModalHeader>
-        <ModalCloseButton/>
+        <ModalCloseButton />
         <ModalBody>
-          <Text>Please unlock your Ledger and open the {ledgerApp} app! After that, click "Sign" and follow the on-screen
-            instructions of your Ledger!</Text>
+          <Text>
+            Please unlock your Ledger and open the {ledgerApp} app! After that,
+            click `&quot;` Sign `&quot;` and follow the on-screen instructions
+            of your Ledger!
+          </Text>
           {signingError && <Text color="red.500">{signingError}</Text>}
         </ModalBody>
 
@@ -141,10 +156,13 @@ function SignWithLedgerModal({ isOpen, onClose, ledgerAction, onTransactionSigne
       </ModalContent>
     </Modal>
   );
-
 }
 
-function LedgerInteractionButton({ active, onClick, variant }: LedgerInteractionButtonProperties) {
+function LedgerInteractionButton({
+  active,
+  onClick,
+  variant
+}: LedgerInteractionButtonProperties) {
   let tooltip = 'Please wait until you can confirm with Ledger Nano S';
   let displayVariant = 'gray';
   let styles;
@@ -168,8 +186,13 @@ function LedgerInteractionButton({ active, onClick, variant }: LedgerInteraction
   }
 
   return (
-    <Tooltip aria-label="confirm-ledger-tx" label={tooltip} placement="top"
-             hasArrow bg={`${displayVariant}.600`}>
+    <Tooltip
+      aria-label="confirm-ledger-tx"
+      label={tooltip}
+      placement="top"
+      hasArrow
+      bg={`${displayVariant}.600`}
+    >
       <IconButton
         // @ts-ignore
         icon="ledger"
@@ -208,7 +231,7 @@ interface StepProperties {
   isUserInteractionActive: boolean;
   event: SwapEvent;
   asActiveStep?: boolean;
-  ledgerAction?: LedgerAction // TODO: Omit actions we are not handling yet, lightning + bitcoin-broadcast-signed-transaction
+  ledgerAction?: LedgerAction; // TODO: Omit actions we are not handling yet, lightning + bitcoin-broadcast-signed-transaction
   onSigned: (txId: string) => void;
 }
 
@@ -383,13 +406,27 @@ function getBobParams(name: SwapStepName) {
   }
 }
 
-export default function SwapStep({ swapId, name, isActive, isUserInteractionActive, event, asActiveStep, ledgerAction, onSigned, role }: StepProperties) {
-
+export default function SwapStep({
+  swapId,
+  name,
+  isActive,
+  isUserInteractionActive,
+  event,
+  asActiveStep,
+  ledgerAction,
+  onSigned,
+  role
+}: StepProperties) {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
-  let { protocol, currency, isInteractionRequired, index, label }: DisplayParams = role === 'alice'
-    ? getAliceParams(name)
-    : getBobParams(name);
+  const {
+    protocol,
+    currency,
+    isInteractionRequired,
+    index,
+    label
+  }: DisplayParams =
+    role === 'alice' ? getAliceParams(name) : getBobParams(name);
 
   let rounded;
   let interactionButton;
@@ -400,37 +437,57 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
   }
   if (isInteractionRequired) {
     rounded = 0;
-    interactionButton = <LedgerInteractionButton
-      active={isUserInteractionActive}
-      onClick={onOpen}
-      variant={variantColor}
-    />;
-    roleBadge =
-      <Badge variant="solid" variantColor={variantColor} marginRight="0.3rem" fontSize="xs" alignSelf="center">Ledger
-        Nano S</Badge>;
+    interactionButton = (
+      <LedgerInteractionButton
+        active={isUserInteractionActive}
+        onClick={onOpen}
+        variant={variantColor}
+      />
+    );
+    roleBadge = (
+      <Badge
+        variant="solid"
+        variantColor={variantColor}
+        marginRight="0.3rem"
+        fontSize="xs"
+        alignSelf="center"
+      >
+        Ledger Nano S
+      </Badge>
+    );
   }
 
-  let currencyIcon = currency === Currency.BTC ? 'bitcoin' : 'dai';
+  const currencyIcon = currency === Currency.BTC ? 'bitcoin' : 'dai';
 
   interface SwapEventDisplayProperties {
-    event: SwapEvent
+    event: SwapEvent;
   }
 
-  let SwapEventDisplay = ({ event }: SwapEventDisplayProperties) => {
+  const SwapEventDisplay = ({ event }: SwapEventDisplayProperties) => {
     if (!event) {
       return <></>;
     }
 
     return (
-      <Flex direction="column" width="100%" paddingLeft="0.5rem" paddingBottom="0.3rem" roundedBottom="md">
+      <Flex
+        direction="column"
+        width="100%"
+        paddingLeft="0.5rem"
+        paddingBottom="0.3rem"
+        roundedBottom="md"
+      >
         <List>
           <ListItem>
             <Flex direction="row" alignItems="center">
-              <ListIcon icon="check-circle" color="green.500"/>
+              <ListIcon icon="check-circle" color="green.500" />
               {/*<Text>{`${(new Date(event.seen_at)).toLocaleString()}: `}</Text>*/}
-              <Link href={`${getBlockchainExplorerUrl(event.name)}${event.tx}`} isExternal color="teal.500">
+              <Link
+                href={`${getBlockchainExplorerUrl(event.name)}${event.tx}`}
+                isExternal
+                color="teal.500"
+              >
                 {`${event.tx.substring(0, 10)}...`}
-                <Icon name="external-link" mx="2px"/>
+                <Icon name="external-link" mx="2px" />
               </Link>
             </Flex>
           </ListItem>
@@ -440,32 +497,50 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
   };
 
   if (asActiveStep) {
-    let activeStepMinWidth = '200px';
+    const activeStepMinWidth = '200px';
     return (
       <>
-        <Flex direction="row" width="100%" justifyContent="right" key={swapId + name + 'activeSwap'}
-              marginRight="1rem">
+        <Flex
+          direction="row"
+          width="100%"
+          justifyContent="right"
+          key={swapId + name + 'activeSwap'}
+          marginRight="1rem"
+        >
           <Flex direction="row">
-            <Badge variant="solid" variantColor={variantColor} marginRight="0.3rem" fontSize="xs"
-                   alignSelf="center">Step {index}</Badge>
+            <Badge
+              variant="solid"
+              variantColor={variantColor}
+              marginRight="0.3rem"
+              fontSize="xs"
+              alignSelf="center"
+            >
+              Step {index}
+            </Badge>
             {roleBadge}
           </Flex>
           <Flex direction={'row'}>
-            <Tag width="100%"
-                 height="40px"
-                 minWidth={activeStepMinWidth}
-                 variant="outline"
-                 variantColor={variantColor}
-                 roundedRight={rounded}
-                 backgroundColor={`${variantColor}.50`}
+            <Tag
+              width="100%"
+              height="40px"
+              minWidth={activeStepMinWidth}
+              variant="outline"
+              variantColor={variantColor}
+              roundedRight={rounded}
+              backgroundColor={`${variantColor}.50`}
             >
               <TagLabel>{label}</TagLabel>
-              <TagIcon size="20px" icon={currencyIcon}/>
+              <TagIcon size="20px" icon={currencyIcon} />
             </Tag>
             {interactionButton}
           </Flex>
         </Flex>
-        <SignWithLedgerModal isOpen={isOpen} onClose={onClose} ledgerAction={ledgerAction} onTransactionSigned={onSigned}/>
+        <SignWithLedgerModal
+          isOpen={isOpen}
+          onClose={onClose}
+          ledgerAction={ledgerAction}
+          onTransactionSigned={onSigned}
+        />
       </>
     );
   }
@@ -473,29 +548,38 @@ export default function SwapStep({ swapId, name, isActive, isUserInteractionActi
   return (
     <Box width="100%" key={swapId + name + 'statusRow'}>
       <Flex direction="row">
-        <Badge variant="solid"
-               variantColor={variantColor}
-               marginRight="0.3rem"
-               fontSize="xs"
-               alignSelf="center"
-        >Step {index}</Badge>
+        <Badge
+          variant="solid"
+          variantColor={variantColor}
+          marginRight="0.3rem"
+          fontSize="xs"
+          alignSelf="center"
+        >
+          Step {index}
+        </Badge>
         {roleBadge}
       </Flex>
       <Flex direction={'row'}>
-        <Tag width="100%"
-             height="40px"
-             variant="outline"
-             variantColor={variantColor}
-             roundedRight={rounded}
-             backgroundColor={`${variantColor}.50`}
+        <Tag
+          width="100%"
+          height="40px"
+          variant="outline"
+          variantColor={variantColor}
+          roundedRight={rounded}
+          backgroundColor={`${variantColor}.50`}
         >
           <TagLabel>{label}</TagLabel>
-          <TagIcon size="20px" icon={currencyIcon}/>
+          <TagIcon size="20px" icon={currencyIcon} />
         </Tag>
         {interactionButton}
       </Flex>
-      <SwapEventDisplay event={event}/>
-      <SignWithLedgerModal isOpen={isOpen} onClose={onClose} ledgerAction={ledgerAction} onTransactionSigned={onSigned}/>
+      <SwapEventDisplay event={event} />
+      <SignWithLedgerModal
+        isOpen={isOpen}
+        onClose={onClose}
+        ledgerAction={ledgerAction}
+        onTransactionSigned={onSigned}
+      />
     </Box>
   );
 }

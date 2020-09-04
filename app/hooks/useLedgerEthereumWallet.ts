@@ -6,28 +6,34 @@ import { Interface } from '@ethersproject/abi';
 import { serializeTransaction } from 'ethers/lib/utils';
 
 interface Account {
-  index: number,
-  address: string
+  index: number;
+  address: string;
 }
 
 const erc20Interface = new Interface([
-  "function balanceOf(address owner) view returns (uint256)",
+  'function balanceOf(address owner) view returns (uint256)'
 ]);
 
 export class LedgerEthereumWallet {
   web3: ethers.ethers.providers.JsonRpcProvider;
 
-  constructor(private readonly ledgerClient: LedgerClient, private readonly account: Account, rpcEndpoint: string) {
+  constructor(
+    private readonly ledgerClient: LedgerClient,
+    private readonly account: Account,
+    rpcEndpoint: string
+  ) {
     this.web3 = new ethers.providers.JsonRpcProvider(rpcEndpoint);
   }
 
   public async getNetwork(): Promise<string> {
     const network = await this.web3.getNetwork();
 
-    return network.name
+    return network.name;
   }
 
-  public async signAndSend(tx: UnsignedTransaction): Promise<TransactionResponse> {
+  public async signAndSend(
+    tx: UnsignedTransaction
+  ): Promise<TransactionResponse> {
     const network = await this.web3.getNetwork();
     const nonce = await this.web3.getTransactionCount(this.account.address);
 
@@ -37,7 +43,11 @@ export class LedgerEthereumWallet {
       chainId: network.chainId
     };
 
-    const signature = await this.ledgerClient.signEthereumTransaction(unsignedTransaction, this.account.index, network.chainId);
+    const signature = await this.ledgerClient.signEthereumTransaction(
+      unsignedTransaction,
+      this.account.index,
+      network.chainId
+    );
 
     const signedTx = serializeTransaction(unsignedTransaction, signature);
     return this.web3.sendTransaction(signedTx);
@@ -54,10 +64,14 @@ export class LedgerEthereumWallet {
    * Returns the ERC20 token balance of the account in WEI.
    */
   public async getErc20Balance(contract: string): Promise<BigNumber> {
-    const erc20Contract = new ethers.Contract(contract, erc20Interface, this.web3);
+    const erc20Contract = new ethers.Contract(
+      contract,
+      erc20Interface,
+      this.web3
+    );
     const balance = await erc20Contract.balanceOf(this.account.address);
 
-    return BigNumber.from(balance)
+    return BigNumber.from(balance);
   }
 
   public getAccount(): string {

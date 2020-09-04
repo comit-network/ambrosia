@@ -1,7 +1,7 @@
 /* eslint @typescript-eslint/ban-ts-ignore: off */
 import { app, BrowserWindow, Menu } from 'electron';
-import path from "path";
-import fs from "fs";
+import path from 'path';
+import fs from 'fs';
 
 export default class MenuBuilder {
   mainWindow: BrowserWindow;
@@ -26,7 +26,10 @@ export default class MenuBuilder {
             label: 'Reset config',
             click: () => {
               // TODO: let the user confirm this with a dialog, need IPC for that
-              const configPath = path.join(app.getPath('userData'), "config.json");
+              const configPath = path.join(
+                app.getPath('userData'),
+                'config.json'
+              );
 
               if (fs.existsSync(configPath)) {
                 fs.unlinkSync(configPath);

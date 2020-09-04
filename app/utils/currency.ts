@@ -1,6 +1,6 @@
-import {ethers} from 'ethers';
-import {toBitcoin} from 'satoshi-bitcoin-ts';
-import {formatEther, formatUnits} from 'ethers/lib/utils';
+import { ethers } from 'ethers';
+import { toBitcoin } from 'satoshi-bitcoin-ts';
+import { formatEther, formatUnits } from 'ethers/lib/utils';
 
 // TODO Deal with this in a more elaborate way, potentially use the COMIT sdk
 export const ETH_FEE = ethers.BigNumber.from(420000000000000); // 21000 units of gas in wei (rough)

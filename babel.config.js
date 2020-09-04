@@ -1,4 +1,4 @@
-/* eslint global-require: off, import/no-extraneous-dependencies: off */
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 const developmentEnvironments = ['development', 'test'];
 

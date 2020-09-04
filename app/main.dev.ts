@@ -1,4 +1,4 @@
-/* eslint global-require: off, no-console: off */
+/* eslint-disable @typescript-eslint/no-var-requires */
 
 /**
  * This module executes inside of electron's main process. You can start
@@ -13,10 +13,10 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 import { LedgerServer } from './ledgerIpc';
 
-app.name = "Tantalus";
+app.name = 'Tantalus';
 
 let mainWindow: BrowserWindow | null = null;
-let ledgerServer = new LedgerServer(ipcMain);
+const ledgerServer = new LedgerServer(ipcMain);
 
 if (process.env.NODE_ENV === 'production') {
   const sourceMapSupport = require('source-map-support');
@@ -62,7 +62,6 @@ const createWindow = async () => {
             preload: path.join(__dirname, 'dist/renderer.prod.js')
           }
   });
-
 
   mainWindow.loadURL(`file://${__dirname}/app.html`);
 

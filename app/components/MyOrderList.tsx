@@ -1,11 +1,11 @@
 import React from 'react';
-import {Box, Flex, IconButton, Text} from '@chakra-ui/core';
-import CurrencyAmount, {ColorMode} from './CurrencyAmount';
-import {Order} from "../utils/order";
-import {calculateQuote} from "../utils/currency";
-import actionToHttpRequest from "../comit-sdk/cnd/action_to_http_request";
-import {useCnd} from "../hooks/useCnd";
-import {mutate} from "swr";
+import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
+import CurrencyAmount, { ColorMode } from './CurrencyAmount';
+import { Order } from '../utils/order';
+import { calculateQuote } from '../utils/currency';
+import actionToHttpRequest from '../comit-sdk/cnd/action_to_http_request';
+import { useCnd } from '../hooks/useCnd';
+import { mutate } from 'swr';
 
 export interface MarketOrderProperties {
   orders: Order[];
@@ -18,7 +18,6 @@ export default function MyOrderList({
   label,
   tableContentHeightLock
 }: MarketOrderProperties) {
-
   const cnd = useCnd();
 
   const rows = [];
@@ -37,34 +36,36 @@ export default function MyOrderList({
       order.position === 'buy' ? 'cyan.800' : 'orange.800';
     const quote = calculateQuote(order.price, order.quantity);
 
-    const cancelAction = order.actions.find((action) => action.name === "cancel");
+    const cancelAction = order.actions.find(action => action.name === 'cancel');
 
     rows.push(
       <Flex
         direction="row"
         key={`price-${order.id}`}
         padding={currencyValuePadding}
-        border="1px" borderColor="gray.400" rounded="lg"
+        border="1px"
+        borderColor="gray.400"
+        rounded="lg"
         marginBottom={marginTopBottom}
         marginTop={marginTopBottom}
         alignItems="center"
         backgroundColor="gray.100"
       >
         <Box width={cancelButtonWidth}>
-          {
-            cancelAction
-                && <IconButton
-                    size="xs"
-                    aria-label="cancel"
-                    icon="close"
-                    onClick={ async () => {
-                        await cnd.client.request(await actionToHttpRequest(cancelAction));
-                        await mutate("/orders");
-                      }
-                    }
-                    variantColor={cancelButtonColor}
-                />
-          }
+          {cancelAction && (
+            <IconButton
+              size="xs"
+              aria-label="cancel"
+              icon="close"
+              onClick={async () => {
+                await cnd.client.request(
+                  await actionToHttpRequest(cancelAction)
+                );
+                await mutate('/orders');
+              }}
+              variantColor={cancelButtonColor}
+            />
+          )}
         </Box>
         <Box width={currencyValueWidth}>
           <CurrencyAmount

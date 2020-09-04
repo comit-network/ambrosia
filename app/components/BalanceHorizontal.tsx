@@ -19,19 +19,18 @@ import useSWR from 'swr/esm/use-swr';
 
 // TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
-
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
 
   const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
-      ZERO_ETH
+    ZERO_ETH
   );
   const [daiBalanceAsCurrencyValue, setDaiBalanceAsCurrencyValue] = useState(
-      ZERO_DAI
+    ZERO_DAI
   );
   const [btcBalanceAsCurrencyValue, setBtcBalanceAsCurrencyValue] = useState(
-      ZERO_BTC
+    ZERO_BTC
   );
   const [book, setBook] = useState<Book>({
     btcAvailableForTrading: ZERO_BTC,
@@ -43,7 +42,6 @@ export default function BalanceHorizontal() {
     ethAvailableForTrading: ZERO_ETH,
     ethInOrders: ZERO_ETH,
     ethTotal: ZERO_ETH
-
   });
 
   useEffect(() => {
@@ -54,18 +52,18 @@ export default function BalanceHorizontal() {
         setEthBalanceAsCurrencyValue(ethCurrencyValue);
       } catch (e) {
         console.error(e);
-        console.warn("Falling back to ETH balance 0.")
+        console.warn('Falling back to ETH balance 0.');
       }
 
       try {
         const dai = await ethWallet.getErc20Balance(
-            await cnd.daiContractAddress()
+          await cnd.daiContractAddress()
         );
         const daiCurrencyValue = daiIntoCurVal(dai);
         setDaiBalanceAsCurrencyValue(daiCurrencyValue);
       } catch (e) {
         console.error(e);
-        console.warn("Falling back to DAI balance 0.")
+        console.warn('Falling back to DAI balance 0.');
       }
     }
 
@@ -80,31 +78,31 @@ export default function BalanceHorizontal() {
         setBtcBalanceAsCurrencyValue(btcCurrencyValue);
       } catch (e) {
         console.error(e);
-        console.warn("Falling back to BTC balance 0.")
+        console.warn('Falling back to BTC balance 0.');
       }
     }
 
     if (btcWallet) loadBtcBalance();
   }, [btcWallet]);
 
-  let ordersEndpoint = "/orders";
+  const ordersEndpoint = '/orders';
   const { data: orders } = useSWR(
-      () => ordersEndpoint,
-      () => cnd.fetch(ordersEndpoint).then(intoOrders),
-      {
-        refreshInterval: 1000,
-        initialData: []
-      }
+    () => ordersEndpoint,
+    () => cnd.fetch(ordersEndpoint).then(intoOrders),
+    {
+      refreshInterval: 1000,
+      initialData: []
+    }
   );
 
   useEffect(() => {
     setBook(
-        intoBook(
-            btcBalanceAsCurrencyValue,
-            daiBalanceAsCurrencyValue,
-            ethBalanceAsCurrencyValue,
-            orders
-        )
+      intoBook(
+        btcBalanceAsCurrencyValue,
+        daiBalanceAsCurrencyValue,
+        ethBalanceAsCurrencyValue,
+        orders
+      )
     );
   }, [
     ethBalanceAsCurrencyValue,

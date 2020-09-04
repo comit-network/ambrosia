@@ -17,7 +17,10 @@ import {
   Tabs
 } from '@chakra-ui/core';
 import { BigNumber } from 'ethers';
-import { myBuyOrderVariantColor, mySellOrderVariantColor } from '../constants/colors';
+import {
+  myBuyOrderVariantColor,
+  mySellOrderVariantColor
+} from '../constants/colors';
 import BitcoinIcon from '../assets/Bitcoin.svg';
 import DaiIcon from '../assets/Dai.svg';
 import {
@@ -30,7 +33,8 @@ import {
   daiIntoCurVal,
   ETH_FEE,
   MIN_BTC,
-  MIN_DAI, ZERO_DAI
+  MIN_DAI,
+  ZERO_DAI
 } from '../utils/currency';
 import { MarketOrder } from '../utils/market';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
@@ -48,7 +52,7 @@ interface OrderCreatorProperties {
 
 enum Position {
   BUY = 'buy',
-  SELL = 'sell',
+  SELL = 'sell'
 }
 
 interface State {
@@ -71,30 +75,41 @@ interface State {
   btcAvailable: CurrencyValue;
 }
 
-type Action = {
-  type: 'priceChange' | 'quantityChange',
-  value: string,
-} | {
-  type: 'update',
-  value: State
-};
+type Action =
+  | {
+      type: 'priceChange' | 'quantityChange';
+      value: string;
+    }
+  | {
+      type: 'update';
+      value: State;
+    };
 
 const NUM_WITHOUT_SIGN_REGEX = new RegExp('^\\d+(\\.\\d+)?$');
 
-function isSufficientBuyFunds(quote: CurrencyValue, availableDai: CurrencyValue): boolean {
-  let quoteBigNumber = BigNumber.from(quote.value);
-  let availableDaiBigNumber = BigNumber.from(availableDai.value);
+function isSufficientBuyFunds(
+  quote: CurrencyValue,
+  availableDai: CurrencyValue
+): boolean {
+  const quoteBigNumber = BigNumber.from(quote.value);
+  const availableDaiBigNumber = BigNumber.from(availableDai.value);
 
   return quoteBigNumber.lte(availableDaiBigNumber);
 }
 
-function maxBtcTradable(btcAvailable: CurrencyValue, btcFee: BigNumber): BigNumber {
-  let availableBtcBigNumber = BigNumber.from(btcAvailable.value);
+function maxBtcTradable(
+  btcAvailable: CurrencyValue,
+  btcFee: BigNumber
+): BigNumber {
+  const availableBtcBigNumber = BigNumber.from(btcAvailable.value);
   return availableBtcBigNumber.sub(btcFee);
 }
 
-function isSufficientSellFunds(quantity: CurrencyValue, availableBtc: CurrencyValue) {
-  let quantityBigNumber = BigNumber.from(quantity.value);
+function isSufficientSellFunds(
+  quantity: CurrencyValue,
+  availableBtc: CurrencyValue
+) {
+  const quantityBigNumber = BigNumber.from(quantity.value);
 
   return quantityBigNumber.lte(maxBtcTradable(availableBtc, BTC_FEE));
 }
@@ -103,8 +118,8 @@ function reducer(state: State, action: Action): State {
   switch (action.type) {
     case 'priceChange':
       let quoteErrorMessage = '';
-      let priceErrorMessage = '';
-      let newPriceStr = action.value;
+      const priceErrorMessage = '';
+      const newPriceStr = action.value;
 
       if (!newPriceStr || newPriceStr === '') {
         return {
@@ -138,9 +153,9 @@ function reducer(state: State, action: Action): State {
         };
       }
 
-      let newPrice = daiIntoCurVal(newPriceStr);
-      let quantity = btcIntoCurVal(state.quantity);
-      let newQuote = calculateQuote(newPrice, quantity);
+      const newPrice = daiIntoCurVal(newPriceStr);
+      const quantity = btcIntoCurVal(state.quantity);
+      const newQuote = calculateQuote(newPrice, quantity);
 
       if (state.position === Position.BUY) {
         quoteErrorMessage = isSufficientBuyFunds(newQuote, state.daiAvailable)
@@ -158,7 +173,7 @@ function reducer(state: State, action: Action): State {
     case 'quantityChange': {
       let quoteErrorMessage = '';
       let quantityErrorMessage = '';
-      let newQuantityStr = action.value;
+      const newQuantityStr = action.value;
 
       if (!newQuantityStr || newQuantityStr === '') {
         return {
@@ -192,9 +207,9 @@ function reducer(state: State, action: Action): State {
         };
       }
 
-      let newQuantity = btcIntoCurVal(newQuantityStr);
-      let price = daiIntoCurVal(state.price);
-      let newQuote = calculateQuote(price, newQuantity);
+      const newQuantity = btcIntoCurVal(newQuantityStr);
+      const price = daiIntoCurVal(state.price);
+      const newQuote = calculateQuote(price, newQuantity);
 
       if (state.position === Position.BUY) {
         quoteErrorMessage = isSufficientBuyFunds(newQuote, state.daiAvailable)
@@ -203,7 +218,10 @@ function reducer(state: State, action: Action): State {
       }
 
       if (state.position === Position.SELL) {
-        quantityErrorMessage = isSufficientSellFunds(newQuantity, state.btcAvailable)
+        quantityErrorMessage = isSufficientSellFunds(
+          newQuantity,
+          state.btcAvailable
+        )
           ? ''
           : 'Insufficient BTC to make this trade!';
       }
@@ -220,7 +238,7 @@ function reducer(state: State, action: Action): State {
       // TODO: We don't want to overwrite what the user already set, so we will have to track this more properly
       //  Calculations should be done and placeholders be set but values should not be overwritten.
 
-      let newState = action.value;
+      const newState = action.value;
 
       return {
         ...state,
@@ -228,7 +246,7 @@ function reducer(state: State, action: Action): State {
         daiAvailable: newState.daiAvailable,
         ethAvailable: newState.ethAvailable,
         ethErrorMessage: newState.ethErrorMessage,
-        maxQuantity: newState.maxQuantity,
+        maxQuantity: newState.maxQuantity
       };
     }
     default:
@@ -237,14 +255,12 @@ function reducer(state: State, action: Action): State {
 }
 
 interface FormProperties {
-  initialState: State,
-  label: string,
-  variantColor: string,
+  initialState: State;
+  label: string;
+  variantColor: string;
 }
 
-
 function Form({ initialState, label, variantColor }: FormProperties) {
-
   const [state, dispatch] = useReducer(reducer, initialState);
   const config = useConfig();
 
@@ -278,7 +294,9 @@ function Form({ initialState, label, variantColor }: FormProperties) {
       price: weiPerSat.toString(10),
       swap: {
         role: config.ROLE,
+        // eslint-disable-next-line @typescript-eslint/camelcase
         bitcoin_address: await btcWallet.getNewAddress(),
+        // eslint-disable-next-line @typescript-eslint/camelcase
         ethereum_address: ethWallet.getAccount()
       }
     };
@@ -289,42 +307,54 @@ function Form({ initialState, label, variantColor }: FormProperties) {
   }
 
   return (
-    <form onSubmit={async (event) => {
-      event.preventDefault();
-      // TODO check error messages in state
+    <form
+      onSubmit={async event => {
+        event.preventDefault();
+        // TODO check error messages in state
 
-      // TODO: Additionally check if we actually have sufficient money!
-      //  (it could be that something changes in the background, but due to no changes in the fields it does not pick up that problem)
+        // TODO: Additionally check if we actually have sufficient money!
+        //  (it could be that something changes in the background, but due to no changes in the fields it does not pick up that problem)
 
-        if (state.ethErrorMessage || state.priceErrorMessage || state.quantityErrorMessage || state.quoteErrorMessage) {
-            console.error("Error message active, cannot create order");
-            return;
+        if (
+          state.ethErrorMessage ||
+          state.priceErrorMessage ||
+          state.quantityErrorMessage ||
+          state.quoteErrorMessage
+        ) {
+          console.error('Error message active, cannot create order');
+          return;
         }
 
-        let quantityBigInt = BigNumber.from(btcIntoCurVal(state.quantity).value);
-        let quoteBigInt = BigNumber.from(daiIntoCurVal(state.quote).value);
+        const quantityBigInt = BigNumber.from(
+          btcIntoCurVal(state.quantity).value
+        );
+        const quoteBigInt = BigNumber.from(daiIntoCurVal(state.quote).value);
 
-        let availableBtcBigInt = BigNumber.from(state.btcAvailable.value);
-        let availableDaiBigInt = BigNumber.from(state.daiAvailable.value);
+        const availableBtcBigInt = BigNumber.from(state.btcAvailable.value);
+        const availableDaiBigInt = BigNumber.from(state.daiAvailable.value);
 
         if (state.position === Position.SELL) {
-            if (availableBtcBigInt.lt(quantityBigInt)) {
-                console.error("Insufficient BTC");
-                return;
-            }
+          if (availableBtcBigInt.lt(quantityBigInt)) {
+            console.error('Insufficient BTC');
+            return;
+          }
         }
 
         if (state.position === Position.BUY) {
-            if (availableDaiBigInt.lt(quoteBigInt)) {
-                console.error("Insufficient DAI");
-                return;
-            }
+          if (availableDaiBigInt.lt(quoteBigInt)) {
+            console.error('Insufficient DAI');
+            return;
+          }
         }
 
-          let orderHref = await postBtcDaiOrder(state.position, state.quantity, state.price);
-          console.log(orderHref);
-
-    }}>
+        const orderHref = await postBtcDaiOrder(
+          state.position,
+          state.quantity,
+          state.price
+        );
+        console.log(orderHref);
+      }}
+    >
       <fieldset disabled={state.ethErrorMessage != ''}>
         <FormControl isInvalid={state.ethErrorMessage != ''}>
           <FormErrorMessage>{state.ethErrorMessage}</FormErrorMessage>
@@ -332,54 +362,80 @@ function Form({ initialState, label, variantColor }: FormProperties) {
         <FormControl isInvalid={state.priceErrorMessage != ''}>
           <FormLabel htmlFor="price">Limit Price</FormLabel>
           <InputGroup>
-            <InputLeftAddon padding="0.5rem" children={<Image
-              src={DaiIcon}
-              height="20px"
-              alignSelf="center"
-            />}/>
-            <Input type="text" id="price"
-                   rounded="0"
-                   placeholder={initialState.price}
-                   value={state.price} onChange={(event) => dispatch({
-              type: 'priceChange',
-              value: event.target.value
-            })}/>
-            <InputRightAddon padding="0" children={<Button
-              onClick={() => dispatch({ type: 'priceChange', value: initialState.price })}
-              variantColor={variantColor}>best</Button>}/>
+            <InputLeftAddon padding="0.5rem">
+              <Image src={DaiIcon} height="20px" alignSelf="center" />
+            </InputLeftAddon>
+            <Input
+              type="text"
+              id="price"
+              rounded="0"
+              placeholder={initialState.price}
+              value={state.price}
+              onChange={event =>
+                dispatch({
+                  type: 'priceChange',
+                  value: event.target.value
+                })
+              }
+            />
+            <InputRightAddon padding="0">
+              <Button
+                onClick={() =>
+                  dispatch({ type: 'priceChange', value: initialState.price })
+                }
+                variantColor={variantColor}
+              >
+                best
+              </Button>
+            </InputRightAddon>
           </InputGroup>
           <FormErrorMessage>{state.priceErrorMessage}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={state.quantityErrorMessage != ''}>
           <FormLabel htmlFor="quantity">Quantity</FormLabel>
           <InputGroup>
-            <InputLeftAddon padding="0.5rem" children={<Image
-              src={BitcoinIcon}
-              height="20px"
-              alignSelf="center"
-            />}/>
-            <Input type="text" id="quantity"
-                   rounded="0"
-                   placeholder={initialState.maxQuantity}
-                   value={state.quantity}
-                   onChange={(event) => dispatch({ type: 'quantityChange', value: event.target.value })}/>
-            <InputRightAddon padding="0" children={<Button
-              onClick={() => dispatch({ type: 'quantityChange', value: initialState.maxQuantity })}
-              variantColor={variantColor}>max</Button>}/>
+            <InputLeftAddon padding="0.5rem">
+              <Image src={BitcoinIcon} height="20px" alignSelf="center" />
+            </InputLeftAddon>
+            <Input
+              type="text"
+              id="quantity"
+              rounded="0"
+              placeholder={initialState.maxQuantity}
+              value={state.quantity}
+              onChange={event =>
+                dispatch({ type: 'quantityChange', value: event.target.value })
+              }
+            />
+            <InputRightAddon padding="0">
+              <Button
+                onClick={() =>
+                  dispatch({
+                    type: 'quantityChange',
+                    value: initialState.maxQuantity
+                  })
+                }
+                variantColor={variantColor}
+              >
+                max
+              </Button>
+            </InputRightAddon>
           </InputGroup>
           <FormErrorMessage>{state.quantityErrorMessage}</FormErrorMessage>
         </FormControl>
         <FormControl isInvalid={state.quoteErrorMessage != ''}>
           <FormLabel htmlFor="quote">Quote</FormLabel>
           <InputGroup>
-            <InputLeftAddon padding="0.5rem" children={<Image
-              src={DaiIcon}
-              height="20px"
-              alignSelf="center"
-            />}/>
-            <Input type="text" id="quote"
-                   value={state.quote}
-                   isDisabled color="gray.800"/>
+            <InputLeftAddon padding="0.5rem">
+              <Image src={DaiIcon} height="20px" alignSelf="center" />
+            </InputLeftAddon>
+            <Input
+              type="text"
+              id="quote"
+              value={state.quote}
+              isDisabled
+              color="gray.800"
+            />
           </InputGroup>
           <FormErrorMessage>{state.quoteErrorMessage}</FormErrorMessage>
         </FormControl>
@@ -399,40 +455,42 @@ function Form({ initialState, label, variantColor }: FormProperties) {
 }
 
 export default function OrderCreator({
-                                       highestPriceBuyOrder,
-                                       lowestPriceSellOrder,
-                                       daiAvailable,
-                                       btcAvailable,
-                                       ethAvailable
-                                     }: OrderCreatorProperties) {
-
+  highestPriceBuyOrder,
+  lowestPriceSellOrder,
+  daiAvailable,
+  btcAvailable,
+  ethAvailable
+}: OrderCreatorProperties) {
   // TODO: Reducer in here
   //  Hard coded initial value
   //  Use Effect for the values, Dispatch event on change with values and let reducer update the state.
 
-
   // Check if we have Ether for fees
   let ethErrorMessage = '';
-  let ethBigNumber = BigNumber.from(ethAvailable.value);
+  const ethBigNumber = BigNumber.from(ethAvailable.value);
   if (ethBigNumber.lt(ETH_FEE)) {
     ethErrorMessage = 'Insufficient ETH, add more to trade!';
   }
 
   let btcErrorMessage = '';
-  let btcBigNumber = BigNumber.from(btcAvailable.value);
+  const btcBigNumber = BigNumber.from(btcAvailable.value);
   if (btcBigNumber.lt(MIN_BTC)) {
     btcErrorMessage = 'Insufficient BTC, add more to trade!';
   }
 
-  let daiErrorMessage = '';
-  let daiBigNumber = BigNumber.from(daiAvailable.value);
+  const daiErrorMessage = '';
+  const daiBigNumber = BigNumber.from(daiAvailable.value);
   if (daiBigNumber.lt(MIN_DAI)) {
     btcErrorMessage = 'Insufficient DAI, add more to trade!';
   }
 
-  const initialBuyPrice = lowestPriceSellOrder !== null ? lowestPriceSellOrder.price : ZERO_DAI;
+  const initialBuyPrice =
+    lowestPriceSellOrder !== null ? lowestPriceSellOrder.price : ZERO_DAI;
   const initialBuyQuote = daiAvailable;
-  const maxBuyQuantity = calculateBaseFromAvailableQuote(initialBuyPrice, initialBuyQuote);
+  const maxBuyQuantity = calculateBaseFromAvailableQuote(
+    initialBuyPrice,
+    initialBuyQuote
+  );
 
   const initialBuyState: State = {
     position: Position.BUY,
@@ -454,7 +512,8 @@ export default function OrderCreator({
     btcAvailable: btcAvailable
   };
 
-  const initialSellPrice = highestPriceBuyOrder !== null ? highestPriceBuyOrder.price : ZERO_DAI;
+  const initialSellPrice =
+    highestPriceBuyOrder !== null ? highestPriceBuyOrder.price : ZERO_DAI;
   const maxSellQuantity = btcIntoCurVal(maxBtcTradable(btcAvailable, BTC_FEE));
 
   const initialSellState: State = {
@@ -519,13 +578,20 @@ export default function OrderCreator({
         <TabPanels>
           <TabPanel backgroundColor="white" height="100%">
             <Flex direction="column" padding="1rem">
-              <Form initialState={initialBuyState} label={'Buy'} variantColor={myBuyOrderVariantColor}/>
+              <Form
+                initialState={initialBuyState}
+                label={'Buy'}
+                variantColor={myBuyOrderVariantColor}
+              />
             </Flex>
           </TabPanel>
           <TabPanel backgroundColor="white" height="100%">
             <Flex direction="column" padding="1rem">
-              <Form initialState={initialSellState} label={'Sell'}
-                    variantColor={mySellOrderVariantColor}/>
+              <Form
+                initialState={initialSellState}
+                label={'Sell'}
+                variantColor={mySellOrderVariantColor}
+              />
             </Flex>
           </TabPanel>
         </TabPanels>

@@ -12,8 +12,14 @@ import { Provider as CndProvider } from './hooks/useCnd';
 import { useConfig } from './config';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
-import { LedgerBitcoinWallet, LedgerBitcoinWalletProvider } from './hooks/useLedgerBitcoinWallet';
-import { LedgerEthereumWallet, LedgerEthereumWalletProvider } from './hooks/useLedgerEthereumWallet';
+import {
+  LedgerBitcoinWallet,
+  LedgerBitcoinWalletProvider
+} from './hooks/useLedgerBitcoinWallet';
+import {
+  LedgerEthereumWallet,
+  LedgerEthereumWalletProvider
+} from './hooks/useLedgerEthereumWallet';
 
 type Props = {
   store: ReduxStore;
@@ -26,11 +32,27 @@ const App = ({ store, history }: Props) => {
   return (
     <CndProvider value={config.CND_URL}>
       <ThemeProvider theme={customTheme}>
-        <LedgerBitcoinWalletProvider value={new LedgerBitcoinWallet(new LedgerClient(ipcRenderer), config.LEDGER_BITCOIN_ACCOUNT_INDEX, config.BITCOIND_ENDPOINT)}>
-          <LedgerEthereumWalletProvider value={new LedgerEthereumWallet(new LedgerClient(ipcRenderer), {
-            index: config.LEDGER_ETHEREUM_ACCOUNT_INDEX,
-            address: config.LEDGER_ETHEREUM_ACCOUNT_ADDRESS
-          }, config.WEB3_ENDPOINT)}>
+        <LedgerBitcoinWalletProvider
+          value={
+            new LedgerBitcoinWallet(
+              new LedgerClient(ipcRenderer),
+              config.LEDGER_BITCOIN_ACCOUNT_INDEX,
+              config.BITCOIND_ENDPOINT
+            )
+          }
+        >
+          <LedgerEthereumWalletProvider
+            value={
+              new LedgerEthereumWallet(
+                new LedgerClient(ipcRenderer),
+                {
+                  index: config.LEDGER_ETHEREUM_ACCOUNT_INDEX,
+                  address: config.LEDGER_ETHEREUM_ACCOUNT_ADDRESS
+                },
+                config.WEB3_ENDPOINT
+              )
+            }
+          >
             <CSSReset />
             <Provider store={store}>
               <ConnectedRouter history={history}>
