@@ -20,6 +20,8 @@ import {
   LedgerEthereumWallet,
   LedgerEthereumWalletProvider
 } from './hooks/useLedgerEthereumWallet';
+import { CacheProvider } from '@emotion/core';
+import createCache from '@emotion/cache';
 
 type Props = {
   store: ReduxStore;
@@ -28,6 +30,10 @@ type Props = {
 
 const App = ({ store, history }: Props) => {
   const config = useConfig();
+
+  // emotions bug fix, see: https://github.com/emotion-js/emotion/issues/1105#issuecomment-557726922
+  const myCache = createCache();
+  myCache.compat = true;
 
   return (
     <CndProvider value={config.CND_URL}>
@@ -57,7 +63,9 @@ const App = ({ store, history }: Props) => {
             <Provider store={store}>
               <ConnectedRouter history={history}>
                 {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-                <Layout />
+                <CacheProvider value={myCache}>
+                  <Layout />
+                </CacheProvider>
               </ConnectedRouter>
             </Provider>
           </LedgerEthereumWalletProvider>
