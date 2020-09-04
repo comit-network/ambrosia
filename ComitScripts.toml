@@ -1,7 +1,7 @@
 [bitcoin]
 addresses_to_fund = [
-    "bcrt1qacqjr08065vm0rqwlymqm656f4v3zssl9kjmyl", # Ledger account 0
-    "bcrt1qllmfaz0hx29ddlcgqf5w4k5ltk2ejq2wp6zug8", # Ledger account 1
+    "bcrt1qmj7zctm6kduqaaqust8jxs0rhau5j65ysw9n74", # Ledger account 0
+    "bcrt1qjnmexntp6z9tm4ywj5j7pmrlfxh83e68l9puk6", # Ledger account 1
     "bcrt1qc252m6afz9v5mfpjpulr92gm7ywgdhkxtlv9xr"
 ]
 

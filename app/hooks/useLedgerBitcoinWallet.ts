@@ -4,8 +4,6 @@ import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Psbt } from 'bitcoinjs-lib';
 import { BigNumber } from 'ethers';
 
-const WALLET_NAME = 'tantalus';
-
 function jsonRpcResponseInterceptor(error: AxiosError): Promise<AxiosError> {
   const response = error.response;
 
@@ -24,6 +22,7 @@ function jsonRpcResponseInterceptor(error: AxiosError): Promise<AxiosError> {
 
 export class LedgerBitcoinWallet {
   private readonly client: AxiosInstance;
+  private readonly walletName: string;
 
   constructor(
     private readonly ledgerClient: LedgerClient,
@@ -40,6 +39,7 @@ export class LedgerBitcoinWallet {
       }),
       jsonRpcResponseInterceptor
     );
+    this.walletName = `tantalus${accountIndex}`;
   }
 
   public async hasWallet(): Promise<boolean> {
@@ -49,8 +49,7 @@ export class LedgerBitcoinWallet {
         params: []
       })
       .then(r => r.data);
-
-    return wallets.includes(WALLET_NAME);
+    return wallets.includes(this.walletName);
   }
 
   public async createWallet(descriptors: Descriptors): Promise<void> {
@@ -60,7 +59,7 @@ export class LedgerBitcoinWallet {
       await this.client
         .post<Response>(`/`, {
           method: 'createwallet',
-          params: [WALLET_NAME, disablePrivateKeys, blank]
+          params: [this.walletName, disablePrivateKeys, blank]
         })
         .then(r => r.data);
     }
@@ -73,7 +72,7 @@ export class LedgerBitcoinWallet {
     };
 
     await this.client
-      .post<Response>(`/wallet/${WALLET_NAME}`, {
+      .post<Response>(`/wallet/${this.walletName}`, {
         method: 'importmulti',
         params: [
           [
@@ -102,7 +101,7 @@ export class LedgerBitcoinWallet {
     btcPerKB: number
   ): Promise<string> {
     const psbt = await this.client
-      .post(`/wallet/${WALLET_NAME}`, {
+      .post(`/wallet/${this.walletName}`, {
         method: 'walletcreatefundedpsbt',
         params: [
           [],
@@ -127,7 +126,7 @@ export class LedgerBitcoinWallet {
             : utxo.hash.reverse().toString('hex');
 
         const tx = await this.client
-          .post(`/wallet/${WALLET_NAME}`, {
+          .post(`/wallet/${this.walletName}`, {
             method: 'getrawtransaction',
             params: [txId, false]
           })
@@ -150,7 +149,7 @@ export class LedgerBitcoinWallet {
 
   public async getNewAddress(): Promise<string> {
     const address = await this.client
-      .post(`/wallet/${WALLET_NAME}`, {
+      .post(`/wallet/${this.walletName}`, {
         method: 'getnewaddress',
         params: ['', 'bech32']
       })
@@ -210,7 +209,7 @@ export class LedgerBitcoinWallet {
 
   public async scanProgress(): Promise<boolean | ScanProgress> {
     const walletInfo = await this.client
-      .post(`/wallet/${WALLET_NAME}`, {
+      .post(`/wallet/${this.walletName}`, {
         method: 'getwalletinfo',
         params: []
       })
@@ -233,7 +232,7 @@ export class LedgerBitcoinWallet {
    */
   public async getBalance(): Promise<BigNumber> {
     const balance = await this.client
-      .post(`/wallet/${WALLET_NAME}`, {
+      .post(`/wallet/${this.walletName}`, {
         method: 'getbalance',
         params: []
       })

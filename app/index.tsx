@@ -14,7 +14,7 @@ const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 const store = new ElectronStore<Config>();
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line global-require
   const App = require('./App').default;
 
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', () => {
       'Running in development mode using comit-scripts, creating Bitcoin wallet ...'
     );
     importDescriptorOfDanielsLedger(comitEnvConfig);
+    await importDescriptorOfDanielsLedger(comitEnvConfig).catch(console.error);
     document.title += ` - ${comitEnvConfig.ROLE}`;
   }
 
