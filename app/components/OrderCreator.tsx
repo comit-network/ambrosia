@@ -235,8 +235,7 @@ function reducer(state: State, action: Action): State {
       };
     }
     case 'update': {
-      // TODO: We don't want to overwrite what the user already set, so we will have to track this more properly
-      //  Calculations should be done and placeholders be set but values should not be overwritten.
+      // TODO: Extract the max/best and placeholder values and set them properly upon update
 
       const newState = action.value;
 
@@ -310,10 +309,6 @@ function Form({ initialState, label, variantColor }: FormProperties) {
     <form
       onSubmit={async event => {
         event.preventDefault();
-        // TODO check error messages in state
-
-        // TODO: Additionally check if we actually have sufficient money!
-        //  (it could be that something changes in the background, but due to no changes in the fields it does not pick up that problem)
 
         if (
           state.ethErrorMessage ||
@@ -461,10 +456,6 @@ export default function OrderCreator({
   btcAvailable,
   ethAvailable
 }: OrderCreatorProperties) {
-  // TODO: Reducer in here
-  //  Hard coded initial value
-  //  Use Effect for the values, Dispatch event on change with values and let reducer update the state.
-
   // Check if we have Ether for fees
   let ethErrorMessage = '';
   const ethBigNumber = BigNumber.from(ethAvailable.value);

@@ -13,12 +13,12 @@ import {
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { intoOrders } from '../utils/order';
-import { Book, intoBook } from '../utils/book';
+import { intoBook } from '../utils/book';
 import { useCnd } from '../hooks/useCnd';
 import useSWR from 'swr/esm/use-swr';
 
-// TODO: Rethink if this should keep its own state.
 export default function BalanceHorizontal() {
+  // TODO: Duplicate of Dashboard setup, refactor
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
   const cnd = useCnd();
@@ -32,17 +32,6 @@ export default function BalanceHorizontal() {
   const [btcBalanceAsCurrencyValue, setBtcBalanceAsCurrencyValue] = useState(
     ZERO_BTC
   );
-  const [book, setBook] = useState<Book>({
-    btcAvailableForTrading: ZERO_BTC,
-    btcInOrders: ZERO_BTC,
-    btcTotal: ZERO_BTC,
-    daiAvailableForTrading: ZERO_DAI,
-    daiInOrders: ZERO_DAI,
-    daiTotal: ZERO_DAI,
-    ethAvailableForTrading: ZERO_ETH,
-    ethInOrders: ZERO_ETH,
-    ethTotal: ZERO_ETH
-  });
 
   useEffect(() => {
     async function loadEthBalance() {
@@ -95,21 +84,12 @@ export default function BalanceHorizontal() {
     }
   );
 
-  useEffect(() => {
-    setBook(
-      intoBook(
-        btcBalanceAsCurrencyValue,
-        daiBalanceAsCurrencyValue,
-        ethBalanceAsCurrencyValue,
-        orders
-      )
-    );
-  }, [
-    ethBalanceAsCurrencyValue,
+  const book = intoBook(
     btcBalanceAsCurrencyValue,
     daiBalanceAsCurrencyValue,
+    ethBalanceAsCurrencyValue,
     orders
-  ]);
+  );
 
   return (
     <div>

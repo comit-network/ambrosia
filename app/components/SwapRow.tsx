@@ -40,14 +40,8 @@ type ComponentAction =
     };
 
 enum ActionStatus {
-  NOT_READY_YET,
   AWAITING_USER_INTERACTION, // for actions that require user interaction
-  READY_FOR_EXECUTION, // for actions that don't require user interaction
-  TRYING_TO_EXECUTE, // when we trigger ledger and await the wallet's response for sending the tx
-  // TODO: Display tx-id for this case
-  WAITING_CONFIRMATION, // once we have the wallet's response for sending the tx
-  // TODO: Most likely we can remove this state because events are enough to deal with this
-  CONFIRMED
+  WAITING_CONFIRMATION // once we have the wallet's response for sending the tx
 }
 
 function findSwapEventInSwap(

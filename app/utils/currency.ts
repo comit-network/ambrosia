@@ -4,7 +4,7 @@ import { formatEther, formatUnits } from 'ethers/lib/utils';
 
 // TODO Deal with this in a more elaborate way, potentially use the COMIT sdk
 export const ETH_FEE = ethers.BigNumber.from(420000000000000); // 21000 units of gas in wei (rough)
-// TODO: Taken from Nectar, check again later
+// TODO: Validate and potentially do in more elaborate way
 // ~265 vbytes (2 inputs 2 outputs segwit transaction)
 // * 35 sat/vbytes (Looking at https://bitcoinfees.github.io/#1m)
 export const BTC_FEE = ethers.BigNumber.from(8960);
