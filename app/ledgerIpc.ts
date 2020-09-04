@@ -89,6 +89,8 @@ export class LedgerServer {
       const eth = new AppEth(transport);
       const result = await eth.getAddress(`m/44'/60'/${accountIndex}'/0`);
 
+      await transport.close();
+
       return result.address;
     });
     this.ipc.handle(
@@ -103,6 +105,8 @@ export class LedgerServer {
           `m/44'/60'/${accountIndex}'/0`,
           hex
         );
+
+        await transport.close();
 
         // Work around Ledger not properly supporting EIP155 for chainIds > 255
         // https://github.com/LedgerHQ/ledgerjs/issues/168
@@ -152,13 +156,17 @@ async function sign(
     })
   }).toString('hex');
 
-  return btc.createPaymentTransactionNew({
+  const signedTransaction = await btc.createPaymentTransactionNew({
     inputs,
     associatedKeysets: derivationPaths,
     outputScriptHex,
     segwit: true,
     additionals: ['bech32']
   });
+
+  await transport.close();
+
+  return signedTransaction;
 }
 
 function makeFingerPrint(publicKey) {
@@ -201,6 +209,8 @@ async function getWalletDescriptors(
     childNumber: 0,
     ...result
   });
+
+  await transport.close();
 
   return `wpkh([${fingerprint}${path}]${xpub}/${change}/*)`;
 }
