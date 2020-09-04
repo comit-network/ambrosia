@@ -617,7 +617,7 @@ const SwapStatus = ({
             }}
           />
         </Box>
-        {role === Role.ALICE && (
+        {role === Role.BOB && (
           <>
             <StepArrow />
             <Box width={widthPercent}>
