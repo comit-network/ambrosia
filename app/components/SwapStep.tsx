@@ -1,4 +1,4 @@
-import { Protocol, SwapEvent, SwapEventName } from '../utils/swap';
+import { Protocol, Role, SwapEvent, SwapEventName } from '../utils/swap';
 import {
   Badge,
   Box,
@@ -225,7 +225,7 @@ function getBlockchainExplorerUrl(event: SwapEventName): string {
 
 interface StepProperties {
   swapId: string;
-  role: string;
+  role: Role;
   name: SwapStepName;
   isActive: boolean;
   isUserInteractionActive: boolean;
@@ -426,7 +426,7 @@ export default function SwapStep({
     index,
     label
   }: DisplayParams =
-    role === 'alice' ? getAliceParams(name) : getBobParams(name);
+    role === Role.ALICE ? getAliceParams(name) : getBobParams(name);
 
   let rounded;
   let interactionButton;

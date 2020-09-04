@@ -277,20 +277,19 @@ function Form({ initialState, label, variantColor }: FormProperties) {
 
   async function postBtcDaiOrder(
     position: Position,
-    quantity: string,
-    price: string
+    quantity: BigNumber,
+    price: BigNumber
   ): Promise<string> {
-    const sats = Number(+quantity) * 100_000_000;
+    const sats = quantity;
 
-    const daiPerBtc = BigInt(price);
-    const weiPerDai = BigInt('1000000000000000000');
-    const satsPerBtc = BigInt('100000000');
-    const weiPerSat = (daiPerBtc * weiPerDai) / satsPerBtc;
+    const weiPerDai = price;
+    const satsPerBtc = BigNumber.from('100000000');
+    const weiPerSat = weiPerDai.div(satsPerBtc);
 
     const body = {
       position,
-      quantity: sats.toString(10),
-      price: weiPerSat.toString(10),
+      quantity: sats.toString(),
+      price: weiPerSat.toString(),
       swap: {
         role: config.ROLE,
         // eslint-disable-next-line @typescript-eslint/camelcase
@@ -342,10 +341,12 @@ function Form({ initialState, label, variantColor }: FormProperties) {
           }
         }
 
+        const priceBigInt = BigNumber.from(daiIntoCurVal(state.price).value);
+
         const orderHref = await postBtcDaiOrder(
           state.position,
-          state.quantity,
-          state.price
+          quantityBigInt,
+          priceBigInt
         );
         console.log(orderHref);
       }}

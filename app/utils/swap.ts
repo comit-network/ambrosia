@@ -1,7 +1,10 @@
 import { Currency } from './currency';
 import { Action as SirenAction, Entity } from '../comit-sdk/cnd/siren';
 
-export type Role = 'Alice' | 'Bob';
+export enum Role {
+  ALICE = 'Alice',
+  BOB = 'Bob'
+}
 
 export enum SwapEventName {
   HERC20_DEPLOYED = 'herc20_deployed',

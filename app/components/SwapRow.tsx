@@ -5,6 +5,7 @@ import CurrencyAmount from './CurrencyAmount';
 import { Currency } from '../utils/currency';
 import {
   Protocol,
+  Role,
   SwapAction,
   SwapActionKind,
   SwapEntity,
@@ -403,7 +404,7 @@ const SwapStatus = ({
 
   const ledgerAction = state.ledgerAction;
   if (protocol === Protocol.HER20) {
-    const widthPercent = role === 'alice' ? '25%' : '20%';
+    const widthPercent = role === Role.ALICE ? '25%' : '20%';
     return (
       <Flex
         direction="row"
@@ -537,7 +538,7 @@ const SwapStatus = ({
             }}
           />
         </Box>
-        {role === 'bob' && (
+        {role === Role.BOB && (
           <>
             <StepArrow />
             <Box width={widthPercent}>
@@ -575,7 +576,7 @@ const SwapStatus = ({
       </Flex>
     );
   } else {
-    const widthPercent = role === 'alice' ? '30%' : '20%';
+    const widthPercent = role === Role.ALICE ? '30%' : '20%';
     return (
       <Flex
         direction="row"
@@ -616,7 +617,7 @@ const SwapStatus = ({
             }}
           />
         </Box>
-        {role === 'bob' && (
+        {role === Role.ALICE && (
           <>
             <StepArrow />
             <Box width={widthPercent}>
@@ -713,7 +714,7 @@ const SwapStatus = ({
             }}
           />
         </Box>
-        {role === 'bob' && (
+        {role === Role.BOB && (
           <>
             <StepArrow />
             <Box width={widthPercent}>
@@ -919,9 +920,9 @@ function isSwapStepActive(
   alphaProtocol: Protocol,
   state: State,
   swap: SwapProperties,
-  role: string
+  role: Role
 ) {
-  if (role === 'alice') {
+  if (role === Role.ALICE) {
     return isSwapStepActiveForAlice(swapStep, alphaProtocol, state, swap);
   }
 
@@ -933,7 +934,7 @@ function isLedgerInteractionButtonActive(
   alphaProtocol: Protocol,
   state: State,
   swap: SwapProperties,
-  role: string
+  role: Role
 ): boolean {
   return (
     isSwapStepActive(swapStep, alphaProtocol, state, swap, role) &&
