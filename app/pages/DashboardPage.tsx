@@ -5,46 +5,15 @@ import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
 import MarketOrderList from '../components/MarketOrderList';
 import MyOrderList from '../components/MyOrderList';
-import { intoBook } from '../utils/book';
-import { useCnd } from '../hooks/useCnd';
-import useSWR from 'swr/esm/use-swr';
-import { intoOrders } from '../utils/order';
-import { intoMarket } from '../utils/market';
 import BidAndAsk from '../components/BidAndAsk';
-import useBitcoinBalance from '../hooks/useBitcoinBalance';
-import useDaiBalance from '../hooks/useDaiBalance';
-import useEtherBalance from '../hooks/useEtherBalance';
+import useOrders from '../hooks/useOrders';
+import useBook from '../hooks/useBook';
+import useMarket from '../hooks/useMarket';
 
 export default function DashboardPage() {
-  const cnd = useCnd();
-  const ethBalanceAsCurrencyValue = useEtherBalance();
-  const daiBalanceAsCurrencyValue = useDaiBalance();
-  const btcBalanceAsCurrencyValue = useBitcoinBalance();
-
-  const { data: orders } = useSWR(
-    '/orders',
-    key => cnd.fetch(key).then(intoOrders),
-    {
-      refreshInterval: 1000,
-      initialData: []
-    }
-  );
-
-  const { data: marketResponse } = useSWR(
-    '/markets/BTC-DAI',
-    key => cnd.fetch(key),
-    {
-      refreshInterval: 1000
-    }
-  );
-
-  const market = intoMarket(marketResponse);
-  const book = intoBook(
-    btcBalanceAsCurrencyValue,
-    daiBalanceAsCurrencyValue,
-    ethBalanceAsCurrencyValue,
-    orders
-  );
+  const orders = useOrders();
+  const book = useBook();
+  const market = useMarket();
 
   const orderTableOffset = '138px';
 

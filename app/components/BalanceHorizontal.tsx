@@ -2,36 +2,10 @@ import React from 'react';
 import { Flex, StatGroup } from '@chakra-ui/core';
 import CurrencyAmount from './CurrencyAmount';
 import { amountToUnitString } from '../utils/currency';
-import { intoOrders } from '../utils/order';
-import { intoBook } from '../utils/book';
-import { useCnd } from '../hooks/useCnd';
-import useSWR from 'swr/esm/use-swr';
-import useEtherBalance from '../hooks/useEtherBalance';
-import useDaiBalance from '../hooks/useDaiBalance';
-import useBitcoinBalance from '../hooks/useBitcoinBalance';
+import useBook from '../hooks/useBook';
 
 export default function BalanceHorizontal() {
-  const cnd = useCnd();
-  const ethBalanceAsCurrencyValue = useEtherBalance();
-  const daiBalanceAsCurrencyValue = useDaiBalance();
-  const btcBalanceAsCurrencyValue = useBitcoinBalance();
-
-  const ordersEndpoint = '/orders';
-  const { data: orders } = useSWR(
-    () => ordersEndpoint,
-    () => cnd.fetch(ordersEndpoint).then(intoOrders),
-    {
-      refreshInterval: 1000,
-      initialData: []
-    }
-  );
-
-  const book = intoBook(
-    btcBalanceAsCurrencyValue,
-    daiBalanceAsCurrencyValue,
-    ethBalanceAsCurrencyValue,
-    orders
-  );
+  const book = useBook();
 
   return (
     <div>

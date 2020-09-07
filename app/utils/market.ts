@@ -11,7 +11,7 @@ export interface MarketOrder {
   maker: string;
 }
 
-interface Market {
+export interface Market {
   buyOrders: MarketOrder[];
   sellOrders: MarketOrder[];
   highestBuyOrder?: MarketOrder;
