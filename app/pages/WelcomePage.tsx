@@ -19,11 +19,11 @@ export default function WelcomePage() {
       <Stack spacing={'5rem'} mt={'5rem'}>
         <Stack spacing={'1rem'}>
           <Heading fontSize={'6xl'} as={'h1'}>
-            Welcome to Tantalus!
+            Welcome to Ambrosia!
           </Heading>
 
           <Text fontSize={'2xl'}>
-            Tantalus is a peer-to-peer, non-custodial crypto currency trading
+            Ambrosia is a peer-to-peer, non-custodial crypto currency trading
             platform. As such, it requires some setup before you can use it.
             Specifically you will need:
           </Text>

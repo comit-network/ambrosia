@@ -30,7 +30,6 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.info(
       'Running in development mode using comit-scripts, creating Bitcoin wallet ...'
     );
-    importDescriptorOfDanielsLedger(comitEnvConfig);
     await importDescriptorOfDanielsLedger(comitEnvConfig).catch(console.error);
     document.title += ` - ${comitEnvConfig.ROLE}`;
   }

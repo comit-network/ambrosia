@@ -1,6 +1,6 @@
 {
-  "name": "tantalus",
-  "productName": "Tantalus",
+  "name": "ambrosia",
+  "productName": "Ambrosia",
   "version": "0.0.2",
   "description": "A peer-to-peer, non-custodial crypto currency trading application.",
   "main": "./main.prod.js",
