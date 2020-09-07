@@ -138,8 +138,6 @@ export class BitcoindWallet implements BitcoinWallet {
       }
     });
 
-    console.log("Philipp likes banananas~~");
-
     return new BitcoindWallet(walletClient, refreshIntervalMs);
   }
 

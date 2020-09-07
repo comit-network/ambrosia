@@ -13,7 +13,7 @@ import { app, BrowserWindow, ipcMain } from 'electron';
 import MenuBuilder from './menu';
 import { LedgerServer } from './ledgerIpc';
 
-app.name = 'Tantalus';
+app.name = 'Ambrosia';
 
 let mainWindow: BrowserWindow | null = null;
 const ledgerServer = new LedgerServer(ipcMain);

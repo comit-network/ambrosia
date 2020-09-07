@@ -1,6 +1,6 @@
 {
-  "name": "tantalus",
-  "productName": "Tantalus",
+  "name": "ambrosia",
+  "productName": "Ambrosia",
   "description": "A peer-to-peer, non-custodial crypto currency trading application.",
   "scripts": {
     "build": "concurrently \"yarn build-main\" \"yarn build-renderer\"",
@@ -50,8 +50,8 @@
     ]
   },
   "build": {
-    "productName": "TakerUI",
-    "appId": "org.comit.TakerUI",
+    "productName": "Ambrosia",
+    "appId": "org.comit.ambrosia",
     "files": [
       "dist/",
       "node_modules/",
@@ -95,13 +95,13 @@
     "publish": {
       "provider": "github",
       "owner": "comit-network",
-      "repo": "taker-ui",
+      "repo": "ambrosia",
       "private": false
     }
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/comit-network/taker-ui.git"
+    "url": "git+https://github.com/comit-network/ambrosia.git"
   },
   "jest": {
     "testURL": "http://localhost/",

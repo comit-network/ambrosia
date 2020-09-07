@@ -39,7 +39,7 @@ export class LedgerBitcoinWallet {
       }),
       jsonRpcResponseInterceptor
     );
-    this.walletName = `tantalus${accountIndex}`;
+    this.walletName = `ambrosia${accountIndex}`;
   }
 
   public async hasWallet(): Promise<boolean> {
