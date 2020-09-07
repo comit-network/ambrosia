@@ -41,6 +41,7 @@ import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useCnd } from '../hooks/useCnd';
 import { useConfig } from '../config';
+import { mutate } from 'swr';
 
 interface OrderCreatorProperties {
   highestPriceBuyOrder: MarketOrder;
@@ -343,12 +344,12 @@ function Form({ initialState, label, variantColor }: FormProperties) {
 
         const priceBigInt = BigNumber.from(daiIntoCurVal(state.price).value);
 
-        const orderHref = await postBtcDaiOrder(
-          state.position,
-          quantityBigInt,
-          priceBigInt
-        );
-        console.log(orderHref);
+        await postBtcDaiOrder(state.position, quantityBigInt, priceBigInt);
+
+        await mutate('/orders');
+        await mutate('/bitcoin/balance');
+        await mutate('/ether/balance');
+        await mutate('/dai/balance');
       }}
     >
       <fieldset disabled={state.ethErrorMessage != ''}>
