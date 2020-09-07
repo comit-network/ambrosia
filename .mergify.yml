@@ -1,0 +1,37 @@
+pull_request_rules:
+  - name: instruct bors to merge dependabot PRs with passing tests
+    conditions:
+      - 'author=dependabot[bot]'
+      - 'status-success=package (ubuntu-latest)'
+      - 'status-success=package (windows-latest)'
+      - 'status-success=package (macos-latest)'
+      - 'status-success=license/cla'
+      - label!=no-mergify
+    actions:
+      comment:
+        message: 'bors r+'
+  - name: instruct bors to merge PRs with passing tests and 2 approvals
+    conditions:
+      - '#approved-reviews-by>=1'
+      - '#changes-requested-reviews-by=0'
+      - 'status-success=static_analysis'
+      - 'status-success=package (ubuntu-latest)'
+      - 'status-success=package (windows-latest)'
+      - 'status-success=package (macos-latest)'
+      - 'status-success=license/cla'
+      - -conflict
+      - label!=work-in-progress
+      - label!=blocked
+      - label!=no-mergify
+      - head~=^(?!release.*).*$
+      - base=master
+    actions:
+      comment:
+        message: 'bors r+'
+  - name: Delete branch if the pull request is merged
+    conditions:
+      - merged
+      - head~=^(?!release.*).*$
+    actions:
+      delete_head_branch:
+        force: false
