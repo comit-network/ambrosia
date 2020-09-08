@@ -168,7 +168,7 @@ export default function CurrencyAmount({
               whiteSpace="nowrap"
             >
               {displayAmount}
-              {showCurrencyText ? ` ${currency}` : <></>}
+              {showCurrencyText && ` ${currency}`}
             </StatNumber>
           )}
         </Flex>

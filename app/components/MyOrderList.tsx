@@ -62,9 +62,9 @@ export default function MyOrderList({
                   await actionToHttpRequest(cancelAction)
                 );
                 await mutate('/orders');
-                await mutate('/bitcoin/balance');
-                await mutate('/ether/balance');
-                await mutate('/dai/balance');
+                await mutate('/balance/btc');
+                await mutate('/balance/eth');
+                await mutate('/balance/dai');
               }}
               variantColor={cancelButtonColor}
             />
