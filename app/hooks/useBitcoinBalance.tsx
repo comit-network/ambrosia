@@ -1,20 +1,23 @@
 import { useLedgerBitcoinWallet } from './useLedgerBitcoinWallet';
 import useSWR from 'swr/esm/use-swr';
-import { btcIntoCurVal } from '../utils/currency';
-import { BigNumber } from 'ethers';
+import { btcIntoCurVal, ZERO_BTC } from '../utils/currency';
 
 export default function useBitcoinBalance() {
   const btcWallet = useLedgerBitcoinWallet();
-  const { data: balance } = useSWR(
+  const { data: balance, error: error } = useSWR(
     '/balance/btc',
     () => btcWallet.getBalance(),
     {
-      refreshInterval: 10000,
-      errorRetryInterval: 500,
-      errorRetryCount: 10,
-      initialData: BigNumber.from(0)
+      refreshInterval: 10000
     }
   );
+
+  if (!balance || error) {
+    return {
+      ...ZERO_BTC,
+      isLoading: true
+    };
+  }
 
   return btcIntoCurVal(balance);
 }

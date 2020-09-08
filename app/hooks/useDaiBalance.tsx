@@ -1,9 +1,8 @@
 import useSWR from 'swr/esm/use-swr';
-import { daiIntoCurVal } from '../utils/currency';
+import { daiIntoCurVal, ZERO_DAI } from '../utils/currency';
 import { useLedgerEthereumWallet } from './useLedgerEthereumWallet';
 import { useCnd } from './useCnd';
 import { useEffect, useState } from 'react';
-import { BigNumber } from 'ethers';
 
 export default function useDaiBalance() {
   const cnd = useCnd();
@@ -23,16 +22,20 @@ export default function useDaiBalance() {
   }, [cnd]);
 
   const ethWallet = useLedgerEthereumWallet();
-  const { data: balance } = useSWR(
+  const { data: balance, error: error } = useSWR(
     daiContractAddress ? '/balance/dai' : null,
     () => ethWallet.getErc20Balance(daiContractAddress),
     {
-      refreshInterval: 10000,
-      errorRetryInterval: 500,
-      errorRetryCount: 10,
-      initialData: BigNumber.from(0)
+      refreshInterval: 10000
     }
   );
+
+  if (!balance || error) {
+    return {
+      ...ZERO_DAI,
+      isLoading: true
+    };
+  }
 
   return daiIntoCurVal(balance);
 }

@@ -156,7 +156,7 @@ export default function CurrencyAmount({
       >
         <Flex direction="row" alignContent="center" minWidth={displayMinWidth}>
           {noImage ? <></> : currencyIcon(currency, iconHeight)}
-          {displayAmount === '0' || displayAmount.startsWith('-') ? (
+          {currencyValue.isLoading ? (
             <Spinner size="sm" />
           ) : (
             <StatNumber
