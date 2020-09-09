@@ -1,107 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Box, Flex, Text } from '@chakra-ui/core';
 import SwapList from '../components/SwapList';
 import OrderCreator from '../components/OrderCreator';
 import AvailableBalance from '../components/AvailableBalance';
 import MarketOrderList from '../components/MarketOrderList';
 import MyOrderList from '../components/MyOrderList';
-import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
-import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
-import {
-  btcIntoCurVal,
-  daiIntoCurVal,
-  ethIntoCurVal,
-  ZERO_BTC,
-  ZERO_DAI,
-  ZERO_ETH
-} from '../utils/currency';
-import { intoBook } from '../utils/book';
-import { useCnd } from '../hooks/useCnd';
-import useSWR from 'swr/esm/use-swr';
-import { intoOrders } from '../utils/order';
-import { intoMarket } from '../utils/market';
 import BidAndAsk from '../components/BidAndAsk';
+import useOrders from '../hooks/useOrders';
+import useBook from '../hooks/useBook';
+import useMarket from '../hooks/useMarket';
 
 export default function DashboardPage() {
-  const ethWallet = useLedgerEthereumWallet();
-  const btcWallet = useLedgerBitcoinWallet();
-  const cnd = useCnd();
-
-  const [ethBalanceAsCurrencyValue, setEthBalanceAsCurrencyValue] = useState(
-    ZERO_ETH
-  );
-  const [daiBalanceAsCurrencyValue, setDaiBalanceAsCurrencyValue] = useState(
-    ZERO_DAI
-  );
-  const [btcBalanceAsCurrencyValue, setBtcBalanceAsCurrencyValue] = useState(
-    ZERO_BTC
-  );
-
-  useEffect(() => {
-    async function loadEthBalance() {
-      try {
-        const eth = await ethWallet.getEtherBalance();
-        const ethCurrencyValue = ethIntoCurVal(eth);
-        setEthBalanceAsCurrencyValue(ethCurrencyValue);
-      } catch (e) {
-        console.error(e);
-        console.warn('Falling back to ETH balance 0.');
-      }
-
-      try {
-        const dai = await ethWallet.getErc20Balance(
-          await cnd.daiContractAddress()
-        );
-        const daiCurrencyValue = daiIntoCurVal(dai);
-        setDaiBalanceAsCurrencyValue(daiCurrencyValue);
-      } catch (e) {
-        console.error(e);
-        console.warn('Falling back to DAI balance 0.');
-      }
-    }
-
-    if (ethWallet) loadEthBalance();
-  }, [ethWallet]);
-
-  useEffect(() => {
-    async function loadBtcBalance() {
-      try {
-        const sats = await btcWallet.getBalance();
-        const btcCurrencyValue = btcIntoCurVal(sats);
-        setBtcBalanceAsCurrencyValue(btcCurrencyValue);
-      } catch (e) {
-        console.error(e);
-        console.warn('Falling back to BTC balance 0.');
-      }
-    }
-
-    if (btcWallet) loadBtcBalance();
-  }, [btcWallet]);
-
-  const { data: orders } = useSWR(
-    '/orders',
-    key => cnd.fetch(key).then(intoOrders),
-    {
-      refreshInterval: 1000,
-      initialData: []
-    }
-  );
-
-  const { data: marketResponse } = useSWR(
-    '/markets/BTC-DAI',
-    key => cnd.fetch(key),
-    {
-      refreshInterval: 1000
-    }
-  );
-
-  const market = intoMarket(marketResponse);
-  const book = intoBook(
-    btcBalanceAsCurrencyValue,
-    daiBalanceAsCurrencyValue,
-    ethBalanceAsCurrencyValue,
-    orders
-  );
+  const orders = useOrders();
+  const book = useBook();
+  const market = useMarket();
 
   const orderTableOffset = '138px';
 

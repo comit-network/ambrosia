@@ -59,6 +59,7 @@ export interface CurrencyValue {
   currency: string;
   value: string;
   decimals: number;
+  isLoading?: boolean;
 }
 
 export function calculateQuote(

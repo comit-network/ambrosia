@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   Image,
+  Spinner,
   Stat,
   StatHelpText,
   StatLabel,
@@ -155,18 +156,21 @@ export default function CurrencyAmount({
       >
         <Flex direction="row" alignContent="center" minWidth={displayMinWidth}>
           {noImage ? <></> : currencyIcon(currency, iconHeight)}
-          {/* @ts-ignore */}
-          <StatNumber
-            color={displayNumberColor}
-            fontSize={amountFontSize}
-            overflow="hidden"
-            // @ts-ignore
-            textOverflow="ellipsis"
-            whiteSpace="nowrap"
-          >
-            {displayAmount}
-            {showCurrencyText ? ` ${currency}` : <></>}
-          </StatNumber>
+          {currencyValue.isLoading ? (
+            <Spinner size="sm" />
+          ) : (
+            <StatNumber
+              color={displayNumberColor}
+              fontSize={amountFontSize}
+              overflow="hidden"
+              // @ts-ignore
+              textOverflow="ellipsis"
+              whiteSpace="nowrap"
+            >
+              {displayAmount}
+              {showCurrencyText && ` ${currency}`}
+            </StatNumber>
+          )}
         </Flex>
       </Tooltip>
     </Flex>
