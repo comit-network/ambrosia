@@ -1,6 +1,12 @@
 name: Package
 
-on: push
+on:
+  push:
+    branches:
+      - 'staging'
+      - 'trying'
+      - 'master'
+  pull_request:
 
 jobs:
   package:
