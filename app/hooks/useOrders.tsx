@@ -8,9 +8,42 @@ export function intoOrders(response: AxiosResponse<Entity>): Order[] {
   return response.data.entities
     .map(order => {
       const { properties } = order;
-      const { actions } = order;
-      const typedOrder = properties as Order;
-      typedOrder.actions = actions as Action[];
+      const actions = order.actions as Action[];
+      const typedOrder: Order = {
+        id: properties.id,
+        position: properties.position,
+        price: properties.price,
+        quantity: properties.quantity,
+        state: {
+          open: {
+            currency: properties.quantity.currency,
+            decimals: properties.quantity.decimals,
+            value: properties.state.open
+          },
+          closed: {
+            currency: properties.quantity.currency,
+            decimals: properties.quantity.decimals,
+            value: properties.state.closed
+          },
+          settling: {
+            currency: properties.quantity.currency,
+            decimals: properties.quantity.decimals,
+            value: properties.state.settling
+          },
+          failed: {
+            currency: properties.quantity.currency,
+            decimals: properties.quantity.decimals,
+            value: properties.state.failed
+          },
+          cancelled: {
+            currency: properties.quantity.currency,
+            decimals: properties.quantity.decimals,
+            value: properties.state.cancelled
+          }
+        },
+        actions: actions
+      };
+
       return typedOrder;
     })
     .sort((order1, order2) => {
