@@ -141,7 +141,7 @@ export default function CurrencyAmount({
     }
   }
 
-  let displayMinWidth = '100px';
+  let displayMinWidth = '80px';
   if (minWidth) {
     displayMinWidth = minWidth;
   }
