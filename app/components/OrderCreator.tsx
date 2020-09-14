@@ -5,7 +5,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Image,
+  Icon,
   Input,
   InputGroup,
   InputLeftAddon,
@@ -21,8 +21,6 @@ import {
   myBuyOrderVariantColor,
   mySellOrderVariantColor
 } from '../constants/colors';
-import BitcoinIcon from '../assets/Bitcoin.svg';
-import DaiIcon from '../assets/Dai.svg';
 import {
   amountToUnitString,
   BTC_FEE,
@@ -360,7 +358,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
           <FormLabel htmlFor="price">Limit Price</FormLabel>
           <InputGroup>
             <InputLeftAddon padding="0.5rem">
-              <Image src={DaiIcon} height="20px" alignSelf="center" />
+              <Icon name="dai" size="20px" alignSelf="center" />
             </InputLeftAddon>
             <Input
               type="text"
@@ -392,7 +390,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
           <FormLabel htmlFor="quantity">Quantity</FormLabel>
           <InputGroup>
             <InputLeftAddon padding="0.5rem">
-              <Image src={BitcoinIcon} height="20px" alignSelf="center" />
+              <Icon name="bitcoin" size="20px" alignSelf="center" />
             </InputLeftAddon>
             <Input
               type="text"
@@ -424,7 +422,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
           <FormLabel htmlFor="quote">Quote</FormLabel>
           <InputGroup>
             <InputLeftAddon padding="0.5rem">
-              <Image src={DaiIcon} height="20px" alignSelf="center" />
+              <Icon name="dai" size="20px" alignSelf="center" />
             </InputLeftAddon>
             <Input
               type="text"

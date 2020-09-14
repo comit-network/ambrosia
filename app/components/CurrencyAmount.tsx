@@ -1,7 +1,7 @@
 import {
   Box,
   Flex,
-  Image,
+  Icon,
   Spinner,
   Stat,
   StatHelpText,
@@ -11,9 +11,6 @@ import {
 } from '@chakra-ui/core';
 import React from 'react';
 import { RiCoinLine } from 'react-icons/all';
-import BitcoinIcon from '../assets/Bitcoin.svg';
-import DaiIcon from '../assets/Dai.svg';
-import EthereumIcon from '../assets/Ethereum.svg';
 import {
   amountToUnitString,
   Currency,
@@ -53,27 +50,27 @@ const currencyIcon = (currency: Currency, iconHeight?: string) => {
   switch (currency) {
     case Currency.BTC:
       return (
-        <Image
-          src={BitcoinIcon}
-          height={displayHeight}
+        <Icon
+          name="bitcoin"
+          size={displayHeight}
           marginRight="0.5rem"
           alignSelf="center"
         />
       );
     case Currency.DAI:
       return (
-        <Image
-          src={DaiIcon}
-          height={displayHeight}
+        <Icon
+          name="dai"
+          size={displayHeight}
           marginRight="0.5rem"
           alignSelf="center"
         />
       );
     case Currency.ETH:
       return (
-        <Image
-          src={EthereumIcon}
-          height={displayHeight}
+        <Icon
+          name="ethereum"
+          size={displayHeight}
           marginRight="0.5rem"
           alignSelf="center"
         />
@@ -82,7 +79,7 @@ const currencyIcon = (currency: Currency, iconHeight?: string) => {
       return (
         <Box
           as={RiCoinLine}
-          height={iconHeight}
+          size={iconHeight}
           marginRight="0.5rem"
           alignSelf="center"
           color="gray"
