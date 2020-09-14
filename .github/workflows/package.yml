@@ -25,6 +25,18 @@ jobs:
         with:
           node-version: 13
 
+      - name: Cache node_modules directory
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Cache app node_modules directory
+        uses: actions/cache@v2
+        with:
+          path: app/node_modules
+          key: ${{ matrix.os }}-app-node-modules-${{ hashFiles('app/yarn.lock') }}
+
       - name: yarn install
         run: |
           yarn install
