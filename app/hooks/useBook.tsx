@@ -3,7 +3,12 @@ import useDaiBalance from './useDaiBalance';
 import useEtherBalance from './useEtherBalance';
 import useOrders from './useOrders';
 import useBitcoinBalance from './useBitcoinBalance';
-import { calculateQuote, CurrencyValue, ETH_FEE } from '../utils/currency';
+import {
+  btcIntoCurVal,
+  calculateQuote,
+  CurrencyValue,
+  ETH_FEE
+} from '../utils/currency';
 import { Order } from '../utils/order';
 import { ethers } from 'ethers';
 
@@ -16,15 +21,25 @@ export function intoBook(
   const sumOfBtcInOrdersBigNumber = orders
     .filter(order => order.position === 'sell')
     .reduce((a, b) => {
-      const quantity = ethers.BigNumber.from(b.quantity.value);
-      return a.add(quantity);
+      const open = ethers.BigNumber.from(b.state.open.value);
+      const settling = ethers.BigNumber.from(b.state.settling.value);
+
+      const openAndSettling = open.add(settling);
+      return a.add(openAndSettling);
     }, ethers.BigNumber.from(0));
 
   const myBuyOrders = orders.filter(order => order.position === 'buy');
 
   // The sum of DAI in orders is the amount of DAI in buy orders (buying BTC = selling DAI), defined by price and quantity
   const sumOfDaiInOrdersBigNumber = myBuyOrders.reduce((a, b) => {
-    const quoteCurrencyVal = calculateQuote(b.price, b.quantity);
+    const open = ethers.BigNumber.from(b.state.open.value);
+    const settling = ethers.BigNumber.from(b.state.settling.value);
+    const openAndSettling = open.add(settling);
+
+    const quoteCurrencyVal = calculateQuote(
+      b.price,
+      btcIntoCurVal(openAndSettling)
+    );
     const quote = ethers.BigNumber.from(quoteCurrencyVal.value);
     return a.add(quote);
   }, ethers.BigNumber.from(0));

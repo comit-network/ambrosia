@@ -265,7 +265,7 @@ function getAliceParams(name: SwapStepName): DisplayParams {
     case SwapStepName.HERC20_HBIT_BOB_FUND:
       return {
         index: 3,
-        label: 'Maker Locks',
+        label: 'They Lock',
         protocol: Protocol.HER20,
         currency: Currency.BTC,
         isInteractionRequired: false
@@ -289,7 +289,7 @@ function getAliceParams(name: SwapStepName): DisplayParams {
     case SwapStepName.HBIT_HERC20_BOB_FUND:
       return {
         index: 2,
-        label: 'Maker Locks',
+        label: 'They Lock',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
         isInteractionRequired: false
@@ -342,7 +342,7 @@ function getBobParams(name: SwapStepName) {
     case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
       return {
         index: 4,
-        label: 'Alice Unlocks',
+        label: 'They Unlock',
         protocol: Protocol.HER20,
         currency: Currency.BTC,
         isInteractionRequired: false
@@ -382,7 +382,7 @@ function getBobParams(name: SwapStepName) {
     case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
       return {
         index: 4,
-        label: 'Alice Unlock',
+        label: 'They Unlock',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
         isInteractionRequired: false

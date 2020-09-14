@@ -76,6 +76,8 @@ function reducer(state: State, action: ComponentAction): State {
       if (!swap.action) {
         return {
           ...state,
+          activeAction: null,
+          activeActionStatus: null,
           swap
         };
       }
@@ -761,22 +763,19 @@ function isSwapStepActiveForAlice(
   swap: SwapProperties
 ) {
   const activeAction = state.activeAction;
-
-  if (!activeAction) {
-    return false;
-  }
-
   const events = swap.events;
 
   if (alphaProtocol === Protocol.HER20) {
     switch (swapStep) {
       case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.DEPLOY &&
           !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
         );
       case SwapStepName.HERC20_HBIT_ALICE_FUND:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           !containsEvent(events, SwapEventName.HERC20_FUNDED)
@@ -789,6 +788,7 @@ function isSwapStepActiveForAlice(
         );
       case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
@@ -802,6 +802,7 @@ function isSwapStepActiveForAlice(
     switch (swapStep) {
       case SwapStepName.HBIT_HERC20_ALICE_FUND:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.FUND &&
           !containsEvent(events, SwapEventName.HBIT_FUNDED)
         );
@@ -812,10 +813,12 @@ function isSwapStepActiveForAlice(
         );
       case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
-          containsEvent(events, SwapEventName.HERC20_FUNDED)
+          containsEvent(events, SwapEventName.HERC20_FUNDED) &&
+          !containsEvent(events, SwapEventName.HERC20_REDEEMED)
         );
       default:
         return false;
@@ -830,11 +833,6 @@ function isSwapStepActiveForBob(
   swap: SwapProperties
 ) {
   const activeAction = state.activeAction;
-
-  if (!activeAction) {
-    return false;
-  }
-
   const events = swap.events;
 
   if (alphaProtocol === Protocol.HER20) {
@@ -851,6 +849,7 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HERC20_HBIT_BOB_FUND:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
           !containsEvent(events, SwapEventName.HBIT_FUNDED)
@@ -864,6 +863,7 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HERC20_HBIT_BOB_REDEEM:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
@@ -882,12 +882,14 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.DEPLOY &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
         );
       case SwapStepName.HBIT_HERC20_BOB_FUND:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
@@ -902,6 +904,7 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HBIT_HERC20_BOB_REDEEM:
         return (
+          activeAction &&
           activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&

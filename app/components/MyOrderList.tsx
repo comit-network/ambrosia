@@ -21,89 +21,95 @@ export default function MyOrderList({
   const cnd = useCnd();
 
   const rows = [];
-  const currencyValueWidth = '30%';
-  const openAmountWidth = '10%';
+  const currencyValueWidth = '25%';
+  const openAmountWidth = '25%';
   const cancelButtonWidth = '30px';
 
   const currencyValuePadding = '0.3rem';
   const marginTopBottom = '0.3rem';
 
   for (const order of orders) {
-    const displayColorMode =
-      order.position === 'buy' ? ColorMode.CYAN : ColorMode.ORANGE;
-    const cancelButtonColor = order.position === 'buy' ? 'cyan' : 'orange';
-    const openAmountFontColor =
-      order.position === 'buy' ? 'cyan.800' : 'orange.800';
-    const quote = calculateQuote(order.price, order.quantity);
+    if (order.state.open.value !== '0' || order.state.settling.value !== '0') {
+      const displayColorMode =
+        order.position === 'buy' ? ColorMode.CYAN : ColorMode.ORANGE;
+      const cancelButtonColor = order.position === 'buy' ? 'cyan' : 'orange';
+      const quote = calculateQuote(order.price, order.quantity);
 
-    const cancelAction = order.actions.find(action => action.name === 'cancel');
+      const cancelAction = order.actions.find(
+        action => action.name === 'cancel'
+      );
 
-    rows.push(
-      <Flex
-        direction="row"
-        key={`price-${order.id}`}
-        padding={currencyValuePadding}
-        border="1px"
-        borderColor="gray.400"
-        rounded="lg"
-        marginBottom={marginTopBottom}
-        marginTop={marginTopBottom}
-        alignItems="center"
-        backgroundColor="gray.100"
-      >
-        <Box width={cancelButtonWidth}>
-          {cancelAction && (
-            <IconButton
-              size="xs"
-              aria-label="cancel"
-              icon="close"
-              onClick={async () => {
-                await cnd.client.request(
-                  await actionToHttpRequest(cancelAction)
-                );
-                await mutate('/orders');
-                await mutate('/balance/btc');
-                await mutate('/balance/eth');
-                await mutate('/balance/dai');
-              }}
-              variantColor={cancelButtonColor}
+      rows.push(
+        <Flex
+          direction="row"
+          key={`price-${order.id}`}
+          padding={currencyValuePadding}
+          border="1px"
+          borderColor="gray.400"
+          rounded="lg"
+          marginBottom={marginTopBottom}
+          marginTop={marginTopBottom}
+          alignItems="center"
+          backgroundColor="gray.100"
+        >
+          <Box width={cancelButtonWidth}>
+            {cancelAction && (
+              <IconButton
+                size="xs"
+                aria-label="cancel"
+                icon="close"
+                onClick={async () => {
+                  await cnd.client.request(
+                    await actionToHttpRequest(cancelAction)
+                  );
+                  await mutate('/orders');
+                  await mutate('/balance/btc');
+                  await mutate('/balance/eth');
+                  await mutate('/balance/dai');
+                }}
+                variantColor={cancelButtonColor}
+              />
+            )}
+          </Box>
+          <Box width={currencyValueWidth}>
+            <CurrencyAmount
+              currencyValue={order.price}
+              amountFontSize="sm"
+              iconHeight="1rem"
+              colourMode={displayColorMode}
+              noImage
             />
-          )}
-        </Box>
-        <Box width={currencyValueWidth}>
-          <CurrencyAmount
-            currencyValue={order.price}
-            amountFontSize="sm"
-            iconHeight="1rem"
-            colourMode={displayColorMode}
-            noImage
-          />
-        </Box>
-        <Box width={currencyValueWidth}>
-          <CurrencyAmount
-            currencyValue={order.quantity}
-            amountFontSize="sm"
-            iconHeight="1rem"
-            colourMode={displayColorMode}
-            noImage
-          />
-        </Box>
-        <Box width={currencyValueWidth}>
-          <CurrencyAmount
-            currencyValue={quote}
-            amountFontSize="sm"
-            iconHeight="1rem"
-            colourMode={displayColorMode}
-            noImage
-          />
-        </Box>
-        <Box width={openAmountWidth}>
-          <Text color={openAmountFontColor}>
-            {`${+order.state.open * 100}%`}
-          </Text>
-        </Box>
-      </Flex>
-    );
+          </Box>
+          <Box width={currencyValueWidth}>
+            <CurrencyAmount
+              currencyValue={order.quantity}
+              amountFontSize="sm"
+              iconHeight="1rem"
+              colourMode={displayColorMode}
+              noImage
+            />
+          </Box>
+          <Box width={currencyValueWidth}>
+            <CurrencyAmount
+              currencyValue={quote}
+              amountFontSize="sm"
+              iconHeight="1rem"
+              colourMode={displayColorMode}
+              noImage
+            />
+          </Box>
+          <Box width={openAmountWidth}>
+            <CurrencyAmount
+              currencyValue={order.state.open}
+              amountFontSize="sm"
+              iconHeight="1rem"
+              colourMode={displayColorMode}
+              noImage
+            />
+          </Box>
+        </Flex>
+      );
+    }
   }
 
   const currencyValHeader = (text, subText) => {

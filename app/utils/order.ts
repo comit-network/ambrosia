@@ -2,10 +2,11 @@ import { Action } from '../comit-sdk/cnd/siren';
 import { CurrencyValue } from './currency';
 
 export interface OrderState {
-  open: string;
-  closed: string;
-  settling: string;
-  failed: string;
+  open: CurrencyValue;
+  closed: CurrencyValue;
+  settling: CurrencyValue;
+  failed: CurrencyValue;
+  cancelled: CurrencyValue;
 }
 
 export interface Order {
