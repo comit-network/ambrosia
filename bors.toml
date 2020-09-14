@@ -1,5 +1,4 @@
 status = [
-    "static_analysis",
     "package (ubuntu-latest)",
     "package (macos-latest)",
     "package (windows-latest)",
