@@ -285,7 +285,7 @@
     "satoshi-bitcoin": "^1.0.4",
     "satoshi-bitcoin-ts": "^0.2.4",
     "source-map-support": "^0.5.16",
-    "swr": "^0.2.3",
+    "swr": "^0.3.2",
     "unstated-next": "^1.1.0",
     "urijs": "^1.19.2"
   },
