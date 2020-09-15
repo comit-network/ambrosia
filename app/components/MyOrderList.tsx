@@ -22,7 +22,6 @@ export default function MyOrderList({
 
   const rows = [];
   const currencyValueWidth = '25%';
-  const openAmountWidth = '25%';
   const cancelButtonWidth = '30px';
 
   const currencyValuePadding = '0.3rem';
@@ -98,7 +97,7 @@ export default function MyOrderList({
               noImage
             />
           </Box>
-          <Box width={openAmountWidth}>
+          <Box width={currencyValueWidth}>
             <CurrencyAmount
               currencyValue={order.state.open}
               amountFontSize="sm"
@@ -147,11 +146,7 @@ export default function MyOrderList({
           {currencyValHeader('Price', 'DAI')}
           {currencyValHeader('Quantity', 'BTC')}
           {currencyValHeader('Quote', 'DAI')}
-          <Box h="25px" paddingTop="0.1rem" width={openAmountWidth}>
-            <Text fontSize="sd" fontWeight="bold">
-              Open
-            </Text>
-          </Box>
+          {currencyValHeader('Open', 'BTC')}
         </Flex>
         <Flex
           direction="column"

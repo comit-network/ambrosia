@@ -288,9 +288,17 @@ export default function SwapRow({ href }: SwapRowProps) {
 
   const sendAmountDisplay =
     sendCurrency === Currency.BTC ? (
-      <CurrencyAmount currencyValue={sendAmount} topText={sendAmountLabel} />
+      <CurrencyAmount
+        currencyValue={sendAmount}
+        topText={sendAmountLabel}
+        minWidth="100px"
+      />
     ) : (
-      <CurrencyAmount currencyValue={sendAmount} topText={sendAmountLabel} />
+      <CurrencyAmount
+        currencyValue={sendAmount}
+        topText={sendAmountLabel}
+        minWidth="100px"
+      />
     );
 
   const receiveAmountDisplay =
@@ -298,11 +306,13 @@ export default function SwapRow({ href }: SwapRowProps) {
       <CurrencyAmount
         currencyValue={receiveAmount}
         topText={receiveAmountLabel}
+        minWidth="100px"
       />
     ) : (
       <CurrencyAmount
         currencyValue={receiveAmount}
         topText={receiveAmountLabel}
+        minWidth="100px"
       />
     );
 
