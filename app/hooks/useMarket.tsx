@@ -63,18 +63,30 @@ export function intoMarket(response: AxiosResponse<Entity>): Market {
   let highestBuyOrder = null;
   let lowestSellOrder = null;
 
-  if (
-    theirBuyOrders &&
-    theirSellOrders &&
-    theirBuyOrders.length > 1 &&
-    theirSellOrders.length > 1
-  ) {
+  if (theirBuyOrders && theirBuyOrders.length > 1) {
     // their highest buying price is my best selling price
     highestBuyOrder = theirBuyOrders.reduce((a, b) => {
+      if (a === null) {
+        return b;
+      }
+      if (b === null) {
+        return a;
+      }
+
       return a.quantity.value > b.quantity.value ? a : b;
     }, null);
+  }
+
+  if (theirSellOrders && theirSellOrders.length > 1) {
     // their lowest selling price is my best buying price
     lowestSellOrder = theirSellOrders.reduce((a, b) => {
+      if (a === null) {
+        return b;
+      }
+      if (b === null) {
+        return a;
+      }
+
       return a.quantity.value < b.quantity.value ? a : b;
     }, null);
   }

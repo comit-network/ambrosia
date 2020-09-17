@@ -253,21 +253,21 @@ function reducer(state: State, action: Action): State {
 }
 
 interface FormProperties {
-  initialState: State;
+  newState: State;
   label: string;
   variantColor: string;
 }
 
-function Form({ initialState, label, variantColor }: FormProperties) {
-  const [state, dispatch] = useReducer(reducer, initialState);
+function Form({ newState, label, variantColor }: FormProperties) {
+  const [state, dispatch] = useReducer(reducer, newState);
   const config = useConfig();
 
   useEffect(() => {
     dispatch({
       type: 'update',
-      value: initialState
+      value: newState
     });
-  }, [initialState]);
+  }, [newState]);
 
   const ethWallet = useLedgerEthereumWallet();
   const btcWallet = useLedgerBitcoinWallet();
@@ -327,14 +327,20 @@ function Form({ initialState, label, variantColor }: FormProperties) {
         const availableDaiBigInt = BigNumber.from(state.daiAvailable.value);
 
         if (state.position === Position.SELL) {
-          if (availableBtcBigInt.lt(quantityBigInt)) {
+          if (
+            availableBtcBigInt.lt(quantityBigInt) ||
+            quantityBigInt === BigNumber.from(0)
+          ) {
             console.error('Insufficient BTC');
             return;
           }
         }
 
         if (state.position === Position.BUY) {
-          if (availableDaiBigInt.lt(quoteBigInt)) {
+          if (
+            availableDaiBigInt.lt(quoteBigInt) ||
+            quoteBigInt === BigNumber.from(0)
+          ) {
             console.error('Insufficient DAI');
             return;
           }
@@ -364,7 +370,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
               type="text"
               id="price"
               rounded="0"
-              placeholder={initialState.price}
+              placeholder={newState.price}
               value={state.price}
               onChange={event =>
                 dispatch({
@@ -376,7 +382,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
             <InputRightAddon padding="0">
               <Button
                 onClick={() =>
-                  dispatch({ type: 'priceChange', value: initialState.price })
+                  dispatch({ type: 'priceChange', value: newState.price })
                 }
                 variantColor={variantColor}
               >
@@ -396,7 +402,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
               type="text"
               id="quantity"
               rounded="0"
-              placeholder={initialState.maxQuantity}
+              placeholder={newState.maxQuantity}
               value={state.quantity}
               onChange={event =>
                 dispatch({ type: 'quantityChange', value: event.target.value })
@@ -407,7 +413,7 @@ function Form({ initialState, label, variantColor }: FormProperties) {
                 onClick={() =>
                   dispatch({
                     type: 'quantityChange',
-                    value: initialState.maxQuantity
+                    value: newState.maxQuantity
                   })
                 }
                 variantColor={variantColor}
@@ -486,7 +492,8 @@ export default function OrderCreator({
   const initialBuyState: State = {
     position: Position.BUY,
 
-    price: amountToUnitString(initialBuyPrice),
+    price:
+      initialBuyPrice === ZERO_DAI ? '' : amountToUnitString(initialBuyPrice),
     quantity: '',
     quote: '',
 
@@ -504,13 +511,15 @@ export default function OrderCreator({
   };
 
   const initialSellPrice =
-    highestPriceBuyOrder !== null ? highestPriceBuyOrder.price : ZERO_DAI;
+    highestPriceBuyOrder !== null
+      ? amountToUnitString(highestPriceBuyOrder.price)
+      : '';
   const maxSellQuantity = btcIntoCurVal(maxBtcTradable(btcAvailable, BTC_FEE));
 
   const initialSellState: State = {
     position: Position.SELL,
 
-    price: amountToUnitString(initialSellPrice),
+    price: initialSellPrice,
     quantity: '',
     quote: '',
 
@@ -570,7 +579,8 @@ export default function OrderCreator({
           <TabPanel backgroundColor="white" height="100%">
             <Flex direction="column" padding="1rem">
               <Form
-                initialState={initialBuyState}
+                key="buy-form"
+                newState={initialBuyState}
                 label={'Buy'}
                 variantColor={myBuyOrderVariantColor}
               />
@@ -579,7 +589,8 @@ export default function OrderCreator({
           <TabPanel backgroundColor="white" height="100%">
             <Flex direction="column" padding="1rem">
               <Form
-                initialState={initialSellState}
+                key="sell-form"
+                newState={initialSellState}
                 label={'Sell'}
                 variantColor={mySellOrderVariantColor}
               />
