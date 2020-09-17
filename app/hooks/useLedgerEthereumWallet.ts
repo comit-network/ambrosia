@@ -1,5 +1,5 @@
 import { LedgerClient } from '../ledgerIpc';
-import ethers, { BigNumber, UnsignedTransaction } from 'ethers';
+import { ethers, BigNumber, UnsignedTransaction } from 'ethers';
 import { TransactionResponse } from '@ethersproject/abstract-provider';
 import { createContext, useContext } from 'react';
 import { Interface } from '@ethersproject/abi';
@@ -15,7 +15,7 @@ const erc20Interface = new Interface([
 ]);
 
 export class LedgerEthereumWallet {
-  web3: ethers.ethers.providers.JsonRpcProvider;
+  web3: ethers.providers.JsonRpcProvider;
 
   constructor(
     private readonly ledgerClient: LedgerClient,
