@@ -10,11 +10,10 @@ pull_request_rules:
     actions:
       comment:
         message: 'bors r+'
-  - name: instruct bors to merge PRs with passing tests and 2 approvals
+  - name: instruct bors to merge PRs with passing tests and 1 approval
     conditions:
       - '#approved-reviews-by>=1'
       - '#changes-requested-reviews-by=0'
-      - 'status-success=static_analysis'
       - 'status-success=package (ubuntu-latest)'
       - 'status-success=package (windows-latest)'
       - 'status-success=package (macos-latest)'
