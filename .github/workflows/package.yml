@@ -38,8 +38,7 @@ jobs:
           key: ${{ matrix.os }}-app-node-modules-${{ hashFiles('app/yarn.lock') }}
 
       - name: yarn install
-        run: |
-          yarn install
+        run: yarn install
 
       - name: yarn lint
         run: |
@@ -60,10 +59,8 @@ jobs:
       #       yarn test-e2e
 
       - name: yarn package
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          yarn package-ci
+        run: yarn package-ci
+
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'macOS-latest' && github.actor != 'dependabot'
         with:
