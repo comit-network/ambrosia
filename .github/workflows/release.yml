@@ -1,0 +1,66 @@
+name: 'Release Ambrosia'
+
+on:
+  release:
+    types: [created]
+
+jobs:
+  release:
+    name: Release ambrosia
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Checkout tagged commit
+        uses: actions/checkout@v2
+        with:
+          ref: ${{ github.event.release.target_commitish }}
+          token: ${{ secrets.BOTTY_GITHUB_TOKEN }}
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13
+
+      - name: yarn install
+        run: yarn install
+
+      - name: yarn package
+        # Token needed for cleanup (removing token triggered error in windows workflow)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: yarn package-ci
+
+      - name: Upload mac release binary
+        if: matrix.os == 'macOS-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOTTY_GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.dmg
+          asset_name: Ambrosia-${{github.event.release.tag_name}}.dmg
+          asset_content_type: application/octet-stream
+
+      - name: Upload linux release binary
+        if: matrix.os == 'ubuntu-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOTTY_GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.AppImage
+          asset_name: Ambrosia-${{github.event.release.tag_name}}.AppImage
+          asset_content_type: application/octet-stream
+
+      - name: Upload windows release binary
+        if: matrix.os == 'windows-latest'
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.BOTTY_GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.exe
+          asset_name: Ambrosia-${{github.event.release.tag_name}}.exe
+          asset_content_type: application/vnd.microsoft.portable-executable

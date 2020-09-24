@@ -38,32 +38,19 @@ jobs:
           key: ${{ matrix.os }}-app-node-modules-${{ hashFiles('app/yarn.lock') }}
 
       - name: yarn install
-        run: |
-          yarn install
+        run: yarn install
 
       - name: yarn lint
         run: |
           yarn lint
           yarn tsc
 
-      # - name: yarn test
-      #   run: |
-      #     yarn build
-      #     yarn test
-
-      # - name: Run E2E test
-      #   uses: GabrielBB/xvfb-action@v1.2
-      #   with:
-      #     working-directory: ./ #optional
-      #     run: |
-      #       yarn build-e2e
-      #       yarn test-e2e
-
       - name: yarn package
+        # Token needed for cleanup (removing token triggered error in windows workflow)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          yarn package-ci
+        run: yarn package-ci
+
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'macOS-latest' && github.actor != 'dependabot'
         with:
