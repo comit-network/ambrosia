@@ -27,6 +27,9 @@ jobs:
         run: yarn install
 
       - name: yarn package
+        # Token needed for cleanup (removing token triggered error in windows workflow)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn package-ci
 
       - name: Upload mac release binary

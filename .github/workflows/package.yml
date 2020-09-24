@@ -45,20 +45,10 @@ jobs:
           yarn lint
           yarn tsc
 
-      # - name: yarn test
-      #   run: |
-      #     yarn build
-      #     yarn test
-
-      # - name: Run E2E test
-      #   uses: GabrielBB/xvfb-action@v1.2
-      #   with:
-      #     working-directory: ./ #optional
-      #     run: |
-      #       yarn build-e2e
-      #       yarn test-e2e
-
       - name: yarn package
+        # Token needed for cleanup (removing token triggered error in windows workflow)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: yarn package-ci
 
       - uses: actions/upload-artifact@v2
