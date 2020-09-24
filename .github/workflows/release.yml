@@ -38,7 +38,7 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.dmg
           asset_name: Ambrosia-${{github.event.release.tag_name}}.dmg
-          asset_content_type: application/dmg
+          asset_content_type: application/octet-stream
 
       - name: Upload linux release binary
         if: matrix.os == 'ubuntu-latest'
@@ -49,7 +49,7 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.AppImage
           asset_name: Ambrosia-${{github.event.release.tag_name}}.AppImage
-          asset_content_type: application/AppImage
+          asset_content_type: application/octet-stream
 
       - name: Upload windows release binary
         if: matrix.os == 'windows-latest'
@@ -60,4 +60,4 @@ jobs:
           upload_url: ${{ github.event.release.upload_url }}
           asset_path: ./release/Ambrosia-${{github.event.release.tag_name}}.exe
           asset_name: Ambrosia-${{github.event.release.tag_name}}.exe
-          asset_content_type: application/exe
+          asset_content_type: application/vnd.microsoft.portable-executable
