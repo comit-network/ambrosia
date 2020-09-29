@@ -200,6 +200,7 @@ function ExportBitcoinAccountStatus({ progress }: StatusProps<Descriptors>) {
 
 interface Props {
   onComplete: ({
+    cndEndpoint,
     bitcoinRpcEndpoint,
     web3Endpoint,
     bitcoinLedgerAccountIndex,
@@ -275,7 +276,7 @@ export default function SetupPage({ onComplete }: Props) {
             ethereumLedgerAccountAddress: undefined
           }}
           onSubmit={async (values, actions) => {
-            let somethingFailed = false; // TODO: Instead of this, we should somehow use formik's `validate` function here
+            let somethingFailed = undefined; // TODO: Instead of this, we should somehow use formik's `validate` function here
 
             const cnd = new Cnd(`http://${values.cndEndpoint}`);
 
@@ -467,7 +468,8 @@ export default function SetupPage({ onComplete }: Props) {
               onComplete({
                 ...values,
                 ethereumLedgerAccountAddress: address,
-                bitcoinRpcEndpoint: `http://${values.bitcoinRpcEndpoint}`
+                bitcoinRpcEndpoint: `http://${values.bitcoinRpcEndpoint}`,
+                cndEndpoint: `http://${values.cndEndpoint}`
               });
             }
 

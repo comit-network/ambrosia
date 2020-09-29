@@ -86,6 +86,7 @@ export default function Layout() {
             {...props}
             onComplete={values => {
               const store = new ElectronStore<Config>();
+              store.set('CND_URL', values.cndEndpoint);
               store.set('BITCOIND_ENDPOINT', values.bitcoinRpcEndpoint);
               store.set('WEB3_ENDPOINT', values.web3Endpoint);
               store.set(
