@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/ban-ts-ignore: off */
-import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
+import { app, BrowserWindow, Menu } from 'electron';
 import path from 'path';
 import fs from 'fs';
 
@@ -18,88 +18,77 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    // this menu enables keyboard shortcuts for mac, without it the shortcuts won't be available on mac
-    // see details here: https://github.com/onmyway133/blog/issues/67
-    const edit: MenuItemConstructorOptions = {
-      label: 'Edit',
+    const template = [];
+
+    // File Menu
+    template.push({
+      label: '&File',
       submenu: [
         {
-          label: 'Undo',
-          accelerator: 'CmdOrCtrl+Z',
-          // @ts-ignore
-          selector: 'undo:'
+          label: 'Reset config',
+          click: () => {
+            // TODO: let the user confirm this with a dialog, need IPC for that
+            const configPath = path.join(
+              app.getPath('userData'),
+              'config.json'
+            );
+
+            if (fs.existsSync(configPath)) {
+              fs.unlinkSync(configPath);
+            }
+
+            this.mainWindow.reload();
+          }
         },
         {
-          label: 'Redo',
-          accelerator: 'Shift+CmdOrCtrl+Z',
-          // @ts-ignore
-          selector: 'redo:'
-        },
-        {
-          type: 'separator'
-        },
-        {
-          label: 'Cut',
-          accelerator: 'CmdOrCtrl+X',
-          // @ts-ignore
-          selector: 'cut:'
-        },
-        {
-          label: 'Copy',
-          accelerator: 'CmdOrCtrl+C',
-          // @ts-ignore
-          selector: 'copy:'
-        },
-        {
-          label: 'Paste',
-          accelerator: 'CmdOrCtrl+V',
-          // @ts-ignore
-          selector: 'paste:'
-        },
-        {
-          label: 'Select All',
-          accelerator: 'CmdOrCtrl+A',
-          // @ts-ignore
-          selector: 'selectAll:'
+          label: 'Exit',
+          click: () => {
+            app.quit();
+          }
         }
       ]
-    };
+    });
 
-    // @ts-ignore
-    const file: MenuItemConstructorOptions = Menu.buildFromTemplate([
-      {
-        label: '&File',
-        submenu: [
-          {
-            label: 'Reset config',
-            click: () => {
-              // TODO: let the user confirm this with a dialog, need IPC for that
-              const configPath = path.join(
-                app.getPath('userData'),
-                'config.json'
-              );
+    // The menu items below are necessary to support keyboard shortcuts on mac
 
-              if (fs.existsSync(configPath)) {
-                fs.unlinkSync(configPath);
-              }
+    // Edit Menu
+    template.push({
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'pasteandmatchstyle' },
+        { role: 'delete' },
+        { role: 'selectall' }
+      ]
+    });
+    // View Menu
+    template.push({
+      label: 'View',
+      submenu: [{ role: 'togglefullscreen' }]
+    });
+    // Window menu
+    template.push({
+      role: 'window',
+      submenu: [{ role: 'minimize' }, { role: 'close' }]
+    });
 
-              this.mainWindow.reload();
-            }
-          },
-          {
-            label: 'Exit',
-            click: () => {
-              app.quit();
-            }
-          }
-        ]
-      }
-    ]);
+    if (process.platform === 'darwin') {
+      // Window menu
+      template[3].submenu = [
+        { role: 'close' },
+        { role: 'minimize' },
+        { type: 'separator' },
+        { role: 'front' }
+      ];
+    }
 
-    const menu = [file, edit];
-
-    Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
-    return menu;
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    return template;
   }
 
   setupDevelopmentEnvironment() {
