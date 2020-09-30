@@ -22,9 +22,38 @@ import { Descriptors, LedgerClient } from '../ledgerIpc';
 import { ipcRenderer } from 'electron';
 import { sleep } from '../comit-sdk/util/sleep';
 import { LedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
+import { Cnd } from '../comit-sdk';
 
 interface StatusProps<T> {
   progress: Progress<T>;
+}
+
+function CndConnectionStatus({ progress }: StatusProps<string>) {
+  if (progress.inProgress) {
+    return (
+      <>
+        <Spinner size={'sm'} mr={2} />
+      </>
+    );
+  }
+
+  if (progress.value) {
+    return (
+      <>
+        <ListIcon icon="check-circle" color="green.500" />
+      </>
+    );
+  }
+
+  if (!progress.value && progress.attempted) {
+    return (
+      <>
+        <ListIcon icon="close" color="red.500" />
+      </>
+    );
+  }
+
+  return null;
 }
 
 function BitcoinConnectionStatus({ progress }: StatusProps<string>) {
@@ -171,6 +200,7 @@ function ExportBitcoinAccountStatus({ progress }: StatusProps<Descriptors>) {
 
 interface Props {
   onComplete: ({
+    cndEndpoint,
     bitcoinRpcEndpoint,
     web3Endpoint,
     bitcoinLedgerAccountIndex,
@@ -188,6 +218,12 @@ interface Progress<T> {
 
 // TODO: Add a field for cnd here ...
 export default function SetupPage({ onComplete }: Props) {
+  const [fetchCndStatusProgress, setFetchCndStatusProgress] = useState<
+    Progress<string>
+  >({
+    inProgress: false,
+    attempted: false
+  });
   const [
     fetchBitcoinNetworkProgress,
     setFetchBitcoinNetworkProgress
@@ -231,23 +267,45 @@ export default function SetupPage({ onComplete }: Props) {
 
         <Formik
           validateOnBlur
-          // initialValues={{
-          //   bitcoinRpcEndpoint: '__cookie__:59838af3a5a06d5977f612acacb1c788370a2734dd7057e9442ed309f0557c6e@localhost:18443',
-          //   web3Endpoint: 'https://ropsten.infura.io/v3/882e8bd8f15a488f9b025ce33c006b23',
-          //   bitcoinLedgerAccountIndex: 0,
-          //   ethereumLedgerAccountIndex: 0,
-          //   ethereumLedgerAccountAddress: undefined
-          // }}
           initialValues={{
-            bitcoinRpcEndpoint:
-              'bitcoin:t68ej4UX2pB0cLlGwSwHFBLKxXYgomkXyFyxuBmm2U8%3D@127.0.0.1:18443',
-            web3Endpoint: 'http://localhost:8545',
+            bitcoinRpcEndpoint: undefined,
+            web3Endpoint: undefined,
+            cndEndpoint: '127.0.0.1:8000',
             bitcoinLedgerAccountIndex: undefined,
             ethereumLedgerAccountIndex: undefined,
             ethereumLedgerAccountAddress: undefined
           }}
           onSubmit={async (values, actions) => {
-            let somethingFailed = false; // TODO: Instead of this, we should somehow use formik's `validate` function here
+            let somethingFailed = undefined; // TODO: Instead of this, we should somehow use formik's `validate` function here
+
+            const cnd = new Cnd(`http://${values.cndEndpoint}`);
+
+            if (!fetchCndStatusProgress.value) {
+              setFetchCndStatusProgress({
+                inProgress: true,
+                attempted: true
+              });
+              try {
+                const peerId = await cnd.getPeerId();
+                await sleep(500);
+                setFetchCndStatusProgress({
+                  inProgress: false,
+                  value: peerId,
+                  attempted: true
+                });
+              } catch (e) {
+                actions.setFieldError(
+                  'cndEndpoint',
+                  `Unable to connect to cnd: ${e}`
+                );
+                setFetchCndStatusProgress({
+                  inProgress: false,
+                  attempted: true,
+                  error: e
+                });
+                somethingFailed = true;
+              }
+            }
 
             const ledgerClient = new LedgerClient(ipcRenderer);
 
@@ -410,14 +468,71 @@ export default function SetupPage({ onComplete }: Props) {
               onComplete({
                 ...values,
                 ethereumLedgerAccountAddress: address,
-                bitcoinRpcEndpoint: `http://${values.bitcoinRpcEndpoint}`
+                bitcoinRpcEndpoint: `http://${values.bitcoinRpcEndpoint}`,
+                cndEndpoint: `http://${values.cndEndpoint}`
               });
             }
+
+            return somethingFailed;
           }}
         >
           {props => (
             <form onSubmit={props.handleSubmit}>
               <Stack spacing={8}>
+                <Box>
+                  <Field
+                    name="cndEndpoint"
+                    validate={url => {
+                      if (!url || url.length === 0) {
+                        return 'URL cannot be empty!';
+                      }
+
+                      return undefined;
+                    }}
+                  >
+                    {({ field, form }) => (
+                      <>
+                        <FormControl
+                          isInvalid={
+                            form.errors.cndEndpoint && form.touched.cndEndpoint
+                          }
+                        >
+                          <FormLabel htmlFor="cndEndpoint">
+                            COMIT network daemon (cnd) endpoint
+                          </FormLabel>
+                          <InputGroup>
+                            <InputLeftAddon>http://</InputLeftAddon>
+                            <Input
+                              {...field}
+                              type="text"
+                              id="cndEndpoint"
+                              aria-describedby="cndEndpoint_helper_text"
+                              placeholder={'127.0.0.1:8000'}
+                            />
+                            <InputRightElement>
+                              <CndConnectionStatus
+                                progress={fetchCndStatusProgress}
+                              />
+                            </InputRightElement>
+                          </InputGroup>
+                          <FormHelperText id="cndEndpoint_helper_text">
+                            The URL to your COMIT network daemon.
+                          </FormHelperText>
+                          <FormErrorMessage>
+                            {form.errors.cndEndpoint}
+                          </FormErrorMessage>
+                        </FormControl>
+                        <Collapse
+                          mt={2}
+                          isOpen={fetchCndStatusProgress.value !== undefined}
+                        >
+                          Connected to cnd with Peer ID &apos;
+                          {fetchCndStatusProgress.value}&apos;
+                        </Collapse>
+                      </>
+                    )}
+                  </Field>
+                </Box>
                 <Box>
                   <Field
                     name="web3Endpoint"
@@ -446,7 +561,9 @@ export default function SetupPage({ onComplete }: Props) {
                               type="text"
                               id="web3Endpoint"
                               aria-describedby="web3Endpoint_helper_text"
-                              placeholder={'http://localhost:8545'}
+                              placeholder={
+                                'https://infura.io/v3/your-project-id'
+                              }
                             />
                             <InputRightElement>
                               <EthereumConnectionStatus
@@ -468,8 +585,8 @@ export default function SetupPage({ onComplete }: Props) {
                             fetchEthereumChainProgress.value !== undefined
                           }
                         >
-                          Connected to Ethereum network `&apos;`
-                          {fetchEthereumChainProgress.value}`&apos;`
+                          Connected to Ethereum network &apos;
+                          {fetchEthereumChainProgress.value}&apos;
                         </Collapse>
                       </>
                     )}
@@ -514,8 +631,8 @@ export default function SetupPage({ onComplete }: Props) {
                             </InputRightElement>
                           </InputGroup>
                           <FormHelperText id="bitcoin_core_endpoint_helper_text">
-                            The URL to your Bitcoin-Core node. Take care to
-                            provide the right port depending on the network!
+                            The RPC-endpoint URL to your Bitcoin-Core node. Port
+                            8332 for mainnet, 18443 for regtest.
                           </FormHelperText>
                           <FormErrorMessage>
                             {form.errors.bitcoinRpcEndpoint}
@@ -527,8 +644,8 @@ export default function SetupPage({ onComplete }: Props) {
                             fetchBitcoinNetworkProgress.value !== undefined
                           }
                         >
-                          Connected to Bitcoin network `&apos;`
-                          {fetchBitcoinNetworkProgress.value}`&apos;`
+                          Connected to Bitcoin network &apos;
+                          {fetchBitcoinNetworkProgress.value}&apos;
                         </Collapse>
                       </>
                     )}
@@ -558,7 +675,7 @@ export default function SetupPage({ onComplete }: Props) {
                           </FormLabel>
                           <InputGroup>
                             <InputLeftAddon>
-                              m/44`&apos;`/60`&apos;`/
+                              m/44&apos;/60&apos;/
                             </InputLeftAddon>
                             <Input
                               {...field}
@@ -575,7 +692,7 @@ export default function SetupPage({ onComplete }: Props) {
                           </InputGroup>
                           <FormHelperText id="ethereumLedgerAccountIndex_helper_text">
                             The Ethereum account on your Nano Ledger that you
-                            would like use. Most likely `&apos;`0`&apos;`.
+                            would like use. Most likely &apos;0&apos;.
                           </FormHelperText>
                           <FormErrorMessage>
                             {form.errors.ethereumLedgerAccountIndex}
@@ -613,9 +730,7 @@ export default function SetupPage({ onComplete }: Props) {
                             Nano Ledger Bitcoin Account
                           </FormLabel>
                           <InputGroup>
-                            <InputLeftAddon>
-                              m/84`&apos;`/0`&apos;`/
-                            </InputLeftAddon>
+                            <InputLeftAddon>m/84&apos;/0&apos;/</InputLeftAddon>
                             <Input
                               {...field}
                               type="number"

@@ -41,7 +41,7 @@ export default function WelcomePage() {
             variantColor="green"
             onClick={() => history.push(routes.SETUP)}
           >
-            I am ready, let`&apos;`s start!
+            I am ready, let&apos;s start!
           </Button>
         </Box>
       </Stack>
