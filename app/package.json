@@ -1,7 +1,7 @@
 {
   "name": "ambrosia",
   "productName": "Ambrosia",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "description": "A peer-to-peer, non-custodial crypto currency trading application.",
   "main": "./main.prod.js",
   "author": {
