@@ -18,38 +18,77 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    const menu = Menu.buildFromTemplate([
-      {
-        label: '&File',
-        submenu: [
-          {
-            label: 'Reset config',
-            click: () => {
-              // TODO: let the user confirm this with a dialog, need IPC for that
-              const configPath = path.join(
-                app.getPath('userData'),
-                'config.json'
-              );
+    const template = [];
 
-              if (fs.existsSync(configPath)) {
-                fs.unlinkSync(configPath);
-              }
+    // File Menu
+    template.push({
+      label: '&File',
+      submenu: [
+        {
+          label: 'Reset config',
+          click: () => {
+            // TODO: let the user confirm this with a dialog, need IPC for that
+            const configPath = path.join(
+              app.getPath('userData'),
+              'config.json'
+            );
 
-              this.mainWindow.reload();
+            if (fs.existsSync(configPath)) {
+              fs.unlinkSync(configPath);
             }
-          },
-          {
-            label: 'Exit',
-            click: () => {
-              app.quit();
-            }
+
+            this.mainWindow.reload();
           }
-        ]
-      }
-    ]);
-    Menu.setApplicationMenu(menu);
+        },
+        {
+          label: 'Exit',
+          click: () => {
+            app.quit();
+          }
+        }
+      ]
+    });
 
-    return menu;
+    // The menu items below are necessary to support keyboard shortcuts on mac
+
+    // Edit Menu
+    template.push({
+      label: 'Edit',
+      submenu: [
+        { role: 'undo' },
+        { role: 'redo' },
+        { type: 'separator' },
+        { role: 'cut' },
+        { role: 'copy' },
+        { role: 'paste' },
+        { role: 'pasteandmatchstyle' },
+        { role: 'delete' },
+        { role: 'selectall' }
+      ]
+    });
+    // View Menu
+    template.push({
+      label: 'View',
+      submenu: [{ role: 'togglefullscreen' }]
+    });
+    // Window menu
+    template.push({
+      role: 'window',
+      submenu: [{ role: 'minimize' }, { role: 'close' }]
+    });
+
+    if (process.platform === 'darwin') {
+      // Window menu
+      template[3].submenu = [
+        { role: 'close' },
+        { role: 'minimize' },
+        { type: 'separator' },
+        { role: 'front' }
+      ];
+    }
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(template));
+    return template;
   }
 
   setupDevelopmentEnvironment() {
