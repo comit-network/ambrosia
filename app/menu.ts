@@ -1,5 +1,5 @@
 /* eslint @typescript-eslint/ban-ts-ignore: off */
-import { app, BrowserWindow, Menu } from 'electron';
+import { app, BrowserWindow, Menu, MenuItemConstructorOptions } from 'electron';
 import path from 'path';
 import fs from 'fs';
 
@@ -18,7 +18,55 @@ export default class MenuBuilder {
       this.setupDevelopmentEnvironment();
     }
 
-    const menu = Menu.buildFromTemplate([
+    // this menu enables keyboard shortcuts for mac, without it the shortcuts won't be available on mac
+    // see details here: https://github.com/onmyway133/blog/issues/67
+    const edit: MenuItemConstructorOptions = {
+      label: 'Edit',
+      submenu: [
+        {
+          label: 'Undo',
+          accelerator: 'CmdOrCtrl+Z',
+          // @ts-ignore
+          selector: 'undo:'
+        },
+        {
+          label: 'Redo',
+          accelerator: 'Shift+CmdOrCtrl+Z',
+          // @ts-ignore
+          selector: 'redo:'
+        },
+        {
+          type: 'separator'
+        },
+        {
+          label: 'Cut',
+          accelerator: 'CmdOrCtrl+X',
+          // @ts-ignore
+          selector: 'cut:'
+        },
+        {
+          label: 'Copy',
+          accelerator: 'CmdOrCtrl+C',
+          // @ts-ignore
+          selector: 'copy:'
+        },
+        {
+          label: 'Paste',
+          accelerator: 'CmdOrCtrl+V',
+          // @ts-ignore
+          selector: 'paste:'
+        },
+        {
+          label: 'Select All',
+          accelerator: 'CmdOrCtrl+A',
+          // @ts-ignore
+          selector: 'selectAll:'
+        }
+      ]
+    };
+
+    // @ts-ignore
+    const file: MenuItemConstructorOptions = Menu.buildFromTemplate([
       {
         label: '&File',
         submenu: [
@@ -47,8 +95,10 @@ export default class MenuBuilder {
         ]
       }
     ]);
-    Menu.setApplicationMenu(menu);
 
+    const menu = [file, edit];
+
+    Menu.setApplicationMenu(Menu.buildFromTemplate(menu));
     return menu;
   }
 
