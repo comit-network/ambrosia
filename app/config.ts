@@ -59,6 +59,8 @@ const CONFIG_CONTEXT = createContext(null);
 
 export const Provider = CONFIG_CONTEXT.Provider;
 
-export function useConfig(): Config {
+type setConfig = (config: Partial<Config>) => void;
+
+export function useConfig(): [Config, setConfig] {
   return useContext(CONFIG_CONTEXT);
 }

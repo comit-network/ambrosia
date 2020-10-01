@@ -260,7 +260,7 @@ interface FormProperties {
 
 function Form({ initialState, label, variantColor }: FormProperties) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const config = useConfig();
+  const [config] = useConfig();
 
   useEffect(() => {
     dispatch({

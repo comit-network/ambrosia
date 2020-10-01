@@ -29,7 +29,7 @@ type Props = {
 };
 
 const App = ({ store, history }: Props) => {
-  const config = useConfig();
+  const [config] = useConfig();
 
   // emotions bug fix, see: https://github.com/emotion-js/emotion/issues/1105#issuecomment-557726922
   const myCache = createCache();
