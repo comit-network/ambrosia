@@ -88,7 +88,7 @@ export class LedgerBitcoinWallet {
             }
           ],
           {
-            rescan: true
+            rescan: false
           }
         ]
       })
