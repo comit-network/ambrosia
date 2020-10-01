@@ -25,7 +25,7 @@ document.addEventListener('DOMContentLoaded', async () => {
   const effectiveConfig =
     comitEnvConfig && process.env.NODE_ENV === 'development'
       ? comitEnvConfig
-      : electronStore;
+      : electronStore.store;
 
   const effectiveSetConfig =
     comitEnvConfig && process.env.NODE_ENV === 'development'

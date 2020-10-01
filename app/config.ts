@@ -55,12 +55,12 @@ export function fromComitEnv(): Config | null {
   };
 }
 
-const CONFIG_CONTEXT = createContext(null);
+type ConfigSetter = (config: Partial<Config>) => void;
+
+const CONFIG_CONTEXT = createContext<[Config, ConfigSetter]>(null);
 
 export const Provider = CONFIG_CONTEXT.Provider;
 
-type setConfig = (config: Partial<Config>) => void;
-
-export function useConfig(): [Config, setConfig] {
+export function useConfig() {
   return useContext(CONFIG_CONTEXT);
 }
