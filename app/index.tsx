@@ -40,6 +40,8 @@ document.addEventListener('DOMContentLoaded', async () => {
     );
     await importDescriptorOfDanielsLedger(comitEnvConfig).catch(console.error);
     document.title += ` - ${comitEnvConfig.ROLE}`;
+  } else {
+    console.info('Using config: ' + electronStore.path);
   }
 
   render(

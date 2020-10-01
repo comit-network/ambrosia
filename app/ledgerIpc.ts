@@ -87,7 +87,7 @@ export class LedgerServer {
     this.ipc.handle(GET_ETHEREUM_ACCOUNT, async (_, accountIndex) => {
       const transport = await TransportNodeHid.open();
       const eth = new AppEth(transport);
-      const result = await eth.getAddress(`m/44'/60'/${accountIndex}'/0`);
+      const result = await eth.getAddress(`m/44'/60'/${accountIndex}'/0/0`);
 
       await transport.close();
 
@@ -102,7 +102,7 @@ export class LedgerServer {
         const hex = tx.startsWith('0x') ? tx.substr(2) : tx;
 
         let { v, r, s } = await eth.signTransaction(
-          `m/44'/60'/${accountIndex}'/0`,
+          `m/44'/60'/${accountIndex}'/0/0`,
           hex
         );
 
