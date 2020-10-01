@@ -260,7 +260,7 @@ interface FormProperties {
 
 function Form({ initialState, label, variantColor }: FormProperties) {
   const [state, dispatch] = useReducer(reducer, initialState);
-  const config = useConfig();
+  const [config] = useConfig();
 
   useEffect(() => {
     dispatch({
@@ -291,9 +291,9 @@ function Form({ initialState, label, variantColor }: FormProperties) {
       price: weiPerSat.toString(),
       swap: {
         role: config.ROLE,
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line camelcase
         bitcoin_address: await btcWallet.getNewAddress(),
-        // eslint-disable-next-line @typescript-eslint/camelcase
+        // eslint-disable-next-line camelcase
         ethereum_address: ethWallet.getAccount()
       }
     };

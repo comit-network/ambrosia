@@ -138,7 +138,7 @@ interface ActiveStepProps {
 }
 
 const ActiveStep = ({ swap, href, state, dispatch }: ActiveStepProps) => {
-  const config = useConfig();
+  const [config] = useConfig();
 
   for (const key of enumKeys(SwapStepName)) {
     const swapStepEnumVal = SwapStepName[key];
@@ -411,7 +411,7 @@ const SwapStatus = ({
     );
   };
 
-  const config = useConfig();
+  const [config] = useConfig();
   const role = config.ROLE;
 
   const ledgerAction = state.ledgerAction;

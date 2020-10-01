@@ -24,8 +24,7 @@ import WalletPage from './WalletPage';
 import DashboardPage from './DashboardPage';
 import WelcomePage from './WelcomePage';
 import SetupPage from './SetupPage';
-import { Config, useConfig } from '../config';
-import ElectronStore from 'electron-store';
+import { useConfig } from '../config';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -60,7 +59,7 @@ const WALLET = 'WALLET';
 export default function Layout() {
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [activeContent, setActiveContent] = useState(DASHBOARD);
-  const config = useConfig();
+  const [config, setConfig] = useConfig();
 
   const setupCompleted = config.SETUP_COMPLETE;
 
@@ -85,24 +84,17 @@ export default function Layout() {
           <SetupPage
             {...props}
             onComplete={values => {
-              const store = new ElectronStore<Config>();
-              store.set('CND_URL', values.cndEndpoint);
-              store.set('BITCOIND_ENDPOINT', values.bitcoinRpcEndpoint);
-              store.set('WEB3_ENDPOINT', values.web3Endpoint);
-              store.set(
-                'LEDGER_BITCOIN_ACCOUNT_INDEX',
-                values.bitcoinLedgerAccountIndex
-              );
-              store.set(
-                'LEDGER_ETHEREUM_ACCOUNT_INDEX',
-                values.ethereumLedgerAccountIndex
-              );
-              store.set(
-                'LEDGER_ETHEREUM_ACCOUNT_ADDRESS',
-                values.ethereumLedgerAccountAddress
-              );
-              store.set('SETUP_COMPLETE', true);
-
+              setConfig({
+                CND_URL: values.cndEndpoint,
+                BITCOIND_ENDPOINT: values.bitcoinRpcEndpoint,
+                WEB3_ENDPOINT: values.web3Endpoint,
+                LEDGER_BITCOIN_ACCOUNT_INDEX: values.bitcoinLedgerAccountIndex,
+                LEDGER_ETHEREUM_ACCOUNT_INDEX:
+                  values.ethereumLedgerAccountIndex,
+                LEDGER_ETHEREUM_ACCOUNT_ADDRESS:
+                  values.ethereumLedgerAccountAddress,
+                SETUP_COMPLETE: true
+              });
               history.push(routes.HOME);
             }}
           />

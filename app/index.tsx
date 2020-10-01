@@ -12,10 +12,11 @@ import { ipcRenderer } from 'electron';
 const reduxStore = configureStore();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
-const store = new ElectronStore<Config>();
+const electronStore = new ElectronStore<Config>();
 
 document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line global-require
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const App = require('./App').default;
 
   const comitEnvConfig = fromComitEnv();
@@ -24,7 +25,14 @@ document.addEventListener('DOMContentLoaded', async () => {
   const effectiveConfig =
     comitEnvConfig && process.env.NODE_ENV === 'development'
       ? comitEnvConfig
-      : store;
+      : electronStore.store;
+
+  const effectiveSetConfig =
+    comitEnvConfig && process.env.NODE_ENV === 'development'
+      ? () => undefined
+      : newConfig => {
+          electronStore.set(newConfig);
+        };
 
   if (comitEnvConfig && process.env.NODE_ENV === 'development') {
     console.info(
@@ -36,7 +44,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
   render(
     <AppContainer>
-      <ConfigProvider value={effectiveConfig}>
+      <ConfigProvider value={[effectiveConfig, effectiveSetConfig]}>
         <App store={reduxStore} history={history} />
       </ConfigProvider>
     </AppContainer>,
