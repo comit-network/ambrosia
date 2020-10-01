@@ -1,4 +1,3 @@
-/* eslint @typescript-eslint/ban-ts-ignore: off */
 import { app, BrowserWindow, Menu } from 'electron';
 import path from 'path';
 import fs from 'fs';

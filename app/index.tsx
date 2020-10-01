@@ -16,6 +16,7 @@ const store = new ElectronStore<Config>();
 
 document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line global-require
+  // eslint-disable-next-line @typescript-eslint/no-var-requires
   const App = require('./App').default;
 
   const comitEnvConfig = fromComitEnv();

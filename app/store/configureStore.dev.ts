@@ -10,7 +10,8 @@ declare global {
     __REDUX_DEVTOOLS_EXTENSION_COMPOSE__: (
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
       obj: Record<string, any>
-    ) => Function;
+    ) => // eslint-disable-next-line @typescript-eslint/ban-types
+    Function;
   }
   interface NodeModule {
     hot?: {
@@ -70,7 +71,7 @@ const configureStore = () => {
   if (module.hot) {
     module.hot.accept(
       '../reducers',
-      // eslint-disable-next-line global-require
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
       () => store.replaceReducer(require('../reducers').default)
     );
   }
