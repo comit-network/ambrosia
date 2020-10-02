@@ -112,7 +112,8 @@ export class LedgerBitcoinWallet {
           ],
           null,
           {
-            feeRate: btcPerKB
+            feeRate: btcPerKB,
+            change_type: 'bech32'
           }
         ]
       })
