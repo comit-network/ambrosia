@@ -25,6 +25,7 @@ import DashboardPage from './DashboardPage';
 import WelcomePage from './WelcomePage';
 import SetupPage from './SetupPage';
 import { useConfig } from '../config';
+import { Role } from '../utils/swap';
 
 const NavIcon = styled(Icon)`
   margin-top: -3px;
@@ -93,6 +94,7 @@ export default function Layout() {
                   values.ethereumLedgerAccountIndex,
                 LEDGER_ETHEREUM_ACCOUNT_ADDRESS:
                   values.ethereumLedgerAccountAddress,
+                ROLE: Role.ALICE,
                 SETUP_COMPLETE: true
               });
               history.push(routes.HOME);
