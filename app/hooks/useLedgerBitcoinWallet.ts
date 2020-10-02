@@ -128,10 +128,10 @@ export class LedgerBitcoinWallet {
 
         const tx = await this.client
           .post(`/wallet/${this.walletName}`, {
-            method: 'getrawtransaction',
+            method: 'gettransaction',
             params: [txId, false]
           })
-          .then(r => r.data);
+          .then(r => r.data.hex);
 
         return {
           tx,

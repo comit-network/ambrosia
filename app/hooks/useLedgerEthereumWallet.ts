@@ -40,7 +40,8 @@ export class LedgerEthereumWallet {
     const unsignedTransaction = {
       ...tx,
       nonce: nonce,
-      chainId: network.chainId
+      chainId: network.chainId,
+      gasPrice: await this.web3.getGasPrice()
     };
 
     const signature = await this.ledgerClient.signEthereumTransaction(
