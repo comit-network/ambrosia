@@ -1,4 +1,4 @@
-import { Protocol, Role, SwapEvent } from '../utils/swap';
+import { Protocol, Role, SwapEvent, SwapEventName } from '../utils/swap';
 import {
   Badge,
   Box,
