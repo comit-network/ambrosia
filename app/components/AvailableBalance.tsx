@@ -26,21 +26,18 @@ export default function AvailableBalance({
         currencyValue={btcAvailable}
         topText="Available BTC"
         subText1={`In orders: ${amountToUnitString(btcReserved)}`}
-        amountShortenPosition={8}
         amountFontSize="14pt"
       />
       <CurrencyAmount
         currencyValue={daiAvailable}
         topText="Available DAI"
         subText1={`In orders: ${amountToUnitString(daiReserved)}`}
-        amountShortenPosition={8}
         amountFontSize="14pt"
       />
       <CurrencyAmount
         currencyValue={ethAvailable}
         topText="Available ETH"
         subText1={`In orders: ${amountToUnitString(ethReserved)}`}
-        amountShortenPosition={8}
         amountFontSize="14pt"
       />
     </StatGroup>

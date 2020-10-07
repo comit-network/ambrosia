@@ -3,6 +3,7 @@ import { Descriptors, LedgerClient } from '../ledgerIpc';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Psbt } from 'bitcoinjs-lib';
 import { BigNumber } from 'ethers';
+import { btcIntoCurVal } from '../utils/currency';
 
 function jsonRpcResponseInterceptor(error: AxiosError): Promise<AxiosError> {
   const response = error.response;
@@ -97,9 +98,22 @@ export class LedgerBitcoinWallet {
 
   public async sendToAddress(
     address: string,
-    satoshis: string,
-    btcPerKB: number
+    satoshis: string
   ): Promise<string> {
+    const network = await this.getConnectedNetwork();
+
+    // on mainnet, use the wallet's fee estimation
+    // in all other cases, specify a fixed fee
+    const feeOptions =
+      network === 'main'
+        ? {
+            conf_target: 6,
+            estimate_mode: 'ECONOMICAL'
+          }
+        : {
+            feeRate: 0.0005
+          };
+
     const psbt = await this.client
       .post(`/wallet/${this.walletName}`, {
         method: 'walletcreatefundedpsbt',
@@ -112,8 +126,8 @@ export class LedgerBitcoinWallet {
           ],
           null,
           {
-            feeRate: btcPerKB,
-            change_type: 'bech32'
+            change_type: 'bech32',
+            ...feeOptions
           }
         ]
       })
@@ -239,7 +253,8 @@ export class LedgerBitcoinWallet {
       })
       .then(r => r.data);
 
-    return BigNumber.from(balance * 100_000_000);
+    const curVal = btcIntoCurVal(balance);
+    return BigNumber.from(curVal.value);
   }
 }
 

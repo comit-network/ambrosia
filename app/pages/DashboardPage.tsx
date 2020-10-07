@@ -45,7 +45,7 @@ export default function DashboardPage() {
           {/* Balance */}
           <Flex
             direction="column"
-            maxWidth="300px"
+            maxWidth="200px"
             height="100%"
             backgroundColor="white"
             shadow="md"

@@ -95,8 +95,7 @@ function SignWithLedgerModal({
         case 'bitcoin-send-amount-to-address': {
           txId = await bitcoinWallet.sendToAddress(
             ledgerAction.payload.to,
-            ledgerAction.payload.amount,
-            0.00035
+            ledgerAction.payload.amount
           );
           break;
         }
@@ -278,6 +277,14 @@ function getAliceParams(name: SwapStepName): DisplayParams {
         currency: Currency.BTC,
         isInteractionRequired: false
       };
+    case SwapStepName.HERC20_HBIT_BOB_REDEEM:
+      return {
+        index: 5,
+        label: 'They Unlock',
+        protocol: Protocol.HER20,
+        currency: Currency.DAI,
+        isInteractionRequired: false
+      };
     case SwapStepName.HBIT_HERC20_ALICE_FUND:
       return {
         index: 1,
@@ -286,21 +293,37 @@ function getAliceParams(name: SwapStepName): DisplayParams {
         currency: Currency.BTC,
         isInteractionRequired: true
       };
-    case SwapStepName.HBIT_HERC20_BOB_FUND:
+    case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
       return {
         index: 2,
-        label: 'They Lock',
+        label: 'They Lock (1/2)',
+        protocol: Protocol.HBIT,
+        currency: Currency.DAI,
+        isInteractionRequired: false
+      };
+    case SwapStepName.HBIT_HERC20_BOB_FUND:
+      return {
+        index: 3,
+        label: 'They Lock (2/2)',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
         isInteractionRequired: false
       };
     case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
       return {
-        index: 3,
+        index: 4,
         label: 'You Unlock',
         protocol: Protocol.HBIT,
         currency: Currency.DAI,
         isInteractionRequired: true
+      };
+    case SwapStepName.HBIT_HERC20_BOB_REDEEM:
+      return {
+        index: 5,
+        label: 'They Unlock',
+        protocol: Protocol.HBIT,
+        currency: Currency.BTC,
+        isInteractionRequired: false
       };
     default:
       return {
@@ -393,7 +416,7 @@ function getBobParams(name: SwapStepName) {
         label: 'Auto Unlock Your',
         protocol: Protocol.HBIT,
         currency: Currency.BTC,
-        isInteractionRequired: true
+        isInteractionRequired: false
       };
     default:
       return {
