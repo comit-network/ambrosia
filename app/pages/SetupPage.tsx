@@ -213,7 +213,7 @@ interface Progress<T> {
   inProgress: boolean;
   attempted: boolean;
   value?: T;
-  error?: any;
+  error?: Error;
 }
 
 // TODO: Add a field for cnd here ...

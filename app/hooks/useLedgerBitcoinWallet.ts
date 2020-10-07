@@ -243,7 +243,7 @@ export class LedgerBitcoinWallet {
   }
 }
 
-type Response<R = any> =
+type Response<R = unknown> =
   | {
       result: R;
       error: null;
@@ -253,7 +253,6 @@ type Response<R = any> =
       error: {
         message: string;
         code: number;
-        data: any;
       };
     };
 
