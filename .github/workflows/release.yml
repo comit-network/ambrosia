@@ -1,0 +1,41 @@
+name: Release
+
+on:
+  workflow_dispatch:
+
+jobs:
+  test:
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        os: [macos-latest, windows-latest, ubuntu-latest]
+
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v1
+        with:
+          node-version: 13
+
+      - name: Cache node_modules directory
+        uses: actions/cache@v2
+        with:
+          path: node_modules
+          key: ${{ matrix.os }}-node-modules-${{ hashFiles('yarn.lock') }}
+
+      - name: Cache app node_modules directory
+        uses: actions/cache@v2
+        with:
+          path: app/node_modules
+          key: ${{ matrix.os }}-app-node-modules-${{ hashFiles('app/yarn.lock') }}
+
+      - name: Install dependencies
+        run: yarn install
+
+      - name: Package and release
+        run: yarn package-ci
+        env:
+          GH_TOKEN: ${{ secrets.BOTTY_GITHUB_TOKEN }}

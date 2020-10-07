@@ -92,8 +92,8 @@
     "publish": {
       "provider": "github",
       "owner": "comit-network",
-      "repo": "ambrosia",
-      "private": false
+      "private": false,
+      "releaseType": "release"
     }
   },
   "repository": {
