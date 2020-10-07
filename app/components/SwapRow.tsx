@@ -7,7 +7,6 @@ import {
   Protocol,
   Role,
   SwapAction,
-  SwapActionKind,
   SwapEntity,
   SwapEvent,
   SwapEventName,
@@ -145,7 +144,6 @@ const ActiveStep = ({ swap, href, state, dispatch }: ActiveStepProps) => {
     const isActive = isSwapStepActive(
       swapStepEnumVal,
       swap.alpha.protocol,
-      state,
       swap,
       config.ROLE
     );
@@ -267,7 +265,7 @@ export default function SwapRow({ href }: SwapRowProps) {
   const alpha = swap.alpha;
   const beta = swap.beta;
 
-  if (swap.role === 'Alice') {
+  if (swap.role === Role.ALICE) {
     sendAmount = alpha.asset;
     sendCurrency =
       alpha.protocol === Protocol.HBIT ? Currency.BTC : Currency.DAI;
@@ -769,24 +767,16 @@ const SwapStatus = ({
 function isSwapStepActiveForAlice(
   swapStep: SwapStepName,
   alphaProtocol: Protocol,
-  state: State,
   swap: SwapProperties
 ) {
-  const activeAction = state.activeAction;
   const events = swap.events;
 
   if (alphaProtocol === Protocol.HER20) {
     switch (swapStep) {
       case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
-        return (
-          activeAction &&
-          activeAction.name === SwapActionKind.DEPLOY &&
-          !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
-        );
+        return !containsEvent(events, SwapEventName.HERC20_DEPLOYED);
       case SwapStepName.HERC20_HBIT_ALICE_FUND:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           !containsEvent(events, SwapEventName.HERC20_FUNDED)
         );
@@ -798,8 +788,6 @@ function isSwapStepActiveForAlice(
         );
       case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
@@ -811,11 +799,7 @@ function isSwapStepActiveForAlice(
   } else {
     switch (swapStep) {
       case SwapStepName.HBIT_HERC20_ALICE_FUND:
-        return (
-          activeAction &&
-          activeAction.name === SwapActionKind.FUND &&
-          !containsEvent(events, SwapEventName.HBIT_FUNDED)
-        );
+        return !containsEvent(events, SwapEventName.HBIT_FUNDED);
       case SwapStepName.HBIT_HERC20_BOB_FUND:
         return (
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
@@ -823,8 +807,6 @@ function isSwapStepActiveForAlice(
         );
       case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
@@ -839,28 +821,21 @@ function isSwapStepActiveForAlice(
 function isSwapStepActiveForBob(
   swapStep: SwapStepName,
   alphaProtocol: Protocol,
-  state: State,
   swap: SwapProperties
 ) {
-  const activeAction = state.activeAction;
   const events = swap.events;
 
   if (alphaProtocol === Protocol.HER20) {
     switch (swapStep) {
       case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
-        return (
-          !activeAction && !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
-        );
+        return !containsEvent(events, SwapEventName.HERC20_DEPLOYED);
       case SwapStepName.HERC20_HBIT_ALICE_FUND:
         return (
-          !activeAction &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           !containsEvent(events, SwapEventName.HERC20_FUNDED)
         );
       case SwapStepName.HERC20_HBIT_BOB_FUND:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
           !containsEvent(events, SwapEventName.HBIT_FUNDED)
         );
@@ -873,8 +848,6 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HERC20_HBIT_BOB_REDEEM:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
@@ -887,20 +860,14 @@ function isSwapStepActiveForBob(
   } else {
     switch (swapStep) {
       case SwapStepName.HBIT_HERC20_ALICE_FUND:
-        return (
-          !activeAction && !containsEvent(events, SwapEventName.HBIT_FUNDED)
-        );
+        return !containsEvent(events, SwapEventName.HBIT_FUNDED);
       case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.DEPLOY &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
         );
       case SwapStepName.HBIT_HERC20_BOB_FUND:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.FUND &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           !containsEvent(events, SwapEventName.HERC20_FUNDED)
@@ -914,8 +881,6 @@ function isSwapStepActiveForBob(
         );
       case SwapStepName.HBIT_HERC20_BOB_REDEEM:
         return (
-          activeAction &&
-          activeAction.name === SwapActionKind.REDEEM &&
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
@@ -931,15 +896,14 @@ function isSwapStepActiveForBob(
 function isSwapStepActive(
   swapStep: SwapStepName,
   alphaProtocol: Protocol,
-  state: State,
   swap: SwapProperties,
   role: Role
 ) {
   if (role === Role.ALICE) {
-    return isSwapStepActiveForAlice(swapStep, alphaProtocol, state, swap);
+    return isSwapStepActiveForAlice(swapStep, alphaProtocol, swap);
   }
 
-  return isSwapStepActiveForBob(swapStep, alphaProtocol, state, swap);
+  return isSwapStepActiveForBob(swapStep, alphaProtocol, swap);
 }
 
 function isLedgerInteractionButtonActive(
@@ -950,7 +914,7 @@ function isLedgerInteractionButtonActive(
   role: Role
 ): boolean {
   return (
-    isSwapStepActive(swapStep, alphaProtocol, state, swap, role) &&
+    isSwapStepActive(swapStep, alphaProtocol, swap, role) &&
     state.activeActionStatus === ActionStatus.AWAITING_USER_INTERACTION
   );
 }
