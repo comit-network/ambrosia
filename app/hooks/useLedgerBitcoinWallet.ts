@@ -3,6 +3,7 @@ import { Descriptors, LedgerClient } from '../ledgerIpc';
 import axios, { AxiosError, AxiosInstance } from 'axios';
 import { Psbt } from 'bitcoinjs-lib';
 import { BigNumber } from 'ethers';
+import { btcIntoCurVal } from '../utils/currency';
 
 function jsonRpcResponseInterceptor(error: AxiosError): Promise<AxiosError> {
   const response = error.response;
@@ -239,7 +240,8 @@ export class LedgerBitcoinWallet {
       })
       .then(r => r.data);
 
-    return BigNumber.from(balance * 100_000_000);
+    const curVal = btcIntoCurVal(balance);
+    return BigNumber.from(curVal.value);
   }
 }
 

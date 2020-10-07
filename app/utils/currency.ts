@@ -182,6 +182,8 @@ export function daiIntoCurVal(
   dai: string | number | ethers.BigNumber
 ): CurrencyValue {
   let bigNr = dai;
+
+  // if NOT a BigNumber instance yet then parse as BigNumber adding decimals
   if (!(bigNr instanceof ethers.BigNumber)) {
     bigNr = ethers.utils.parseUnits(dai.toString(), DAI_DEC);
   }
@@ -199,6 +201,8 @@ export function btcIntoCurVal(
   btc: string | number | ethers.BigNumber
 ): CurrencyValue {
   let bigNr = btc;
+
+  // if NOT a BigNumber instance yet then parse as BigNumber adding decimals
   if (!(bigNr instanceof ethers.BigNumber)) {
     bigNr = ethers.utils.parseUnits(btc.toString(), BTC_DEC);
   }
@@ -216,6 +220,8 @@ export function ethIntoCurVal(
   eth: string | number | ethers.BigNumber
 ): CurrencyValue {
   let bigNr = eth;
+
+  // if NOT a BigNumber instance yet then parse as BigNumber adding decimals
   if (!(bigNr instanceof ethers.BigNumber)) {
     bigNr = ethers.utils.parseUnits(eth.toString(), ETH_DEC);
   }
