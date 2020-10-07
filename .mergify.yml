@@ -2,9 +2,9 @@ pull_request_rules:
   - name: instruct bors to merge dependabot PRs with passing tests
     conditions:
       - 'author=dependabot[bot]'
-      - 'status-success=package (ubuntu-latest)'
-      - 'status-success=package (windows-latest)'
-      - 'status-success=package (macos-latest)'
+      - 'status-success=test (ubuntu-latest)'
+      - 'status-success=test (windows-latest)'
+      - 'status-success=test (macos-latest)'
       - 'status-success=license/cla'
       - label!=no-mergify
     actions:
@@ -14,9 +14,9 @@ pull_request_rules:
     conditions:
       - '#approved-reviews-by>=1'
       - '#changes-requested-reviews-by=0'
-      - 'status-success=package (ubuntu-latest)'
-      - 'status-success=package (windows-latest)'
-      - 'status-success=package (macos-latest)'
+      - 'status-success=test (ubuntu-latest)'
+      - 'status-success=test (windows-latest)'
+      - 'status-success=test (macos-latest)'
       - 'status-success=license/cla'
       - -conflict
       - label!=work-in-progress
