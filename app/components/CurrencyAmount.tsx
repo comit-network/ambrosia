@@ -32,7 +32,6 @@ interface CurrencyAmountProps {
   topText?: string;
   subText1?: string;
   subText2?: string;
-  amountShortenPosition?: number;
   amountFontSize?: string;
   iconHeight?: string;
   colourMode?: ColorMode;
@@ -151,7 +150,12 @@ export default function CurrencyAmount({
         label={`${displayAmount} ${currency}`}
         placement="top"
       >
-        <Flex direction="row" alignContent="center" minWidth={displayMinWidth}>
+        <Flex
+          direction="row"
+          alignContent="center"
+          minWidth={displayMinWidth}
+          maxWidth="150px"
+        >
           {noImage ? <></> : currencyIcon(currency, iconHeight)}
           {currencyValue.isLoading ? (
             <Spinner size="sm" />
