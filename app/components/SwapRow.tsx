@@ -232,16 +232,40 @@ const ActiveStep = ({ swap, href, state, dispatch }: ActiveStepProps) => {
   return <></>;
 };
 
+function loadPersistedStateFromDisk(href: string): State {
+  return JSON.parse(window.localStorage.getItem(href)) as State;
+}
+
+function mergeLocalSwapEventsIntoRemoteSwapEvents(
+  local: SwapProperties,
+  remote: SwapProperties
+): SwapProperties {
+  for (const event of local.events) {
+    if (!remote.events.find(e => e.name === event.name)) {
+      remote.events.push(event);
+    }
+  }
+
+  return remote;
+}
+
 export default function SwapRow({ href }: SwapRowProps) {
   const cnd = useCnd();
   const bitcoinWallet = useLedgerBitcoinWallet();
   const [show, setShow] = React.useState(false);
-  const initialState: State = {
-    activeAction: null,
-    activeActionStatus: null,
-    alreadySeenActions: [],
-    swap: null
-  };
+
+  // try to load the initial state from local storage
+  let initialState = loadPersistedStateFromDisk(href);
+
+  if (!initialState) {
+    initialState = {
+      activeAction: null,
+      activeActionStatus: null,
+      alreadySeenActions: [],
+      swap: null
+    };
+  }
+
   const { data: swapResponse } = useSWR<AxiosResponse<SwapEntity>>(
     href,
     path => cnd.fetch(path),
@@ -257,13 +281,22 @@ export default function SwapRow({ href }: SwapRowProps) {
       const body = swapResponse.data;
 
       const action = body.actions[0];
-      const swap = {
+
+      let swap: SwapProperties = {
         action: action,
         alpha: body.properties.alpha,
         beta: body.properties.beta,
         events: body.properties.events,
         role: body.properties.role
       };
+
+      const persistentState = loadPersistedStateFromDisk(href);
+      if (persistentState && persistentState.swap) {
+        swap = mergeLocalSwapEventsIntoRemoteSwapEvents(
+          persistentState.swap,
+          swap
+        );
+      }
 
       if (action) {
         (async () => {
@@ -302,6 +335,14 @@ export default function SwapRow({ href }: SwapRowProps) {
       }
     }
   }, [swapResponse]);
+
+  // Hook to save the state to localStorage whenever it changes
+  useEffect(() => {
+    if (href && state) {
+      console.log('persisting swap state: ' + state);
+      localStorage.setItem(href, JSON.stringify(state));
+    }
+  }, [state]);
 
   const handleDetailsToggle = () => setShow(!show);
 
