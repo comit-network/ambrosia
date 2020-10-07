@@ -586,6 +586,14 @@ function isSwapStepActiveForAlice(
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
           !containsEvent(events, SwapEventName.HBIT_REDEEMED)
         );
+      case SwapStepName.HERC20_HBIT_BOB_REDEEM:
+        return (
+          containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
+          containsEvent(events, SwapEventName.HERC20_FUNDED) &&
+          containsEvent(events, SwapEventName.HBIT_FUNDED) &&
+          containsEvent(events, SwapEventName.HBIT_REDEEMED) &&
+          !containsEvent(events, SwapEventName.HERC20_REDEEMED)
+        );
       default:
         return false;
     }
@@ -593,9 +601,15 @@ function isSwapStepActiveForAlice(
     switch (swapStep) {
       case SwapStepName.HBIT_HERC20_ALICE_FUND:
         return !containsEvent(events, SwapEventName.HBIT_FUNDED);
+      case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
+        return (
+          containsEvent(events, SwapEventName.HBIT_FUNDED) &&
+          !containsEvent(events, SwapEventName.HERC20_DEPLOYED)
+        );
       case SwapStepName.HBIT_HERC20_BOB_FUND:
         return (
           containsEvent(events, SwapEventName.HBIT_FUNDED) &&
+          containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           !containsEvent(events, SwapEventName.HERC20_FUNDED)
         );
       case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
@@ -604,6 +618,14 @@ function isSwapStepActiveForAlice(
           containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
           containsEvent(events, SwapEventName.HERC20_FUNDED) &&
           !containsEvent(events, SwapEventName.HERC20_REDEEMED)
+        );
+      case SwapStepName.HBIT_HERC20_BOB_REDEEM:
+        return (
+          containsEvent(events, SwapEventName.HBIT_FUNDED) &&
+          containsEvent(events, SwapEventName.HERC20_DEPLOYED) &&
+          containsEvent(events, SwapEventName.HERC20_FUNDED) &&
+          containsEvent(events, SwapEventName.HERC20_REDEEMED) &&
+          !containsEvent(events, SwapEventName.HBIT_REDEEMED)
         );
       default:
         return false;
