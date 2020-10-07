@@ -54,8 +54,7 @@ export function fromComitEnv(): Config | null {
     ROLE: role
   };
 
-  console.info('Starting in dev-mode with config:');
-  console.info(config);
+  console.info('Starting in dev-mode with config:', config);
 
   return config;
 }
