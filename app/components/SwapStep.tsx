@@ -95,8 +95,7 @@ function SignWithLedgerModal({
         case 'bitcoin-send-amount-to-address': {
           txId = await bitcoinWallet.sendToAddress(
             ledgerAction.payload.to,
-            ledgerAction.payload.amount,
-            0.00035
+            ledgerAction.payload.amount
           );
           break;
         }
