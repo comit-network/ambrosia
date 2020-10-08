@@ -68,7 +68,7 @@ export default class MenuBuilder {
     // View Menu
     template.push({
       label: 'View',
-      submenu: [{ role: 'togglefullscreen' }]
+      submenu: [{ role: 'toggledevtools' }, { role: 'togglefullscreen' }]
     });
     // Window menu
     template.push({
