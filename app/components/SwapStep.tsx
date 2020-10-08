@@ -1,4 +1,4 @@
-import { Protocol, Role, SwapEvent, SwapEventName } from '../utils/swap';
+import { Protocol, Role, SwapEvent } from '../utils/swap';
 import {
   Badge,
   Box,
@@ -17,6 +17,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spinner,
   Tag,
   TagIcon,
   TagLabel,
@@ -207,16 +208,19 @@ function LedgerInteractionButton({
 }
 
 // TODO: Include network!
-function getBlockchainExplorerUrl(event: SwapEventName): string {
-  switch (event) {
-    case SwapEventName.HERC20_DEPLOYED:
-    case SwapEventName.HERC20_FUNDED:
-    case SwapEventName.HERC20_REDEEMED:
-    case SwapEventName.HERC20_REFUNDED:
+function getBlockchainExplorerUrl(swapStepName: SwapStepName): string {
+  switch (swapStepName) {
+    case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
+    case SwapStepName.HERC20_HBIT_ALICE_FUND:
+    case SwapStepName.HERC20_HBIT_BOB_FUND:
+    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+    case SwapStepName.HERC20_HBIT_BOB_REDEEM:
       return 'https://etherscan.io/tx/';
-    case SwapEventName.HBIT_FUNDED:
-    case SwapEventName.HBIT_REDEEMED:
-    case SwapEventName.HBIT_REFUNDED:
+    case SwapStepName.HBIT_HERC20_ALICE_FUND:
+    case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
+    case SwapStepName.HBIT_HERC20_BOB_FUND:
+    case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+    case SwapStepName.HBIT_HERC20_BOB_REDEEM:
     default:
       return 'https://www.blockchain.com/btc/tx/';
   }
@@ -231,6 +235,7 @@ interface StepProperties {
   event: SwapEvent;
   asActiveStep?: boolean;
   ledgerAction?: LedgerAction; // TODO: Omit actions we are not handling yet, lightning + bitcoin-broadcast-signed-transaction
+  pendingTxId?: string;
   onSigned: (txId: string) => void;
 }
 
@@ -437,6 +442,7 @@ export default function SwapStep({
   event,
   asActiveStep,
   ledgerAction,
+  pendingTxId,
   onSigned,
   role
 }: StepProperties) {
@@ -483,13 +489,27 @@ export default function SwapStep({
   const currencyIcon = currency === Currency.BTC ? 'bitcoin' : 'dai';
 
   interface SwapEventDisplayProperties {
+    pendingTxId: string;
+    swapStep: SwapStepName;
     event: SwapEvent;
   }
 
-  const SwapEventDisplay = ({ event }: SwapEventDisplayProperties) => {
-    if (!event) {
+  const SwapEventDisplay = ({
+    pendingTxId,
+    swapStep,
+    event
+  }: SwapEventDisplayProperties) => {
+    if (!pendingTxId && !event) {
       return <></>;
     }
+
+    const icon = event ? (
+      <ListIcon icon="check-circle" color="green.500" />
+    ) : (
+      <Spinner size="sm" marginRight="0.5rem" />
+    );
+
+    const txId = event ? event.tx : pendingTxId;
 
     return (
       <Flex
@@ -502,14 +522,13 @@ export default function SwapStep({
         <List>
           <ListItem>
             <Flex direction="row" alignItems="center">
-              <ListIcon icon="check-circle" color="green.500" />
-              {/*<Text>{`${(new Date(event.seen_at)).toLocaleString()}: `}</Text>*/}
+              {icon}
               <Link
-                href={`${getBlockchainExplorerUrl(event.name)}${event.tx}`}
+                href={`${getBlockchainExplorerUrl(swapStep)}${txId}`}
                 isExternal
                 color="teal.500"
               >
-                {`${event.tx.substring(0, 10)}...`}
+                {`${txId.substring(0, 10)}...`}
                 <Icon name="external-link" mx="2px" />
               </Link>
             </Flex>
@@ -596,7 +615,11 @@ export default function SwapStep({
         </Tag>
         {interactionButton}
       </Flex>
-      <SwapEventDisplay event={event} />
+      <SwapEventDisplay
+        swapStep={name}
+        pendingTxId={pendingTxId}
+        event={event}
+      />
       <SignWithLedgerModal
         isOpen={isOpen}
         onClose={onClose}

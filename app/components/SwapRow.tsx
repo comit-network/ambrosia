@@ -130,6 +130,7 @@ function reducer(state: State, action: ComponentAction): State {
           ...state,
           activeAction: null,
           activeActionStatus: null,
+          activeActionTxId: null,
           swap
         };
       }
@@ -158,6 +159,7 @@ function reducer(state: State, action: ComponentAction): State {
         activeActionStatus: ledgerAction
           ? ActionStatus.AWAITING_USER_INTERACTION
           : null,
+        activeActionTxId: null,
         ledgerAction
       };
     case 'actionCompleted': {
@@ -261,6 +263,7 @@ export default function SwapRow({ href }: SwapRowProps) {
     initialState = {
       activeAction: null,
       activeActionStatus: null,
+      activeActionTxId: null,
       alreadySeenActions: [],
       swap: null
     };
@@ -510,37 +513,45 @@ const SwapStatus = ({
   const ledgerAction = state.ledgerAction;
   const widthPercent = '20%';
 
-  const renderSteps = steps.map((swapStep, index) => (
-    <>
-      <Box width={widthPercent} key={href + role + swapStep}>
-        <SwapStep
-          role={role}
-          swapId={href}
-          name={swapStep}
-          isActive={isSwapStepActive(swapStep, protocol, swap, role)}
-          isUserInteractionActive={isLedgerInteractionButtonActive(
-            swapStep,
-            protocol,
-            state,
-            swap,
-            role
-          )}
-          event={findSwapEventInSwap(swap, swapStep)}
-          ledgerAction={ledgerAction}
-          onSigned={txId => {
-            dispatch({
-              type: 'actionCompleted',
-              name: ledgerAction.type,
-              value: txId
-            });
-          }}
-        />
-      </Box>
-      {index !== steps.length - 1 && (
-        <StepArrow key={href + role + swapStep + 'stepArrow'} />
-      )}
-    </>
-  ));
+  const renderSteps = steps.map((swapStep, index) => {
+    const isStepActive = isSwapStepActive(swapStep, protocol, swap, role);
+    const isInteractionButtonActive = isLedgerInteractionButtonActive(
+      swapStep,
+      protocol,
+      state,
+      swap,
+      role
+    );
+
+    const pendingTx = isStepActive ? state.activeActionTxId : undefined;
+
+    return (
+      <>
+        <Box width={widthPercent} key={href + role + swapStep}>
+          <SwapStep
+            role={role}
+            swapId={href}
+            name={swapStep}
+            isActive={isStepActive}
+            isUserInteractionActive={isInteractionButtonActive}
+            event={findSwapEventInSwap(swap, swapStep)}
+            ledgerAction={ledgerAction}
+            pendingTxId={pendingTx}
+            onSigned={txId => {
+              dispatch({
+                type: 'actionCompleted',
+                name: ledgerAction.type,
+                value: txId
+              });
+            }}
+          />
+        </Box>
+        {index !== steps.length - 1 && (
+          <StepArrow key={href + role + swapStep + 'stepArrow'} />
+        )}
+      </>
+    );
+  });
 
   return (
     <Flex
