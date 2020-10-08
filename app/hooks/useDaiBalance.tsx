@@ -26,7 +26,7 @@ export default function useDaiBalance() {
     daiContractAddress ? '/balance/dai' : null,
     () => ethWallet.getErc20Balance(daiContractAddress),
     {
-      refreshInterval: 10000
+      refreshInterval: 30000
     }
   );
 

@@ -8,7 +8,7 @@ export default function useEtherBalance() {
     '/balance/eth',
     () => ethWallet.getEtherBalance(),
     {
-      refreshInterval: 10000
+      refreshInterval: 30000
     }
   );
 

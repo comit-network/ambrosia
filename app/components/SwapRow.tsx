@@ -268,9 +268,9 @@ export default function SwapRow({ href }: SwapRowProps) {
 
   const { data: swapResponse } = useSWR<AxiosResponse<SwapEntity>>(
     href,
-    path => cnd.fetch(path),
+    key => cnd.fetch(key),
     {
-      refreshInterval: 1000
+      refreshInterval: 5000
     }
   );
 

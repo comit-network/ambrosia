@@ -8,7 +8,7 @@ export default function useBitcoinBalance() {
     '/balance/btc',
     () => btcWallet.getBalance(),
     {
-      refreshInterval: 10000
+      refreshInterval: 30000
     }
   );
 

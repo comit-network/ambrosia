@@ -12,7 +12,7 @@ export default function SwapList() {
     '/swaps',
     key => cnd.fetch(key),
     {
-      refreshInterval: 1000
+      refreshInterval: 10000
     }
   );
 
