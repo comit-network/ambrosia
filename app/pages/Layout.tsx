@@ -95,7 +95,11 @@ export default function Layout() {
                 LEDGER_ETHEREUM_ACCOUNT_ADDRESS:
                   values.ethereumLedgerAccountAddress,
                 ROLE: Role.ALICE,
-                SETUP_COMPLETE: true
+                SETUP_COMPLETE: true,
+                SWAP_POLL_INTERVAL_MS: 15000, // every 15 sec
+                // TODO: Set longer interval once we have a solution for rescanning (or add manual refresh button)
+                BITCOIN_BALANCE_POLL_INTERVAL_MS: 10000, // every 10 sec
+                ETHEREUM_BALANCE_POLL_INTERVAL_MS: 15000 // every 15 sec
               });
               history.push(routes.HOME);
             }}

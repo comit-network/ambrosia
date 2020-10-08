@@ -3,8 +3,10 @@ import { daiIntoCurVal, ZERO_DAI } from '../utils/currency';
 import { useLedgerEthereumWallet } from './useLedgerEthereumWallet';
 import { useCnd } from './useCnd';
 import { useEffect, useState } from 'react';
+import { useConfig } from '../config';
 
 export default function useDaiBalance() {
+  const [config] = useConfig();
   const cnd = useCnd();
   const [daiContractAddress, setDaiContractAddress] = useState(null);
 
@@ -26,7 +28,7 @@ export default function useDaiBalance() {
     daiContractAddress ? '/balance/dai' : null,
     () => ethWallet.getErc20Balance(daiContractAddress),
     {
-      refreshInterval: 10000
+      refreshInterval: config.ETHEREUM_BALANCE_POLL_INTERVAL_MS
     }
   );
 
