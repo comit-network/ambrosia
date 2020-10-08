@@ -250,6 +250,7 @@ function mergeLocalSwapEventsIntoRemoteSwapEvents(
 }
 
 export default function SwapRow({ href }: SwapRowProps) {
+  const [config] = useConfig();
   const cnd = useCnd();
   const bitcoinWallet = useLedgerBitcoinWallet();
   const [show, setShow] = React.useState(false);
@@ -270,7 +271,7 @@ export default function SwapRow({ href }: SwapRowProps) {
     href,
     key => cnd.fetch(key),
     {
-      refreshInterval: 5000
+      refreshInterval: config.SWAP_POLL_INTERVAL_MS
     }
   );
 

@@ -13,6 +13,9 @@ export interface Config {
   CND_URL: string;
   SETUP_COMPLETE: boolean;
   ROLE: Role;
+  SWAP_POLL_INTERVAL_MS: number;
+  BITCOIN_BALANCE_POLL_INTERVAL_MS: number;
+  ETHEREUM_BALANCE_POLL_INTERVAL_MS: number;
 }
 
 const ENV_PATH = `${os.homedir()}/.create-comit-app/env`;
@@ -51,7 +54,10 @@ export function fromComitEnv(): Config | null {
     CND_URL:
       role === Role.ALICE ? 'http://127.0.0.1:8000' : 'http://127.0.0.1:8100',
     SETUP_COMPLETE: true,
-    ROLE: role
+    ROLE: role,
+    SWAP_POLL_INTERVAL_MS: 1000,
+    BITCOIN_BALANCE_POLL_INTERVAL_MS: 1000,
+    ETHEREUM_BALANCE_POLL_INTERVAL_MS: 1000
   };
 
   console.info('Starting in dev-mode with config:', config);
