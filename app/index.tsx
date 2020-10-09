@@ -1,18 +1,14 @@
 import React, { Fragment } from 'react';
 import { render } from 'react-dom';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
-import { configureStore, history } from './store/configureStore';
 import './app.global.css';
-import { Config, fromComitEnv, Provider as ConfigProvider } from './config';
-import ElectronStore from 'electron-store';
+import { Config, fromComitEnv } from './config';
 import { LedgerBitcoinWallet } from './hooks/useLedgerBitcoinWallet';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
+import { createBrowserHistory } from 'history';
 
-const reduxStore = configureStore();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
-
-const electronStore = new ElectronStore<Config>();
 
 document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line global-require
@@ -20,35 +16,19 @@ document.addEventListener('DOMContentLoaded', async () => {
   const App = require('./App').default;
 
   const comitEnvConfig = fromComitEnv();
-
-  // if comit-env is present during development, use that, otherwise load file system config
-  const effectiveConfig =
-    comitEnvConfig && process.env.NODE_ENV === 'development'
-      ? comitEnvConfig
-      : electronStore.store;
-
-  const effectiveSetConfig =
-    comitEnvConfig && process.env.NODE_ENV === 'development'
-      ? () => undefined
-      : newConfig => {
-          electronStore.set(newConfig);
-        };
-
   if (comitEnvConfig && process.env.NODE_ENV === 'development') {
     console.info(
       'Running in development mode using comit-scripts, creating Bitcoin wallet ...'
     );
     await importDescriptorOfDanielsLedger(comitEnvConfig).catch(console.error);
     document.title += ` - ${comitEnvConfig.ROLE}`;
-  } else {
-    console.info('Using config: ' + electronStore.path);
   }
+
+  const history = createBrowserHistory();
 
   render(
     <AppContainer>
-      <ConfigProvider value={[effectiveConfig, effectiveSetConfig]}>
-        <App store={reduxStore} history={history} />
-      </ConfigProvider>
+      <App comitEnvConfig={comitEnvConfig} history={history} />
     </AppContainer>,
     document.getElementById('root')
   );

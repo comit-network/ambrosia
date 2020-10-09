@@ -176,21 +176,21 @@ export default function Layout() {
                           </MenuNavBox>
                         </Link>
                         <Link
-                          to={routes.ABOUT}
-                          onClick={() => setActiveContent(ABOUT)}
-                        >
-                          <MenuNavBox>
-                            <NavIcon name="info" />
-                            <NavText>About</NavText>
-                          </MenuNavBox>
-                        </Link>
-                        <Link
                           to={routes.WALLET}
                           onClick={() => setActiveContent(WALLET)}
                         >
                           <MenuNavBox>
                             <NavIcon name="star" />
                             <NavText>Wallet</NavText>
+                          </MenuNavBox>
+                        </Link>
+                        <Link
+                          to={routes.ABOUT}
+                          onClick={() => setActiveContent(ABOUT)}
+                        >
+                          <MenuNavBox>
+                            <NavIcon name="info" />
+                            <NavText>About</NavText>
                           </MenuNavBox>
                         </Link>
                       </Stack>
