@@ -1,10 +1,6 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { ConnectedRouter } from 'connected-react-router';
 import { hot } from 'react-hot-loader/root';
-import { History } from 'history';
 import { CSSReset, ThemeProvider } from '@chakra-ui/core';
-import { Store as ReduxStore } from 'redux';
 import AppRegionDrag from './components/AppRegionDrag';
 import customTheme from './theme';
 import Layout from './pages/Layout';
@@ -22,13 +18,14 @@ import {
 } from './hooks/useLedgerEthereumWallet';
 import { CacheProvider } from '@emotion/core';
 import createCache from '@emotion/cache';
+import { Router } from 'react-router';
+import { History } from 'history';
 
-type Props = {
-  store: ReduxStore;
+interface Props {
   history: History;
-};
+}
 
-const App = ({ store, history }: Props) => {
+const App = ({ history }: Props) => {
   const [config] = useConfig();
 
   // emotions bug fix, see: https://github.com/emotion-js/emotion/issues/1105#issuecomment-557726922
@@ -60,14 +57,12 @@ const App = ({ store, history }: Props) => {
             }
           >
             <CSSReset />
-            <Provider store={store}>
-              <ConnectedRouter history={history}>
-                {process.platform === 'darwin' ? <AppRegionDrag /> : null}
-                <CacheProvider value={myCache}>
-                  <Layout />
-                </CacheProvider>
-              </ConnectedRouter>
-            </Provider>
+            <Router history={history}>
+              {process.platform === 'darwin' ? <AppRegionDrag /> : null}
+              <CacheProvider value={myCache}>
+                <Layout />
+              </CacheProvider>
+            </Router>
           </LedgerEthereumWalletProvider>
         </LedgerBitcoinWalletProvider>
       </ThemeProvider>

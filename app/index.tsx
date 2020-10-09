@@ -1,15 +1,14 @@
 import React, { Fragment } from 'react';
 import { render } from 'react-dom';
 import { AppContainer as ReactHotAppContainer } from 'react-hot-loader';
-import { configureStore, history } from './store/configureStore';
 import './app.global.css';
 import { Config, fromComitEnv, Provider as ConfigProvider } from './config';
 import ElectronStore from 'electron-store';
 import { LedgerBitcoinWallet } from './hooks/useLedgerBitcoinWallet';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
+import { createBrowserHistory } from 'history';
 
-const reduxStore = configureStore();
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
 
 const electronStore = new ElectronStore<Config>();
@@ -44,10 +43,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     console.info('Using config: ' + electronStore.path);
   }
 
+  const history = createBrowserHistory();
+
   render(
     <AppContainer>
       <ConfigProvider value={[effectiveConfig, effectiveSetConfig]}>
-        <App store={reduxStore} history={history} />
+        <App history={history} />
       </ConfigProvider>
     </AppContainer>,
     document.getElementById('root')
