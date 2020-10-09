@@ -53,16 +53,16 @@ jobs:
         if: matrix.os == 'macOS-latest'
         with:
           name: ${{ matrix.os }}-app
-          path: release/*.dmg
+          path: dist/*.dmg
 
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'windows-latest'
         with:
           name: ${{ matrix.os }}-app
-          path: release/*.exe
+          path: dist/*.exe
 
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'ubuntu-latest'
         with:
           name: ${{ matrix.os }}-app
-          path: release/*.AppImage
+          path: dist/*.AppImage
