@@ -25,7 +25,7 @@
   },
   "exclude": [
     "test",
-    "release",
+    "dist",
     "app/main.prod.js",
     "app/main.prod.js.map",
     "app/renderer.prod.js",

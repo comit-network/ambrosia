@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="100mm" height="100mm" version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:cc="http://creativecommons.org/ns#" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#" xmlns:xlink="http://www.w3.org/1999/xlink">
+ <defs>
+  <style>.cls-1{fill:#2a3484;}.cls-2,.cls-3,.cls-4{opacity:0.64;}.cls-3{fill:url(#linear-gradient);}.cls-4{fill:url(#linear-gradient-3);}</style>
+  <linearGradient id="linear-gradient" x1="293.06" x2="640.92" y1="282.45" y2="648.15" gradientUnits="userSpaceOnUse">
+   <stop stop-color="#0c1ce3" offset="0"/>
+   <stop stop-color="#0ed1e1" offset="1"/>
+  </linearGradient>
+  <linearGradient id="linear-gradient-3" x1="293.06" x2="640.92" y1="282.45" y2="648.15" gradientTransform="rotate(45 500 500)" xlink:href="#linear-gradient"/>
+  <linearGradient id="linearGradient1553" x1="293.06" x2="640.92" y1="282.45" y2="648.15" gradientUnits="userSpaceOnUse" xlink:href="#linear-gradient"/>
+ </defs>
+ <metadata>
+  <rdf:RDF>
+   <cc:Work rdf:about="">
+    <dc:format>image/svg+xml</dc:format>
+    <dc:type rdf:resource="http://purl.org/dc/dcmitype/StillImage"/>
+    <dc:title/>
+   </cc:Work>
+  </rdf:RDF>
+ </metadata>
+ <g transform="translate(-38.222 -27.813)">
+  <rect x="48.531" y="37.709" width="79.972" height="79.972" ry="17.776" fill="#fff6d5" fill-opacity=".99048" stroke-opacity="0"/>
+  <g transform="matrix(.068877 0 0 .070711 54.088 44.244)">
+   <path class="cls-1" d="m245.37 877.44c-241.24-210-241.24-544.84 0-754.88l52.08 36.8c-105.08 105-158.08 218.12-158.08 341.09s53 236.07 158.08 341.08z"/>
+   <path class="cls-1" d="m754.64 122.56c241.23 210 241.23 544.84 0 754.88l-52.09-35.91c105.08-105 158.08-218.11 158.08-341.08s-53-236.07-158.08-341.09z"/>
+   <g class="cls-2">
+    <ellipse class="cls-3" cx="500" cy="500" rx="264.43" ry="113.88" fill="url(#linearGradient1553)"/>
+   </g>
+   <g class="cls-2">
+    <ellipse class="cls-3" cx="500" cy="500" rx="113.88" ry="264.43" fill="url(#linearGradient1553)"/>
+   </g>
+   <g class="cls-2">
+    <ellipse class="cls-4" transform="rotate(-45 500 500)" cx="500" cy="500" rx="113.88" ry="264.43" fill="url(#linear-gradient-3)"/>
+   </g>
+   <g class="cls-2">
+    <ellipse class="cls-4" transform="rotate(-45 500 500)" cx="500" cy="500" rx="264.43" ry="113.88" fill="url(#linear-gradient-3)"/>
+   </g>
+  </g>
+ </g>
+</svg>

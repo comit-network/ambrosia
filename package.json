@@ -76,10 +76,6 @@
       ],
       "category": "Development"
     },
-    "directories": {
-      "buildResources": "resources",
-      "output": "release"
-    },
     "publish": {
       "provider": "github",
       "owner": "comit-network",
