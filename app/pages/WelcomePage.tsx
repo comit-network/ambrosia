@@ -29,7 +29,7 @@ export default function WelcomePage() {
           </Text>
           <List styleType="disc" fontSize={'2xl'}>
             <ListItem>A Ledger Nano S hardware wallet</ListItem>
-            <ListItem>A Bitcore-Core node</ListItem>
+            <ListItem>A Bitcoin Core node</ListItem>
             <ListItem>Access to an Ethereum node (Infura also works!)</ListItem>
           </List>
         </Stack>
