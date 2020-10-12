@@ -631,8 +631,9 @@ export default function SetupPage({ onComplete }: Props) {
                             </InputRightElement>
                           </InputGroup>
                           <FormHelperText id="bitcoin_core_endpoint_helper_text">
-                            The RPC-endpoint URL to your Bitcoin-Core node. Port
-                            8332 for mainnet, 18443 for regtest.
+                            The RPC endpoint URL to your Bitcoin Core node.
+                            Ports are usually 8332 for mainnet, 18443 for
+                            regtest.
                           </FormHelperText>
                           <FormErrorMessage>
                             {form.errors.bitcoinRpcEndpoint}
