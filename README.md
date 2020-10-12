@@ -1,26 +1,34 @@
 # Ambrosia
 
-⚠️ We are currently working on a better user experience. It is not recommended to use this application on mainnet yet.
+This is alpha software, feel free to contact us for help if you want to try it out:
+
+- Email: [team@coblox.tech](mailto:team@coblox.tech)
+- Matrix chat: [#comit:matrix.org](https://matrix.to/#/!HYBOPcopXgKbEnEELc:matrix.org?via=matrix.org&via=privacytools.io)
+- Twitter: [@comit_network](https://twitter.com/comit_network)
 
 Ambrosia is a decentralized exchange user interface, that uses the [COMIT network daemon](https://github.com/comit-network/comit-rs) for atomic swaps.
 
 ## Prerequisites
 
-Swapping requires setting up a Ledger Nanon S device.
-The development setup is currently configured to one specific device.
-If you want to set this up yourself please contact that COMIT team.
-UI setup support will be added shortly so you can easily do the setup yourself.
+Swapping requires setting up a Ledger Nano S device and a [Bitcoin Core](https://bitcoincore.org) node.
 
 For testing Ambrosia with a development setup (on regtest) we recommend using [comit-scripts](https://github.com/comit-network/create-comit-app/tree/master/scripts).
-We are working on a stable release of comit-scripts at the moment, until then you have to build the rust-code yourself.
 
-## Starting Development
+## Build from code
+
+```
+git clone https://github.com/comit-network/ambrosia.git
+cd ambrosia
+yarn install
+```
+
+### Run Development build
 
 ```bash
 yarn dev
 ```
 
-## Running production build
+## Run Production build
 
 ```bash
 yarn start
