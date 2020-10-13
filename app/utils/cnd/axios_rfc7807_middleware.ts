@@ -1,5 +1,5 @@
-import { AxiosError } from "axios";
-import contentType from "content-type";
+import { AxiosError } from 'axios';
+import contentType from 'content-type';
 
 export class Problem extends Error {
   private static makeMessage({
@@ -12,7 +12,7 @@ export class Problem extends Error {
       ? `Request failed with status code ${status}: `
       : `Request failed: `;
     const typePart =
-      type && type !== "about:blank"
+      type && type !== 'about:blank'
         ? ` See ${type} for more information.`
         : ``;
     const detailPart = detail ? ` ${detail}` : ``;
@@ -28,7 +28,7 @@ export class Problem extends Error {
 
   constructor({ title, type, status, detail, instance }: ProblemMembers) {
     super(Problem.makeMessage({ title, type, status, detail, instance }));
-    this.type = type || "about:blank";
+    this.type = type || 'about:blank';
     this.status = status;
     this.detail = detail;
     this.instance = instance;
@@ -53,7 +53,7 @@ export async function problemResponseInterceptor(
     return Promise.reject(error);
   }
 
-  const rawContentType = response.headers["content-type"];
+  const rawContentType = response.headers['content-type'];
 
   if (!rawContentType) {
     return Promise.reject(error);
@@ -61,7 +61,7 @@ export async function problemResponseInterceptor(
 
   const parsedContentType = contentType.parse(rawContentType).type;
 
-  if (parsedContentType !== "application/problem+json") {
+  if (parsedContentType !== 'application/problem+json') {
     return Promise.reject(error);
   }
 

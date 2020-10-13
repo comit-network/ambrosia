@@ -1,4 +1,4 @@
-import { Action } from '../comit-sdk/cnd/siren';
+import { Action } from './cnd/siren';
 import { CurrencyValue } from './currency';
 
 export interface OrderState {

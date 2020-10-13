@@ -2,7 +2,7 @@ import useSWR from 'swr/esm/use-swr';
 import { useCnd } from './useCnd';
 import { Market, MarketOrder } from '../utils/market';
 import { AxiosResponse } from 'axios';
-import { Entity } from '../comit-sdk/cnd/siren';
+import { Entity } from '../utils/cnd/siren';
 
 export const EMPTY_MARKET = {
   buyOrders: [],

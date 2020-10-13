@@ -29,9 +29,9 @@ import { Currency } from '../utils/currency';
 import React, { useState } from 'react';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
-import { LedgerAction } from '../comit-sdk';
 import { BigNumber } from 'ethers';
 import open from 'open';
+import { LedgerAction } from '../utils/cnd/action_payload';
 
 export enum SwapStepName {
   HERC20_HBIT_ALICE_DEPLOY = 'HERC20_HBIT_ALICE_DEPLOY',

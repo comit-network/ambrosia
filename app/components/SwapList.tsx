@@ -4,7 +4,7 @@ import SwapRow from './SwapRow';
 import { useCnd } from '../hooks/useCnd';
 import useSWR from 'swr/esm/use-swr';
 import { AxiosResponse } from 'axios';
-import { Entity } from '../comit-sdk/cnd/siren';
+import { Entity } from '../utils/cnd/siren';
 
 export default function SwapList() {
   const cnd = useCnd();

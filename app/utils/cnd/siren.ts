@@ -1,87 +1,88 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export type SubEntity = EmbeddedLinkSubEntity | EmbeddedRepresentationSubEntity;
 export type RelValue =
   | string
   | (
-      | "about"
-      | "alternate"
-      | "appendix"
-      | "archives"
-      | "author"
-      | "blocked-by"
-      | "bookmark"
-      | "canonical"
-      | "chapter"
-      | "collection"
-      | "contents"
-      | "convertedFrom"
-      | "copyright"
-      | "create-form"
-      | "current"
-      | "derivedfrom"
-      | "describedby"
-      | "describes"
-      | "disclosure"
-      | "dns-prefetch"
-      | "duplicate"
-      | "edit"
-      | "edit-form"
-      | "edit-media"
-      | "enclosure"
-      | "first"
-      | "glossary"
-      | "help"
-      | "hosts"
-      | "hub"
-      | "icon"
-      | "index"
-      | "item"
-      | "last"
-      | "latest-version"
-      | "license"
-      | "lrdd"
-      | "memento"
-      | "monitor"
-      | "monitor-group"
-      | "next"
-      | "next-archive"
-      | "nofollow"
-      | "noreferrer"
-      | "original"
-      | "payment"
-      | "pingback"
-      | "preconnect"
-      | "predecessor-version"
-      | "prefetch"
-      | "preload"
-      | "prerender"
-      | "prev"
-      | "preview"
-      | "previous"
-      | "prev-archive"
-      | "privacy-policy"
-      | "profile"
-      | "related"
-      | "restconf"
-      | "replies"
-      | "search"
-      | "section"
-      | "self"
-      | "service"
-      | "start"
-      | "stylesheet"
-      | "subsection"
-      | "successor-version"
-      | "tag"
-      | "terms-of-service"
-      | "timegate"
-      | "timemap"
-      | "type"
-      | "up"
-      | "version-history"
-      | "via"
-      | "webmention"
-      | "working-copy"
-      | "working-copy-of"
+      | 'about'
+      | 'alternate'
+      | 'appendix'
+      | 'archives'
+      | 'author'
+      | 'blocked-by'
+      | 'bookmark'
+      | 'canonical'
+      | 'chapter'
+      | 'collection'
+      | 'contents'
+      | 'convertedFrom'
+      | 'copyright'
+      | 'create-form'
+      | 'current'
+      | 'derivedfrom'
+      | 'describedby'
+      | 'describes'
+      | 'disclosure'
+      | 'dns-prefetch'
+      | 'duplicate'
+      | 'edit'
+      | 'edit-form'
+      | 'edit-media'
+      | 'enclosure'
+      | 'first'
+      | 'glossary'
+      | 'help'
+      | 'hosts'
+      | 'hub'
+      | 'icon'
+      | 'index'
+      | 'item'
+      | 'last'
+      | 'latest-version'
+      | 'license'
+      | 'lrdd'
+      | 'memento'
+      | 'monitor'
+      | 'monitor-group'
+      | 'next'
+      | 'next-archive'
+      | 'nofollow'
+      | 'noreferrer'
+      | 'original'
+      | 'payment'
+      | 'pingback'
+      | 'preconnect'
+      | 'predecessor-version'
+      | 'prefetch'
+      | 'preload'
+      | 'prerender'
+      | 'prev'
+      | 'preview'
+      | 'previous'
+      | 'prev-archive'
+      | 'privacy-policy'
+      | 'profile'
+      | 'related'
+      | 'restconf'
+      | 'replies'
+      | 'search'
+      | 'section'
+      | 'self'
+      | 'service'
+      | 'start'
+      | 'stylesheet'
+      | 'subsection'
+      | 'successor-version'
+      | 'tag'
+      | 'terms-of-service'
+      | 'timegate'
+      | 'timemap'
+      | 'type'
+      | 'up'
+      | 'version-history'
+      | 'via'
+      | 'webmention'
+      | 'working-copy'
+      | 'working-copy-of'
     );
 /**
  * Defines media type of the linked resource, per Web Linking (RFC5988). For the syntax, see RFC2045 (section 5.1), RFC4288 (section 4.2), RFC6838 (section 4.2)
@@ -162,7 +163,7 @@ export interface Action {
   /**
    * An enumerated attribute mapping to a protocol method. For HTTP, these values may be GET, PUT, POST, DELETE, or PATCH. As new methods are introduced, this list can be extended. If this attribute is omitted, GET should be assumed.
    */
-  method?: "DELETE" | "GET" | "PATCH" | "POST" | "PUT";
+  method?: 'DELETE' | 'GET' | 'PATCH' | 'POST' | 'PUT';
   /**
    * The URI of the action.
    */
@@ -193,25 +194,25 @@ export interface Field {
    * The input type of the field. This is a subset of the input types specified by HTML5.
    */
   type?:
-    | "hidden"
-    | "text"
-    | "search"
-    | "tel"
-    | "url"
-    | "email"
-    | "password"
-    | "datetime"
-    | "date"
-    | "month"
-    | "week"
-    | "time"
-    | "datetime-local"
-    | "number"
-    | "range"
-    | "color"
-    | "checkbox"
-    | "radio"
-    | "file";
+    | 'hidden'
+    | 'text'
+    | 'search'
+    | 'tel'
+    | 'url'
+    | 'email'
+    | 'password'
+    | 'datetime'
+    | 'date'
+    | 'month'
+    | 'week'
+    | 'time'
+    | 'datetime-local'
+    | 'number'
+    | 'range'
+    | 'color'
+    | 'checkbox'
+    | 'radio'
+    | 'file';
   /**
    * Textual annotation of a field. Clients may use this as a label.
    */

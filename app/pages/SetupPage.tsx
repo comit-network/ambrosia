@@ -20,9 +20,9 @@ import { Field, Formik } from 'formik';
 import { LedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { Descriptors, LedgerClient } from '../ledgerIpc';
 import { ipcRenderer } from 'electron';
-import { sleep } from '../comit-sdk/util/sleep';
 import { LedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
-import { Cnd } from '../comit-sdk';
+import { sleep } from '../utils/sleep';
+import { Cnd } from '../utils/cnd/cnd';
 
 interface StatusProps<T> {
   progress: Progress<T>;

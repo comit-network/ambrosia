@@ -1,5 +1,5 @@
 import { createContext, useContext } from 'react';
-import { Cnd } from '../comit-sdk';
+import { Cnd } from '../utils/cnd/cnd';
 
 export const CndContext = createContext<string>(null);
 
