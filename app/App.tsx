@@ -37,6 +37,8 @@ const App = ({ comitEnvConfig, history }: Props) => {
     if (!comitEnvConfig) {
       console.info('Using config file', electronStore.path);
       setEffectiveConfig(electronStore.store);
+    } else {
+      setEffectiveConfig(comitEnvConfig);
     }
   }, [comitEnvConfig]);
 
