@@ -1,7 +1,6 @@
 status = [
     "test (ubuntu-latest)",
     "test (macos-latest)",
-    "test (windows-latest)",
 ]
 pr_status = ["license/cla"]
 block_labels = ["no-mergify"]
