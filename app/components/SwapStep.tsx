@@ -212,17 +212,17 @@ function getBlockchainExplorerUrl(swapStepName: SwapStepName): string {
   switch (swapStepName) {
     case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
     case SwapStepName.HERC20_HBIT_ALICE_FUND:
-    case SwapStepName.HERC20_HBIT_BOB_FUND:
-    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
     case SwapStepName.HERC20_HBIT_BOB_REDEEM:
-      return 'https://etherscan.io/tx/';
-    case SwapStepName.HBIT_HERC20_ALICE_FUND:
     case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
     case SwapStepName.HBIT_HERC20_BOB_FUND:
     case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+      return 'https://etherscan.io/tx/';
+    case SwapStepName.HERC20_HBIT_BOB_FUND:
+    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+    case SwapStepName.HBIT_HERC20_ALICE_FUND:
     case SwapStepName.HBIT_HERC20_BOB_REDEEM:
     default:
-      return 'https://www.blockchain.com/btc/tx/';
+      return 'https://mempool.space/tx/';
   }
 }
 
