@@ -31,6 +31,7 @@ import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { LedgerAction } from '../comit-sdk';
 import { BigNumber } from 'ethers';
+import open from 'open';
 
 export enum SwapStepName {
   HERC20_HBIT_ALICE_DEPLOY = 'HERC20_HBIT_ALICE_DEPLOY',
@@ -524,9 +525,10 @@ export default function SwapStep({
             <Flex direction="row" alignItems="center">
               {icon}
               <Link
-                href={`${getBlockchainExplorerUrl(swapStep)}${txId}`}
-                isExternal
                 color="teal.500"
+                onClick={async () => {
+                  await open(`${getBlockchainExplorerUrl(swapStep)}${txId}`);
+                }}
               >
                 {`${txId.substring(0, 10)}...`}
                 <Icon name="external-link" mx="2px" />
