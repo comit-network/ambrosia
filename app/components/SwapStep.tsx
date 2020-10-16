@@ -31,6 +31,7 @@ import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import { useLedgerEthereumWallet } from '../hooks/useLedgerEthereumWallet';
 import { LedgerAction } from '../comit-sdk';
 import { BigNumber } from 'ethers';
+import open from 'open';
 
 export enum SwapStepName {
   HERC20_HBIT_ALICE_DEPLOY = 'HERC20_HBIT_ALICE_DEPLOY',
@@ -212,17 +213,17 @@ function getBlockchainExplorerUrl(swapStepName: SwapStepName): string {
   switch (swapStepName) {
     case SwapStepName.HERC20_HBIT_ALICE_DEPLOY:
     case SwapStepName.HERC20_HBIT_ALICE_FUND:
-    case SwapStepName.HERC20_HBIT_BOB_FUND:
-    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
     case SwapStepName.HERC20_HBIT_BOB_REDEEM:
-      return 'https://etherscan.io/tx/';
-    case SwapStepName.HBIT_HERC20_ALICE_FUND:
     case SwapStepName.HBIT_HERC20_BOB_DEPLOY:
     case SwapStepName.HBIT_HERC20_BOB_FUND:
     case SwapStepName.HBIT_HERC20_ALICE_REDEEM:
+      return 'https://etherscan.io/tx/';
+    case SwapStepName.HERC20_HBIT_BOB_FUND:
+    case SwapStepName.HERC20_HBIT_ALICE_REDEEM:
+    case SwapStepName.HBIT_HERC20_ALICE_FUND:
     case SwapStepName.HBIT_HERC20_BOB_REDEEM:
     default:
-      return 'https://www.blockchain.com/btc/tx/';
+      return 'https://mempool.space/tx/';
   }
 }
 
@@ -524,9 +525,10 @@ export default function SwapStep({
             <Flex direction="row" alignItems="center">
               {icon}
               <Link
-                href={`${getBlockchainExplorerUrl(swapStep)}${txId}`}
-                isExternal
                 color="teal.500"
+                onClick={async () => {
+                  await open(`${getBlockchainExplorerUrl(swapStep)}${txId}`);
+                }}
               >
                 {`${txId.substring(0, 10)}...`}
                 <Icon name="external-link" mx="2px" />
