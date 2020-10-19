@@ -150,7 +150,7 @@
     "@types/urijs": "^1.19.12",
     "@types/vfile-message": "^2.0.0",
     "@types/webpack": "^4.41.3",
-    "@typescript-eslint/eslint-plugin": "^4.3.0",
+    "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.4.1",
     "babel-core": "7.0.0-bridge.0",
     "babel-eslint": "^10.1.0",
