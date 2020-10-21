@@ -14,7 +14,7 @@ export default function useEtherBalance() {
     }
   );
 
-  if (!balance || error !== undefined) {
+  if (!balance || error) {
     return {
       ...ZERO_ETH,
       isLoading: true

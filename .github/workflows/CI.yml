@@ -48,6 +48,8 @@ jobs:
 
       - name: Package application
         run: yarn package
+        env:
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}
 
       - uses: actions/upload-artifact@v2
         if: matrix.os == 'macOS-latest'

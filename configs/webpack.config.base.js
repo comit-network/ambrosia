@@ -43,6 +43,11 @@ export default {
       NODE_ENV: 'production'
     }),
 
+    new webpack.DefinePlugin({
+      SENTRY_URL: JSON.stringify(process.env.SENTRY_URL),
+      IS_SENTRY: JSON.stringify(!!process.env.SENTRY_URL)
+    }),
+
     new webpack.NamedModulesPlugin()
   ]
 };

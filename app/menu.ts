@@ -86,6 +86,19 @@ export default class MenuBuilder {
       ];
     }
 
+    // Help menu
+    template.push({
+      role: 'help',
+      submenu: [
+        {
+          label: 'Send Error Report',
+          click: () => {
+            this.mainWindow.webContents.send('USER_ERROR_REPORT');
+          }
+        }
+      ]
+    });
+
     Menu.setApplicationMenu(Menu.buildFromTemplate(template));
     return template;
   }
