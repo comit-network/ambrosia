@@ -3,22 +3,6 @@
  *        See https://github.com/webpack-contrib/sass-loader#imports
  */
 
-#sidebar {
-  width: 80px;
-  height: 100vh;
-  padding-left: 20px;
-  padding-top: 20px;
-  position: fixed;
-}
-
-#content {
-  max-height: 100vh;
-  height: 100vh;
-  width: calc(100% - 80px);
-  position: absolute;
-  left: 80px;
-}
-
 .button.ledger.pink {
   background: rgba(213, 63, 140, 1);
   box-shadow: 0 0 0 0 rgba(213, 63, 140, 1);
