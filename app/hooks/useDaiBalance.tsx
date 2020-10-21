@@ -32,7 +32,7 @@ export default function useDaiBalance() {
     }
   );
 
-  if (!balance || error) {
+  if (!balance || error !== undefined) {
     return {
       ...ZERO_DAI,
       isLoading: true

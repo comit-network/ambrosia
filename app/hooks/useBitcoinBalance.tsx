@@ -14,8 +14,7 @@ export default function useBitcoinBalance() {
     }
   );
 
-  if (!balance || error) {
-    console.error(error);
+  if (!balance || error !== undefined) {
     return {
       ...ZERO_BTC,
       isLoading: true
