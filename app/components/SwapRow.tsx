@@ -13,13 +13,13 @@ import {
   SwapProperties
 } from '../utils/swap';
 import SwapStep, { SwapStepName } from './SwapStep';
-import { LedgerAction } from '../comit-sdk';
 import { useLedgerBitcoinWallet } from '../hooks/useLedgerBitcoinWallet';
 import useSWR from 'swr/esm/use-swr';
 import { useCnd } from '../hooks/useCnd';
 import { AxiosResponse } from 'axios';
-import actionToHttpRequest from '../comit-sdk/cnd/action_to_http_request';
 import { useConfig } from '../config';
+import { LedgerAction } from '../utils/cnd/action_payload';
+import actionToHttpRequest from '../utils/cnd/action_to_http_request';
 
 export interface SwapRowProps {
   href: string;

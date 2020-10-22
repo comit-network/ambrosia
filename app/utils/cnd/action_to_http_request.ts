@@ -1,7 +1,9 @@
-import { AxiosRequestConfig } from "axios";
-import contentType from "content-type";
-import URI from "urijs";
-import { Action, Field } from "./siren";
+import { AxiosRequestConfig } from 'axios';
+import contentType from 'content-type';
+import URI from 'urijs';
+import { Action, Field } from './siren';
+
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 export type FieldValueResolverFn = (
   field: Field
@@ -14,9 +16,9 @@ export default async function actionToHttpRequest(
   const fields = action.fields || [];
   const fieldValues = await resolveAllFieldValues(fields, resolver);
 
-  const requestMethod = action.method ? action.method : "GET";
+  const requestMethod = action.method ? action.method : 'GET';
 
-  if (requestMethod === "GET") {
+  if (requestMethod === 'GET') {
     return Promise.resolve({
       url: action.href,
       method: action.method,
@@ -33,14 +35,14 @@ export default async function actionToHttpRequest(
       data: fieldValues,
       transformRequest: [jsonRequestTransformer, failIfNotBuffer],
       headers: {
-        "Content-Type": action.type
+        'Content-Type': action.type
       }
     });
   }
 }
 
 function jsonRequestTransformer(data: any, headers: any): any {
-  const rawContentType = headers["Content-Type"];
+  const rawContentType = headers['Content-Type'];
 
   if (!rawContentType) {
     return data;
@@ -48,17 +50,17 @@ function jsonRequestTransformer(data: any, headers: any): any {
 
   const parsedContentType = contentType.parse(rawContentType).type;
 
-  if (parsedContentType !== "application/json") {
+  if (parsedContentType !== 'application/json') {
     return data; // pass on data to the next transformer
   }
 
-  return Buffer.from(JSON.stringify(data), "utf-8");
+  return Buffer.from(JSON.stringify(data), 'utf-8');
 }
 
 function failIfNotBuffer(data: any, headers: any): any {
   if (data && !Buffer.isBuffer(data)) {
     throw new Error(
-      `Failed to serialize data for content-type ${headers["Content-Type"]}`
+      `Failed to serialize data for content-type ${headers['Content-Type']}`
     );
   }
 

@@ -1,7 +1,5 @@
-import axios, {AxiosInstance, AxiosPromise, AxiosResponse} from "axios";
-import actionToHttpRequest, {FieldValueResolverFn} from "./action_to_http_request";
-import {problemResponseInterceptor} from "./axios_rfc7807_middleware";
-import {Action} from "./siren";
+import axios, { AxiosInstance, AxiosPromise } from 'axios';
+import { problemResponseInterceptor } from './axios_rfc7807_middleware';
 
 interface GetInfo {
   id: string;
@@ -9,9 +7,9 @@ interface GetInfo {
 }
 
 interface Token {
-  symbol: string,
-  address: string,
-  decimals: number
+  symbol: string;
+  address: string;
+  decimals: number;
 }
 
 export interface Ledger {
@@ -56,7 +54,7 @@ export class Cnd {
   public async getPeerId(): Promise<string> {
     const info = await this.getInfo();
     if (!info.id) {
-      throw new Error("id field not present");
+      throw new Error('id field not present');
     }
 
     return info.id;
@@ -71,7 +69,7 @@ export class Cnd {
   public async getPeerListenAddresses(): Promise<string[]> {
     const info = await this.getInfo();
     if (!info.listen_addresses) {
-      throw new Error("listen addresses field not present");
+      throw new Error('listen addresses field not present');
     }
 
     return info.listen_addresses;
@@ -89,36 +87,21 @@ export class Cnd {
   }
 
   public async daiContractAddress(): Promise<string> {
-    const tokens = await this.fetch<Token[]>("/tokens");
+    const tokens = await this.fetch<Token[]>('/tokens');
 
     const daiToken = tokens.data.find(token => token.symbol === 'DAI');
 
     if (!daiToken) {
-      throw new Error("Your cnd instance doesn't seem to know about the DAI token contract for the current network")
+      throw new Error(
+        "Your cnd instance doesn't seem to know about the DAI token contract for the current network"
+      );
     }
 
-    return daiToken.address
-  }
-
-  /**
-   * Proceed with an action request on the cnd REST API.
-   *
-   * @param action The action to perform.
-   * @param resolver A function that returns data needed to perform the action, this data is likely to be provided by a
-   * blockchain wallet or interface (e.g. wallet address).
-   * @throws A {@link Problem} from the cnd REST API, or {@link WalletError} if the blockchain wallet throws, or an {@link Error}.
-   */
-  public async executeSirenAction(
-    action: Action,
-    resolver?: FieldValueResolverFn
-  ): Promise<AxiosResponse> {
-    const request = await actionToHttpRequest(action, resolver);
-
-    return this.client.request(request);
+    return daiToken.address;
   }
 
   private async getInfo(): Promise<GetInfo> {
-    const response = await this.client.get("/");
+    const response = await this.client.get('/');
 
     return response.data;
   }

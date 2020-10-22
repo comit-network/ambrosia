@@ -1,5 +1,5 @@
 import { Currency } from './currency';
-import { Action as SirenAction, Entity } from '../comit-sdk/cnd/siren';
+import { Action as SirenAction, Entity } from './cnd/siren';
 
 export enum Role {
   ALICE = 'Alice',

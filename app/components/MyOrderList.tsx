@@ -3,9 +3,9 @@ import { Box, Flex, IconButton, Text } from '@chakra-ui/core';
 import CurrencyAmount, { ColorMode } from './CurrencyAmount';
 import { Order } from '../utils/order';
 import { calculateQuote } from '../utils/currency';
-import actionToHttpRequest from '../comit-sdk/cnd/action_to_http_request';
 import { useCnd } from '../hooks/useCnd';
 import { mutate } from 'swr';
+import actionToHttpRequest from '../utils/cnd/action_to_http_request';
 
 export interface MarketOrderProperties {
   orders: Order[];

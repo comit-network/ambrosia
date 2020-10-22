@@ -2,7 +2,7 @@ import useSWR from 'swr/esm/use-swr';
 import { useCnd } from './useCnd';
 import { Order } from '../utils/order';
 import { AxiosResponse } from 'axios';
-import { Action, Entity } from '../comit-sdk/cnd/siren';
+import { Action, Entity } from '../utils/cnd/siren';
 
 export function intoOrders(response: AxiosResponse<Entity>): Order[] {
   return response.data.entities
