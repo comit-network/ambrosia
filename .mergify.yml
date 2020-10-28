@@ -4,7 +4,6 @@ pull_request_rules:
       - 'author=dependabot[bot]'
       - 'status-success=test (ubuntu-latest)'
       - 'status-success=test (macos-latest)'
-      - 'status-success=license/cla'
       - label!=no-mergify
     actions:
       comment:
@@ -15,7 +14,6 @@ pull_request_rules:
       - '#changes-requested-reviews-by=0'
       - 'status-success=test (ubuntu-latest)'
       - 'status-success=test (macos-latest)'
-      - 'status-success=license/cla'
       - -conflict
       - label!=work-in-progress
       - label!=blocked
