@@ -1,12 +1,5 @@
 {
   "HOME": "/",
-  "ABOUT": "/about",
-  "HISTORY": "/history",
-  "EXCHANGE": "/exchange",
-  "SETTINGS": "/settings",
-  "SWAPS": "/swaps/:id",
-  "ORDERS": "/orders/:id",
-  "WALLET": "/wallet",
   "WELCOME": "/welcome",
   "SETUP": "/setup"
 }

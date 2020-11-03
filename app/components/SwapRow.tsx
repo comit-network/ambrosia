@@ -514,7 +514,7 @@ const SwapStatus = ({
   const ledgerAction = state.ledgerAction;
   const widthPercent = '20%';
 
-  const renderSteps = steps.map((swapStep, index) => {
+  const renderSteps = steps.flatMap((swapStep, index) => {
     const isStepActive = isSwapStepActive(swapStep, protocol, swap, role);
     const isInteractionButtonActive = isLedgerInteractionButtonActive(
       swapStep,
@@ -526,32 +526,30 @@ const SwapStatus = ({
 
     const pendingTx = isStepActive ? state.activeActionTxId : undefined;
 
-    return (
-      <>
-        <Box width={widthPercent} key={href + role + swapStep}>
-          <SwapStep
-            role={role}
-            swapId={href}
-            name={swapStep}
-            isActive={isStepActive}
-            isUserInteractionActive={isInteractionButtonActive}
-            event={findSwapEventInSwap(swap, swapStep)}
-            ledgerAction={ledgerAction}
-            pendingTxId={pendingTx}
-            onSigned={txId => {
-              dispatch({
-                type: 'actionCompleted',
-                name: ledgerAction.type,
-                value: txId
-              });
-            }}
-          />
-        </Box>
-        {index !== steps.length - 1 && (
-          <StepArrow key={href + role + swapStep + 'stepArrow'} />
-        )}
-      </>
-    );
+    return [
+      <Box width={widthPercent} key={href + role + swapStep}>
+        <SwapStep
+          role={role}
+          swapId={href}
+          name={swapStep}
+          isActive={isStepActive}
+          isUserInteractionActive={isInteractionButtonActive}
+          event={findSwapEventInSwap(swap, swapStep)}
+          ledgerAction={ledgerAction}
+          pendingTxId={pendingTx}
+          onSigned={txId => {
+            dispatch({
+              type: 'actionCompleted',
+              name: ledgerAction.type,
+              value: txId
+            });
+          }}
+        />
+      </Box>,
+      index !== steps.length - 1 && (
+        <StepArrow key={href + role + swapStep + 'stepArrow'} />
+      )
+    ];
   });
 
   return (

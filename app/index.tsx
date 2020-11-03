@@ -7,8 +7,30 @@ import { LedgerBitcoinWallet } from './hooks/useLedgerBitcoinWallet';
 import { LedgerClient } from './ledgerIpc';
 import { ipcRenderer } from 'electron';
 import { createBrowserHistory } from 'history';
+import * as Sentry from '@sentry/react';
+import { captureException, showReportDialog } from '@sentry/react';
+import { _IS_SENTRY, _SENTRY_URL } from './constants/sentry';
+
+if (process.env.NODE_ENV === 'production' && _IS_SENTRY) {
+  Sentry.init({
+    dsn: `${_SENTRY_URL}`
+  });
+}
 
 const AppContainer = process.env.PLAIN_HMR ? Fragment : ReactHotAppContainer;
+
+ipcRenderer.on('USER_ERROR_REPORT', () => {
+  const error = new Error('Submit user feedback');
+  captureException(error);
+  showReportDialog({
+    title: 'Something went wrong? Tell us.',
+    subtitle: 'If you need help please provide your email',
+    subtitle2: '',
+    labelSubmit: 'Send to COMIT team',
+    successMessage:
+      'Report successfully sent, we will get back to you as soon as possible.'
+  });
+});
 
 document.addEventListener('DOMContentLoaded', async () => {
   // eslint-disable-next-line global-require

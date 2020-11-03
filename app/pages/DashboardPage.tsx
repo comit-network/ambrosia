@@ -18,7 +18,12 @@ export default function DashboardPage() {
   const orderTableOffset = '138px';
 
   return (
-    <Flex direction="row" width="100%" padding="1rem">
+    <Flex
+      direction="row"
+      width="100%"
+      padding="1rem"
+      backgroundColor="gray.100"
+    >
       <Flex direction="column" width="100%" flexGrow={2}>
         {/* Swaps */}
         <Flex

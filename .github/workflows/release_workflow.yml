@@ -39,3 +39,4 @@ jobs:
         run: yarn package-ci
         env:
           GH_TOKEN: ${{ secrets.BOTTY_GITHUB_TOKEN }}
+          SENTRY_URL: ${{ secrets.SENTRY_URL }}

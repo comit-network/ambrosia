@@ -232,6 +232,7 @@
     "@ethersproject/abi": "^5.0.7",
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@hot-loader/react-dom": "^16.13.0",
+    "@sentry/react": "^5.26.0",
     "axios": "^0.20.0",
     "bignumber.js": "^9.0.1",
     "bn.js": "^5.1.2",
