@@ -233,7 +233,7 @@
     "@fortawesome/fontawesome-free": "^5.15.1",
     "@hot-loader/react-dom": "^16.13.0",
     "@sentry/react": "^5.26.0",
-    "axios": "^0.20.0",
+    "axios": "^0.21.1",
     "bignumber.js": "^9.0.1",
     "bn.js": "^5.1.2",
     "content-type": "^1.0.4",
